@@ -21,9 +21,14 @@ export class CL_Entity{
     destroy(){ 
         this.game.viewport.removeChild(this.graphics);
         this.graphics.destroy();
+        this.game.removeClEntity(this.entity.id);
     }
 
     update(){}
 
     onChange(){}
+
+    onDeath(){
+        this.destroy();
+    }
 }

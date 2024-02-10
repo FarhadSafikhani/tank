@@ -11,11 +11,13 @@ import { SV_WorldDoodad } from "../server/rooms/sv_worlddoodad";
 import { CL_WorldDoodad } from "./cl_worlddoodad";
 import { SV_Projectile } from "../server/rooms/sv_projectile";
 import { CL_Projectile } from "./cl_projectile";
+import { Particle } from "./particle";
 
 const ENDPOINT = "http://localhost:2567";
 
 export class Game extends PIXI.Application {
     clEntities: { [id: string]: CL_Entity } = {};
+    particles: Particle[] = [];
     currentPlayerEntity: CL_Player;
 
     client = new Client(ENDPOINT);
@@ -104,7 +106,8 @@ export class Game extends PIXI.Application {
             });
         });
 
-        this.room.state.entities.onRemove((_, entityId: string) => {
+        this.room.state.entities.onRemove((entity: SV_Entity , entityId: string) => {            
+            this.getClEntity(entityId).onDeath();
             this.removeClEntity(entityId);
         });
     }
@@ -129,12 +132,11 @@ export class Game extends PIXI.Application {
             console.error("Unknown entity type");
             return;
         }
-        //debugger;
+
         this.clEntities[entity.id] = clEntity;
     }
 
     removeClEntity(entityId: string) {
-        this.getClEntity(entityId).destroy();
         delete this.clEntities[entityId];
     }
 
@@ -152,9 +154,21 @@ export class Game extends PIXI.Application {
             this.getClEntity(id).update();
         }
 
+        this.updateParticles();
+
         // continue looping if interpolation is still enabled.
         if (this._interpolation) {
             requestAnimationFrame(this.loop.bind(this));
         }
+    }
+
+
+    //TOOO: move to particle manager
+    addParticle(x: number, y: number) {
+        this.particles.push(new Particle(this, x, y));
+    }
+
+    updateParticles() {
+        this.particles = this.particles.filter(particle => particle.update());
     }
 }

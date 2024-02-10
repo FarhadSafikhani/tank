@@ -81,4 +81,16 @@ export class CL_Projectile extends CL_Entity{
         
     }
 
+    onDeath(): void {
+
+        this.spawnPartiles();
+        this.destroy();
+    }
+
+    spawnPartiles(){
+        for (let i = 0; i < 10; i++) {
+            this.game.addParticle(this.entity.x, this.entity.y);  
+        }
+    }
+
 }
