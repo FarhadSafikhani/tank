@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js";
-import { CL_Entity } from "./cl_entity";
+import { CL_Entity, EntityState } from "./cl_entity";
 import { SV_Player } from "../server/rooms/sv_player";
 import { Game } from "./game";
 import { lerp } from "../common/utils";
@@ -181,23 +181,6 @@ export class CL_Player extends CL_Entity{
         healthBarFG.position.x = -20 * (1 - scale); // Adjust this value as needed to align correctly with the parent
     }
 
-
-    destroy(){ 
-        this.game.viewport.removeChild(this.graphics);
-        this.graphics.destroy();
-    }
-
-    update(){
-        if(!this.entity || !this.graphics || this.entity.dead) return;
-        this.graphics.x = lerp(this.graphics.x, this.entity.x, 0.2);
-        this.graphics.y = lerp(this.graphics.y, this.entity.y, 0.2);
-        this.graphicsTankBody.rotation = this.entity.angle;
-        this.graphicsTurret.rotation = this.entity.turretAngle;
-        this.animateMuzzleFlash();
-    }
-
-
-
     onChange(): void {
         
         if(this.entity.shots > this.localShots){
@@ -214,7 +197,13 @@ export class CL_Player extends CL_Entity{
         this.animateMuzzleFlash();
     }
 
-
+    aliveTick(): void {
+        this.graphics.x = lerp(this.graphics.x, this.entity.x, 0.2);
+        this.graphics.y = lerp(this.graphics.y, this.entity.y, 0.2);
+        this.graphicsTankBody.rotation = this.entity.angle;
+        this.graphicsTurret.rotation = this.entity.turretAngle;
+        this.animateMuzzleFlash();
+    }
 
     animateMuzzleFlash() {
         if(this.graphicsMuzzleFlash.alpha == 0){

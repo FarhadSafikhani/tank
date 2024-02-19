@@ -20,8 +20,8 @@ export class Particle {
         this.graphic.y = y;
 
         this.velocity = {
-            x: (Math.random() - 0.5) * 3,
-            y: (Math.random() - 0.5) * 3
+            x: (Math.random() - 0.5) * 4,
+            y: (Math.random() - 0.5) * 4
         };
 
         this.lifespan = this.lifespanMax;

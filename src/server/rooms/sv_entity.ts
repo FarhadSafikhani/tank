@@ -25,10 +25,6 @@ export class SV_Entity extends Schema {
 
     update(engineDeltaTime) {}
 
-    onCollisionStart(otherEntity: SV_Entity, collision: IEventCollision<Engine>) {
-        // if(this.body && otherEntity && otherEntity.body) {
-        //     console.log("collision start", this.tag , "is hit by", otherEntity.tag);
-        // }
-    }
+    onCollisionStart(otherEntity: SV_Entity, collision: IEventCollision<Engine>) {}
 
 }

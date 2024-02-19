@@ -24,7 +24,6 @@ export class Game extends PIXI.Application {
     room: Room<State>;
 
     viewport: Viewport;
-    _interpolation: boolean;
 
     constructor () {
         super({
@@ -38,22 +37,24 @@ export class Game extends PIXI.Application {
             screenHeight: window.innerHeight,
             worldWidth: 1000,
             worldHeight: 1000,
-            events: this.renderer.events // the interaction module is important for wheel to work properly when renderer.view is placed or scaled
+            events: this.renderer.events
         })
-
-        // // draw boundaries of the world
-        // const boundaries = new PIXI.Graphics();
-        // boundaries.beginFill(0x000000);
-        // boundaries.drawRoundedRect(0, 0, WORLD_SIZE, WORLD_SIZE, 30);
-        // this.viewport.addChild(boundaries);
 
         // add viewport to stage
         this.stage.addChild(this.viewport);
 
         this.connect();
 
-        this.interpolation = false;
+        this.setupBindings();
 
+
+        //start the engine
+        this.loop();
+
+    }
+
+    setupBindings() {
+       
         this.viewport.on("mousemove", (e) => {
             if(!this.currentPlayerEntity) return;
             const point = this.viewport.toLocal(e.global);
@@ -106,9 +107,8 @@ export class Game extends PIXI.Application {
             });
         });
 
-        this.room.state.entities.onRemove((entity: SV_Entity , entityId: string) => {            
-            this.getClEntity(entityId).onDeath();
-            this.removeClEntity(entityId);
+        this.room.state.entities.onRemove((entity: SV_Entity , entityId: string) => { 
+            this.getClEntity(entityId).onSVDeath();
         });
     }
 
@@ -140,26 +140,15 @@ export class Game extends PIXI.Application {
         delete this.clEntities[entityId];
     }
 
-    set interpolation (bool: boolean) {
-        this._interpolation = bool;
-
-        if (this._interpolation) {
-            this.loop();
-        }
-    }
-
     loop () {
-
+        
         for (let id in this.clEntities) {
             this.getClEntity(id).update();
         }
 
         this.updateParticles();
 
-        // continue looping if interpolation is still enabled.
-        if (this._interpolation) {
-            requestAnimationFrame(this.loop.bind(this));
-        }
+        requestAnimationFrame(this.loop.bind(this));
     }
 
 

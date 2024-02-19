@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js";
-import { CL_Entity } from "./cl_entity";
+import { CL_Entity, EntityState } from "./cl_entity";
 import { Game } from "./game";
 import { SV_Projectile } from "../server/rooms/sv_projectile";
 import { lerp } from "../common/utils";
@@ -57,14 +57,7 @@ export class CL_Projectile extends CL_Entity{
         this.game.viewport.addChild(line);
     }
 
-
-    destroy(){ 
-        this.game.viewport.removeChild(this.graphics);
-        this.graphics.destroy();
-    }
-
-    update(): void {
-        if(!this.entity || !this.graphics || this.entity.dead) return;
+    aliveTick(): void {
         this.graphics.x = lerp(this.graphics.x, this.entity.x, 0.2);
         this.graphics.y = lerp(this.graphics.y, this.entity.y, 0.2);
         this.graphics.rotation = this.entity.angle;
@@ -77,14 +70,12 @@ export class CL_Projectile extends CL_Entity{
         //     gVerts.drawCircle(v.x, v.y, 3);
         //     gVerts.endFill();
         // });
-
-        
     }
 
-    onDeath(): void {
-
+    //called from update in cl_entity when state is DYING
+    dieTick(): void {
+        super.dieTick();
         this.spawnPartiles();
-        this.destroy();
     }
 
     spawnPartiles(){

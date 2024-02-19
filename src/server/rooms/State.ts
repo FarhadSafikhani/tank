@@ -136,6 +136,8 @@ export class State extends Schema {
   }
 
   update(deltaTime) {
+
+    // delete all dead entities
     this.entities.forEach((entity, entityId) => {
       entity.dead && this.removeEntity(entityId);
     });
@@ -143,27 +145,13 @@ export class State extends Schema {
   }
 
   matterAfterUpdate(engineTimeEvent: IEventTimestamped<Engine>) {
-    const deadEntities: string[] = [];
     this.entities.forEach((entity, entityId) => {
-      if(!entity.dead){
-        entity.update(engineTimeEvent['delta']);
-      }
-      
-      // if (entity.dead) {
-      //   deadEntities.push(entityId);
-      //   return;
-      // }
+      entity.update(engineTimeEvent['delta']);
 
       //   // touch all satic entities for filtering by distance...
       //   //
       //   entity['$changes'].touch(0);
-
     });
-
-    // // delete all dead entities
-    // deadEntities.forEach(entityId => {
-    //   this.removeEntity(entityId);
-    // });
-
   }
+
 }
