@@ -9,7 +9,7 @@ export class SV_Entity extends Schema {
     @type("string") id: string;
     @type("string") tag: string = "entity";
     
-    state: State
+    state: State;
     body: Matter.Body | undefined;
     dead: boolean = false;
 

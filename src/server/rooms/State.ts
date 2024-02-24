@@ -19,12 +19,15 @@ export class State extends Schema {
   engine: Matter.Engine;
   world: Matter.World;
 
+  startTime: number = 0;
+
   matterBodies: { [entityId: string]: Matter.Body } = {};
 
   constructor() {
     super();
     this.engine = Matter.Engine.create({ gravity: { x: 0, y: 0 }});
     this.world = this.engine.world;
+    this.startTime = Date.now();
   }
 
   // @filterChildren(function(client, key: string, value: SV_Entity, root: State) {
@@ -142,16 +145,31 @@ export class State extends Schema {
       entity.dead && this.removeEntity(entityId);
     });
     Matter.Engine.update(this.engine, deltaTime)
+
+    this.waveSpawner(deltaTime);
   }
 
   matterAfterUpdate(engineTimeEvent: IEventTimestamped<Engine>) {
     this.entities.forEach((entity, entityId) => {
       entity.update(engineTimeEvent['delta']);
 
-      //   // touch all satic entities for filtering by distance...
-      //   //
-      //   entity['$changes'].touch(0);
+      // touch all satic entities for filtering by distance...
+      // entity['$changes'].touch(0);
     });
   }
+
+
+  nextSpawnTime = Date.now();
+
+  //TODO: move to a wave manager
+  waveSpawner(deltaTime) {
+    if(this.nextSpawnTime >= Date.now()) {
+      return;
+    }
+    this.createPlayer("testbot" + Math.random());
+    this.nextSpawnTime = Date.now() + 2000;
+  }
+
+
 
 }

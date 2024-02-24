@@ -1,0 +1,16 @@
+
+
+//GAME DESIGN
+
+Pitch: A survivors style game, with Tanks. 
+You enter short raids, defeat waves of enemies, beat the boss to win the raid.
+Each run can make your permanently stronger.
+
+Raid: 20 minute raids. Beat final boss of raid to get back to base. 
+During raid enemies drop XP and lets your tank level up.
+
+Enemies (Alien theme):
+ - goobers (slow, low hp, melee)
+ - scout (fast, low hp, melee)
+ - grunt (slow, high hp, melee)
+ 

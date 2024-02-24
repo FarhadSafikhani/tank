@@ -17,7 +17,7 @@ const gameServer = new Server({
   server: http.createServer(app),
 });
 
-gameServer.define("my_room", MyRoom);
+
 
 app.use("/", express.static(path.resolve(__dirname, "public")));
 
@@ -27,3 +27,6 @@ app.use("/colyseus", auth, monitor());
 
 gameServer.listen(port);
 console.log(`Listening on http://${endpoint}:${port}`);
+
+gameServer.define("room1", MyRoom);
+

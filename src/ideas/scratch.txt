@@ -1,0 +1,63 @@
+  createBody() {
+
+        // const tankVertices  = [
+        //     // Hull vertices (central rectangle) scaled by 30%
+        //     { x: -10 * 1.3, y: -10 * 1.3 }, // Top-left of the hull
+        //     { x: 10 * 1.3, y: -10 * 1.3 },  // Top-right of the hull
+        //     { x: 10 * 1.3, y: 10 * 1.3 },   // Bottom-right of the hull
+        //     { x: -10 * 1.3, y: 10 * 1.3 },  // Bottom-left of the hull
+        
+        //     // Left track vertices forming an octagon, scaled by 30%
+        //     { x: -12 * 1.3, y: -15 * 1.3 }, // Top-left chamfer of the left track
+        //     { x: -15 * 1.3, y: -12 * 1.3 }, // Top-left corner of the left track
+        //     { x: -15 * 1.3, y: 12 * 1.3 },  // Bottom-left corner of the left track
+        //     { x: -12 * 1.3, y: 15 * 1.3 },  // Bottom-left chamfer of the left track
+        //     { x: 12 * 1.3, y: 15 * 1.3 },   // Bottom-right chamfer of the left track
+        //     { x: 15 * 1.3, y: 12 * 1.3 },   // Bottom-right corner of the left track
+        //     { x: 15 * 1.3, y: -12 * 1.3 },  // Top-right corner of the left track
+        //     { x: 12 * 1.3, y: -15 * 1.3 },  // Top-right chamfer of the left track
+        
+        //     // Right track vertices forming an octagon, scaled by 30% (mirrored relative to the left track)
+        //     { x: 17 * 1.3, y: -15 * 1.3 },  // Top-left chamfer of the right track
+        //     { x: 20 * 1.3, y: -12 * 1.3 },  // Top-left corner of the right track
+        //     { x: 20 * 1.3, y: 12 * 1.3 },   // Bottom-left corner of the right track
+        //     { x: 17 * 1.3, y: 15 * 1.3 },   // Bottom-left chamfer of the right track
+        //     { x: -17 * 1.3, y: 15 * 1.3 },  // Bottom-right chamfer of the right track
+        //     { x: -20 * 1.3, y: 12 * 1.3 },  // Bottom-right corner of the right track
+        //     { x: -20 * 1.3, y: -12 * 1.3 }, // Top-right corner of the right track
+        //     { x: -17 * 1.3, y: -15 * 1.3 }  // Top-right chamfer of the right track
+        // ];
+            
+
+        // const tankBody = Matter.Bodies.fromVertices(this.x, this.y, [tankVertices],
+        // {
+        //     isStatic: false, friction: this.friction, 
+        //     frictionAir: 0.01, restitution: 0.4, 
+        //     density: 0.4,
+        //     collisionFilter: {
+        //         category: CollisionCategory.PLAYER, // category for projectiles
+        //         mask: CollisionCategory.PROJECTILE | CollisionCategory.PLAYER // mask for other objects (e.g., players)
+        //         // group: 1
+        //     },
+        // });
+        
+        const tankBody = Matter.Bodies.rectangle(this.x, this.y, this.w, this.h,
+        {
+            isStatic: false, friction: this.friction, 
+            frictionAir: 0.01, restitution: 0.4, 
+            density: 0.4,
+            chamfer: { radius: 6 },
+            collisionFilter: {
+                category: CollisionCategory.PLAYER, // category for projectiles
+                mask: CollisionCategory.PROJECTILE | CollisionCategory.PLAYER // mask for other objects (e.g., players)
+                // group: 1
+            },
+        });
+
+        const points = tankBody.vertices.map(vertex => {
+            return { x: this.x - vertex.x, y: this.y - vertex.y };
+        });
+
+        this.verts = JSON.stringify(points);
+        return tankBody;
+    }

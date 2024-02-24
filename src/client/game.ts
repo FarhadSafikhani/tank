@@ -47,7 +47,6 @@ export class Game extends PIXI.Application {
 
         this.setupBindings();
 
-
         //start the engine
         this.loop();
 
@@ -84,7 +83,7 @@ export class Game extends PIXI.Application {
     }
 
     async connect() {
-        this.room = await this.client.joinOrCreate<State>("my_room");
+        this.room = await this.client.joinOrCreate<State>("room1");
 
         this.room.state.entities.onAdd((entity: SV_Entity, sessionId: string) => {
 
@@ -105,6 +104,7 @@ export class Game extends PIXI.Application {
             entity.onChange(() => {
                 clEntity.onChange();
             });
+            
         });
 
         this.room.state.entities.onRemove((entity: SV_Entity , entityId: string) => { 

@@ -5,12 +5,10 @@ import { SV_Player } from "./sv_player";
 import { KeyMessage, MouseMessage } from "../../common/interfaces";
 
 
-
-
-
 export class MyRoom extends Room<State> {
 
   onCreate() {
+    
     this.setState(new State());
     this.state.initialize();
 
@@ -30,18 +28,17 @@ export class MyRoom extends Room<State> {
       this.getClientEntity(client.sessionId)?.onClick(message.x, message.y);
     });
 
-    this.setSimulationInterval((delta) => this.state.update(delta));
+    this.startTheGameLoop();
   }
 
   onJoin(client: Client, options: any) {
     console.log(client.sessionId, "JOINED");
     this.state.createPlayer(client.sessionId);
-    this.state.createPlayer("testbot", { x: 200, y: 500 });
+    //this.state.createPlayer("testbot", { x: 200, y: 500 });
   }
 
   onLeave(client: Client) {
-    console.log(client.sessionId, "LEFT!");
-    const entity = this.state.entities[client.sessionId];
+    const entity = this.state.entities[client.sessionId] as SV_Player;
 
     // entity may be already dead.
     if (entity) { entity.dead = true; }
@@ -49,6 +46,10 @@ export class MyRoom extends Room<State> {
 
   getClientEntity(sessionId: string): SV_Player | undefined {
     return this.state.entities[sessionId];
+  }
+
+  startTheGameLoop() {
+    this.setSimulationInterval((delta) => this.state.update(delta));
   }
 
 }

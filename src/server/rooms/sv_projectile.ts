@@ -20,7 +20,7 @@ export class SV_Projectile extends SV_Entity {
     // configs
     w: number = 25;
     h: number = 7;
-    initialSpeed: number = 20; //40
+    initialSpeed: number = 10; //40
     damage: number = 34;
     
 
