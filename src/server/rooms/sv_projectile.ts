@@ -4,6 +4,7 @@ import { type } from "@colyseus/schema";
 import { State } from "./State";
 import { CollisionCategory } from "../../common/interfaces";
 import { SV_Player } from "./sv_player";
+import { SV_Enemy } from "./sv_enemy";
 
 export class SV_Projectile extends SV_Entity {
 
@@ -85,6 +86,9 @@ export class SV_Projectile extends SV_Entity {
             if(otherEntity.tag === "player"){
                 const player = otherEntity as SV_Player;
                 player.healthCurr -= this.damage;
+            } else if (otherEntity.tag === "enemy") {
+                const enemy = otherEntity as SV_Enemy;
+                enemy.healthCurr -= this.damage;
             }
             //console.log("collision start", this.tag , " hits ", otherEntity.tag);
             this.dead = true;

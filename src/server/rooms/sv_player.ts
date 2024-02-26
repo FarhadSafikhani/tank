@@ -52,7 +52,7 @@ export class SV_Player extends SV_Entity {
             chamfer: { radius: 6 },
             collisionFilter: {
                 category: CollisionCategory.PLAYER, // category for projectiles
-                mask: CollisionCategory.PROJECTILE | CollisionCategory.PLAYER // mask for other objects (e.g., players)
+                mask: CollisionCategory.PROJECTILE | CollisionCategory.PLAYER | CollisionCategory.ENEMY | CollisionCategory.ENEMY_PROJECTILE // mask for other objects (e.g., players)
                 // group: 1
             },
         });

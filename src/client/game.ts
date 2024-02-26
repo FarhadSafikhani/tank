@@ -12,6 +12,8 @@ import { CL_WorldDoodad } from "./cl_worlddoodad";
 import { SV_Projectile } from "../server/rooms/sv_projectile";
 import { CL_Projectile } from "./cl_projectile";
 import { Particle } from "./particle";
+import { CL_Enemy } from "./cl_enemy";
+import { SV_Enemy } from "../server/rooms/sv_enemy";
 
 const ENDPOINT = "http://localhost:2567";
 
@@ -104,7 +106,7 @@ export class Game extends PIXI.Application {
             entity.onChange(() => {
                 clEntity.onChange();
             });
-            
+
         });
 
         this.room.state.entities.onRemove((entity: SV_Entity , entityId: string) => { 
@@ -127,6 +129,9 @@ export class Game extends PIXI.Application {
         }
         else if (entity.tag === "projectile") {
             clEntity = new CL_Projectile(this, entity as SV_Projectile);
+        }
+        else if (entity.tag === "enemy") {
+            clEntity = new CL_Enemy(this, entity as SV_Enemy);
         }
         else {
             console.error("Unknown entity type");

@@ -7,6 +7,7 @@ import Matter, { Engine, IEventCollision, IEventTimestamped } from "matter-js";
 import { Bodies } from "matter-js";
 import { SV_WorldDoodad } from "./sv_worlddoodad";
 import { SV_Projectile } from "./sv_projectile";
+import { SV_Enemy } from "./sv_enemy";
 
 const GAME_CONFIG = {
   worldSize: 1200
@@ -112,6 +113,12 @@ export class State extends Schema {
     this.addEntity(entityId, p);
   }
 
+  createEnemy(position: { x: number, y: number }) {
+    const entityId = generateId();
+    const p = new SV_Enemy(this, entityId, position.x, position.y);
+    this.addEntity(entityId, p);
+  }
+
   addEntity(entityId: string, entity: SV_Entity) {
 
     if(entity.body) {
@@ -146,7 +153,7 @@ export class State extends Schema {
     });
     Matter.Engine.update(this.engine, deltaTime)
 
-    this.waveSpawner(deltaTime);
+    //this.waveSpawner(deltaTime);
   }
 
   matterAfterUpdate(engineTimeEvent: IEventTimestamped<Engine>) {
@@ -166,7 +173,7 @@ export class State extends Schema {
     if(this.nextSpawnTime >= Date.now()) {
       return;
     }
-    this.createPlayer("testbot" + Math.random());
+    this.createEnemy({ x: 0, y: 0 });
     this.nextSpawnTime = Date.now() + 2000;
   }
 

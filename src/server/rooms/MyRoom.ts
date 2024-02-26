@@ -34,6 +34,7 @@ export class MyRoom extends Room<State> {
   onJoin(client: Client, options: any) {
     console.log(client.sessionId, "JOINED");
     this.state.createPlayer(client.sessionId);
+    this.state.createEnemy({ x: 0, y: 100 });
     //this.state.createPlayer("testbot", { x: 200, y: 500 });
   }
 
