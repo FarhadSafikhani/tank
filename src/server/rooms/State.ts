@@ -89,10 +89,11 @@ export class State extends Schema {
     const wallThickness = 100;
     const sideLength = GAME_CONFIG.worldSize;
     // Add some boundary in our world
-    this.createWorldDoodad(0, 0, sideLength, wallThickness);
-    this.createWorldDoodad(-sideLength/2, sideLength/2, wallThickness, sideLength + wallThickness);
-    this.createWorldDoodad(sideLength/2, sideLength/2, wallThickness, sideLength + wallThickness);
-    this.createWorldDoodad(0, sideLength, sideLength, wallThickness);
+    // this.createWorldDoodad(0, 0, sideLength, wallThickness);
+    // this.createWorldDoodad(-sideLength/2, sideLength/2, wallThickness, sideLength + wallThickness);
+    // this.createWorldDoodad(sideLength/2, sideLength/2, wallThickness, sideLength + wallThickness);
+    // this.createWorldDoodad(0, sideLength, sideLength, wallThickness);
+    //this.createWorldDoodad(0, 0, 50, 50);
   }
 
   createWorldDoodad(x: number, y: number, w: number, h: number) {
@@ -153,7 +154,7 @@ export class State extends Schema {
     });
     Matter.Engine.update(this.engine, deltaTime)
 
-    //this.waveSpawner(deltaTime);
+    this.waveSpawner(deltaTime);
   }
 
   matterAfterUpdate(engineTimeEvent: IEventTimestamped<Engine>) {
@@ -173,8 +174,15 @@ export class State extends Schema {
     if(this.nextSpawnTime >= Date.now()) {
       return;
     }
-    this.createEnemy({ x: 0, y: 0 });
-    this.nextSpawnTime = Date.now() + 2000;
+    //random position from world bounds
+    const padding = 100;
+    const x = Math.random() * GAME_CONFIG.worldSize - GAME_CONFIG.worldSize / 2;
+    const y = Math.random() * GAME_CONFIG.worldSize - GAME_CONFIG.worldSize / 2;
+    //padd the x and y
+    const spawnPos = { x: x < 0 ? x - padding : x + padding, y: y < 0 ? y - padding : y + padding };
+    //console.log("spawning enemy at", spawnPos);
+    this.createEnemy(spawnPos);
+    this.nextSpawnTime = Date.now() + 3000;
   }
 
 

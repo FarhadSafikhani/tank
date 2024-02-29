@@ -43,6 +43,7 @@
     "@types/matter-js": "^0.19.6",
     "colyseus": "^0.15.0",
     "colyseus.js": "^0.15.0",
+    "cors": "^2.8.5",
     "express": "^4.16.4",
     "express-basic-auth": "^1.2.0",
     "express-jwt": "^5.3.1",

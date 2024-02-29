@@ -12,17 +12,19 @@ export class SV_Enemy extends SV_Entity {
     @type("float64") turretAngle: number = 0;
     @type("int32") healthCurr: number = 0;
     @type("int32") healthMax: number = 0;
-    @type("int32") size: number = 32;
+    @type("int32") size: number = 26;
 
 
     accel: number = .15; 
-    turnRate: number = 0.05; 
-    maxSpeed: number = 4;
+    turnRate: number = 1; 
+    maxSpeed: number = 3;
     friction: number = 0.75;
-    startingMaxHealth: number = 100;
-    damage: number = 10;
+    startingMaxHealth: number = 60;
+    damage: number = 2;
 
     body: Matter.Body;
+
+    currentTarget: SV_Player | null = null;
 
     constructor(state: State, id: string, x: number, y: number) {
         super(state, id);
@@ -62,95 +64,65 @@ export class SV_Enemy extends SV_Entity {
             return;
         }
 
-        //console.log("enemy update", this.x, this.y, this.healthCurr);
+        //chase the nearby players
+        this.currentTarget = this.acquireTarget();
 
-        
-        // if (this.aDown) {
-            
-        //     Matter.Body.rotate(this.body, -this.turnRate);
-        //     Matter.Body.setAngularSpeed(this.body, 0);
-            
-        // } else if (this.dDown) {
-            
-        //     Matter.Body.rotate(this.body, +this.turnRate);
-        //     Matter.Body.setAngularSpeed(this.body, 0);
-        // } 
+        if(this.currentTarget) {
+            const angleToPlayer = Math.atan2(this.currentTarget.y - this.y, this.currentTarget.x - this.x);
+            const angleDiff = angleToPlayer - this.body.angle;
 
-        // if (this.wDown) {
-        //     this.vx = Math.cos(this.angle) * this.accel;
-        //     this.vy = Math.sin(this.angle) * this.accel;
-        //     Matter.Body.applyForce(this.body, this.body.position, {x: this.vx, y: this.vy});
-        // } else if (this.sDown) {
-        //     this.vx = -Math.cos(this.angle) * this.accel;
-        //     this.vy = -Math.sin(this.angle) * this.accel;
-        //     Matter.Body.applyForce(this.body, this.body.position, {x: this.vx, y: this.vy});
-        // } else {
+            if(angleDiff > Math.PI) {
+                Matter.Body.rotate(this.body, this.turnRate);
+            } else if(angleDiff < -Math.PI) {
+                Matter.Body.rotate(this.body, -this.turnRate);
+            } else if(angleDiff > 0) {
+                Matter.Body.rotate(this.body, this.turnRate);
+            } else if(angleDiff < 0) {
+                Matter.Body.rotate(this.body, -this.turnRate);
+            }
 
-        //     //goal here is, when no acceleration keys are pressed, apply a force to reduce the sideways velocity
-        //     const velocity = this.body.velocity;
+            //apply force towards player
+            this.vx = Math.cos(this.angle) * this.accel;
+            this.vy = Math.sin(this.angle) * this.accel;
+            Matter.Body.applyForce(this.body, this.body.position, {x: this.vx, y: this.vy});
 
-        //     // Calculate the perpendicular vector (to the tank's facing direction)
-        //     const perpAngle = this.angle + Math.PI / 2; // Rotate the angle by 90 degrees to get the perpendicular
-        //     const perpVx = Math.cos(perpAngle);
-        //     const perpVy = Math.sin(perpAngle);
-        
-        //     // Project the current velocity onto the perpendicular vector to get the sideways velocity component
-        //     const dotProduct = velocity.x * perpVx + velocity.y * perpVy;
-        //     const sideVx = perpVx * dotProduct;
-        //     const sideVy = perpVy * dotProduct;
-        
-        //     // Apply a force to reduce the sideways velocity
-        //     // Adjust the reductionFactor to control how quickly the velocity is reduced
-        //     const reductionFactor = 0.15;
-        //     Matter.Body.applyForce(this.body, this.body.position, {
-        //         x: -sideVx * reductionFactor,
-        //         y: -sideVy * reductionFactor
-        //     });
-        // }
+            // Limit velocity to maximum speed
+            const speed = Math.sqrt(this.body.velocity.x * this.body.velocity.x + this.body.velocity.y * this.body.velocity.y);
+            if (speed > this.maxSpeed) {
+                const ratio = this.maxSpeed / speed;
+                Matter.Body.setVelocity(this.body, {
+                    x: this.body.velocity.x * ratio,
+                    y: this.body.velocity.y * ratio
+                });
+            }
 
-
-        // // Limit velocity to maximum speed
-        // const speed = Math.sqrt(this.body.velocity.x * this.body.velocity.x + this.body.velocity.y * this.body.velocity.y);
-        // if (speed > this.maxSpeed) {
-        //     const ratio = this.maxSpeed / speed;
-        //     Matter.Body.setVelocity(this.body, {
-        //         x: this.body.velocity.x * ratio,
-        //         y: this.body.velocity.y * ratio
-        //     });
-        // }
-
+        }
 
         this.x = this.body.position.x;
         this.y = this.body.position.y;
         this.angle = this.body.angle;
-        
-
 
     }
 
-    // onClick(x: number, y: number) {
+    acquireTarget(): SV_Player | null {
+    
+        //chase the nearby players
+        const players = this.state.entities.values();
+        let closestPlayer: SV_Player | null = null;
+        let closestDistance = 999999;
+        for(let player of players) {
+            if(player.tag === "player") {
+                const distance = Math.sqrt(Math.pow(player.x - this.x, 2) + Math.pow(player.y - this.y, 2));
+                if(distance < closestDistance) {
+                    closestDistance = distance;
+                    closestPlayer = player as SV_Player;
+                }
+            }
+        }
 
-        
-    //     const spawnX = this.x + Math.cos(this.turretAngle) * 40;
-    //     const spawnY = this.y + Math.sin(this.turretAngle) * 40;
-    //     const spawnAngle = Math.atan2(this.y - spawnY, this.x - spawnX);
+        return closestPlayer;
 
-    //     this.state.createProjectile(this, spawnX, spawnY, spawnAngle);
-
-    //     const forceMagnitude = -1; //kickback force - gradual
-    //     const forceX = Math.cos(spawnAngle) * forceMagnitude;
-    //     const forceY = Math.sin(spawnAngle) * forceMagnitude;
-    //     Matter.Body.applyForce(this.body, { x: this.x, y: this.y }, { x: -forceX, y: -forceY });
-
-    //     // Move the tank along the same vector as the applied force
-    //     const moveMagnitude = 5; //kickback force - sudden
-    //     const moveX = Math.cos(spawnAngle) * moveMagnitude;
-    //     const moveY = Math.sin(spawnAngle) * moveMagnitude;
-    //     Matter.Body.setPosition(this.body, { x: this.body.position.x + moveX, y: this.body.position.y + moveY });
-
-        
-    // }
-
+    }
 
     onCollisionStart(otherEntity: SV_Entity, collision: IEventCollision<Engine>) {
         if(this.body && otherEntity && otherEntity.body) {

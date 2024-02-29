@@ -117,37 +117,6 @@ export class CL_Player extends CL_Entity{
         return flash;
     }
 
-    // createTriangularMuzzleFlash() {
-    //     const flash = new PIXI.Graphics();
-    
-    //     // Main flash triangle
-    //     flash.beginFill(0xFFFFFF);
-    //     flash.drawPolygon([
-    //         -10, 0,  // Point 1: Left point of the base
-    //         20, 0,   // Point 2: Right point of the base
-    //         5, -60   // Point 3: Top point making the triangle
-    //     ]);
-    //     flash.endFill();
-    
-    //     // Smaller triangles for a dynamic effect
-    //     flash.beginFill(0xFFFF00, 0.5); // Slightly transparent for glow effect
-    //     // Smaller triangle 1
-    //     flash.drawPolygon([
-    //         -5, 0,
-    //         10, 0,
-    //         0, -30
-    //     ]);
-    //     // Smaller triangle 2
-    //     flash.drawPolygon([
-    //         0, 0,
-    //         15, 0,
-    //         10, -40
-    //     ]);
-    //     flash.endFill();
-    
-    //     return flash;
-    // }
-
     createHealthBar(){
         const healthBar = new PIXI.Graphics();
         //healthBar.beginFill({ r: 0, g: 0, b: 0 });

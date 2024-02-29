@@ -1,5 +1,4 @@
 import { Room, Client } from "colyseus";
-import { SV_Entity } from "./sv_entity";
 import { State } from "./State";
 import { SV_Player } from "./sv_player";
 import { KeyMessage, MouseMessage } from "../../common/interfaces";
@@ -33,8 +32,8 @@ export class MyRoom extends Room<State> {
 
   onJoin(client: Client, options: any) {
     console.log(client.sessionId, "JOINED");
-    this.state.createPlayer(client.sessionId);
-    this.state.createEnemy({ x: 0, y: 100 });
+    this.state.createPlayer(client.sessionId, { x: 0, y: 0 });
+    this.state.createEnemy({ x: 0, y: 300 });
     //this.state.createPlayer("testbot", { x: 200, y: 500 });
   }
 

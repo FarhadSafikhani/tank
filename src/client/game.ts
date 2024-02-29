@@ -14,6 +14,7 @@ import { CL_Projectile } from "./cl_projectile";
 import { Particle } from "./particle";
 import { CL_Enemy } from "./cl_enemy";
 import { SV_Enemy } from "../server/rooms/sv_enemy";
+//import dirtImg from '../assets/dirt.jpg';
 
 const ENDPOINT = "http://localhost:2567";
 
@@ -34,6 +35,18 @@ export class Game extends PIXI.Application {
             backgroundColor: 0x0c0c0c
         });
 
+        // create a texture from an image path
+        const texture = PIXI.Texture.from(ENDPOINT+'/dirt.jpg');
+
+        const tilingSprite = new PIXI.TilingSprite(
+            texture,
+            window.innerWidth,
+            window.innerHeight
+        );
+        this.stage.addChild(tilingSprite);
+
+
+
         this.viewport = new Viewport({
             screenWidth: window.innerWidth,
             screenHeight: window.innerHeight,
@@ -41,6 +54,11 @@ export class Game extends PIXI.Application {
             worldHeight: 1000,
             events: this.renderer.events
         })
+
+        this.viewport.on("moved", () => {
+            tilingSprite.tilePosition.x = -this.viewport.left;
+            tilingSprite.tilePosition.y = -this.viewport.top;
+        });
 
         // add viewport to stage
         this.stage.addChild(this.viewport);
