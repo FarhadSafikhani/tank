@@ -20,7 +20,7 @@ export class SV_Enemy extends SV_Entity {
     maxSpeed: number = 3;
     friction: number = 0.75;
     startingMaxHealth: number = 60;
-    damage: number = 2;
+    damage: number = 22;
 
     body: Matter.Body;
 

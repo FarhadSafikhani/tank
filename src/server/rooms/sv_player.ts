@@ -73,6 +73,7 @@ export class SV_Player extends SV_Entity {
         if(this.healthCurr <= 0) {
             this.healthCurr = 0;
             this.dead = true;
+            this.state.onPlayerDeath(this);
             return;
         }
 
@@ -216,6 +217,9 @@ export class SV_Player extends SV_Entity {
     }
 
     onClick(x: number, y: number) {
+
+        if(this.dead) return;
+
         this.shots++;
         
         //this.healthCurr -= 10;

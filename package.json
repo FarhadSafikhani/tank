@@ -6,7 +6,7 @@
   "scripts": {
     "start": "npm run start-client & npm run start-server",
     "start-client": "parcel serve src/client/index.html",
-    "start-server": "ts-node-dev src/server/index.ts",
+    "start-server": "ts-node-dev --no-log src/server/index.ts",
     "build": "parcel build src/client/index.html && tsc",
     "schema-codegen": "schema-codegen src/server/rooms/*.ts --ts --output src/client/schema/",
     "test": "echo \"Error: no test specified\" && exit 1"

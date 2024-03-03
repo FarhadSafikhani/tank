@@ -21,8 +21,12 @@ export class State extends Schema {
   world: Matter.World;
 
   startTime: number = 0;
-
+  
   matterBodies: { [entityId: string]: Matter.Body } = {};
+
+
+  @type({ map: SV_Entity }) entities = new MapSchema<SV_Entity>();
+  @type("boolean") isGameOver: boolean = false;
 
   constructor() {
     super();
@@ -44,8 +48,7 @@ export class State extends Schema {
   //   }
   // })
 
-  @type({ map: SV_Entity })
-  entities = new MapSchema<SV_Entity>();
+
   
   initialize () {
     this.initMatter();
@@ -148,6 +151,11 @@ export class State extends Schema {
 
   update(deltaTime) {
 
+    if(this.isGameOver) {
+      return;
+    }
+
+
     // delete all dead entities
     this.entities.forEach((entity, entityId) => {
       entity.dead && this.removeEntity(entityId);
@@ -182,9 +190,18 @@ export class State extends Schema {
     const spawnPos = { x: x < 0 ? x - padding : x + padding, y: y < 0 ? y - padding : y + padding };
     //console.log("spawning enemy at", spawnPos);
     this.createEnemy(spawnPos);
-    this.nextSpawnTime = Date.now() + 3000;
+    this.nextSpawnTime = Date.now() + 2000;
   }
 
+  onPlayerDeath(player: SV_Player) {
+    console.log("player died");
+    //TODO: have a shared pool of lives for players
+    this.gameOver();
+  }
+
+  gameOver() {
+    this.isGameOver = true;
+  }
 
 
 }

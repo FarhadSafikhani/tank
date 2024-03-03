@@ -25,7 +25,7 @@ export class Game extends PIXI.Application {
 
     client = new Client(ENDPOINT);
     room: Room<State>;
-
+    
     viewport: Viewport;
 
     constructor () {
@@ -44,8 +44,6 @@ export class Game extends PIXI.Application {
             window.innerHeight
         );
         this.stage.addChild(tilingSprite);
-
-
 
         this.viewport = new Viewport({
             screenWidth: window.innerWidth,
@@ -69,7 +67,7 @@ export class Game extends PIXI.Application {
 
         //start the engine
         this.loop();
-
+        
     }
 
     setupBindings() {
@@ -163,13 +161,23 @@ export class Game extends PIXI.Application {
         delete this.clEntities[entityId];
     }
 
-    loop () {
-        
-        for (let id in this.clEntities) {
-            this.getClEntity(id).update();
-        }
+    loop() {
 
-        this.updateParticles();
+        if(this.room){
+
+            console.log("loop");
+
+            if(this.room.state.isGameOver) {    
+                this.addGameOverText();
+            }
+
+            for (let id in this.clEntities) {
+                this.getClEntity(id).update();
+            }
+    
+            this.updateParticles();
+
+        }
 
         requestAnimationFrame(this.loop.bind(this));
     }
@@ -182,5 +190,21 @@ export class Game extends PIXI.Application {
 
     updateParticles() {
         this.particles = this.particles.filter(particle => particle.update());
+    }
+
+
+    addGameOverText() {
+
+        const gameOverText = new PIXI.Text("Game Over", {
+            fontFamily: "Arial",
+            fontSize: 48,
+            fill: 0xffffff,
+            align: "center"
+        });
+        gameOverText.anchor.set(0.5);
+        gameOverText.position.set(window.innerWidth / 2, window.innerHeight / 2);
+        this.stage.addChild(gameOverText);
+        return;
+
     }
 }

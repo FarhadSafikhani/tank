@@ -6,7 +6,7 @@ import basicAuth from "express-basic-auth";
 import { monitor } from "@colyseus/monitor";
 import cors from 'cors';
 import { MyRoom } from "./rooms/MyRoom";
-
+import { WebSocketTransport } from "@colyseus/ws-transport";
 export const port = Number(process.env.PORT || 2567);
 export const endpoint = "localhost";
 
@@ -21,7 +21,13 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const gameServer = new Server({
-  server: http.createServer(app),
+  greet: false,
+  transport: new WebSocketTransport({
+    //pingInterval: ...,
+    //pingMaxRetries: ...,
+    server: http.createServer(app),
+    //verifyClient: ...
+  })
 });
 
 // Serve static files with the .jpg extension from the "assets" directory
@@ -36,11 +42,11 @@ app.use(express.static(clientPath));
 
 // add colyseus monitor
 const auth = basicAuth({ users: { 'admin': 'admin' }, challenge: true });
-
 app.use("/colyseus", auth, monitor());
 
 gameServer.listen(port);
 console.log(`Listening on http://${endpoint}:${port}`, 'Env:', process.env.NODE_ENV);
+
 
 gameServer.define("room1", MyRoom);
 
