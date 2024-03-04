@@ -8,7 +8,7 @@ export class MyRoom extends Room<State> {
 
   onCreate() {
     
-    this.setState(new State());
+    this.setState(new State(this));
     this.state.initialize();
 
     this.onMessage("mousemove", (client, message: MouseMessage) => {
@@ -28,12 +28,13 @@ export class MyRoom extends Room<State> {
     });
 
     this.startTheGameLoop();
+    
+    console.log('room:', this.roomId, 'created');
   }
 
   onJoin(client: Client, options: any) {
-    console.log(client.sessionId, "JOINED");
+    //console.log(client.sessionId, "JOINED");
     this.state.createPlayer(client.sessionId, { x: 0, y: 0 });
-    this.state.createEnemy({ x: 0, y: 300 });
     //this.state.createPlayer("testbot", { x: 200, y: 500 });
   }
 
@@ -50,6 +51,10 @@ export class MyRoom extends Room<State> {
 
   startTheGameLoop() {
     this.setSimulationInterval((delta) => this.state.update(delta));
+  }
+
+  onDispose(): void | Promise<any> {
+    console.log('room:', this.roomId, 'disposed');
   }
 
 }

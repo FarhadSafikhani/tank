@@ -24,7 +24,7 @@ export class Game extends PIXI.Application {
     currentPlayerEntity: CL_Player;
 
     client = new Client(ENDPOINT);
-    room: Room<State>;
+    room: null | Room<State>;
     
     viewport: Viewport;
 
@@ -61,7 +61,7 @@ export class Game extends PIXI.Application {
         // add viewport to stage
         this.stage.addChild(this.viewport);
 
-        this.connect();
+        this.connect("room1");
 
         this.setupBindings();
 
@@ -75,23 +75,23 @@ export class Game extends PIXI.Application {
         this.viewport.on("mousemove", (e) => {
             if(!this.currentPlayerEntity) return;
             const point = this.viewport.toLocal(e.global);
-            this.room.send('mousemove', { x: point.x, y: point.y } as MouseMessage);
+            this.room?.send('mousemove', { x: point.x, y: point.y } as MouseMessage);
         });
 
         window.addEventListener("click", (e) => {
             if(!this.currentPlayerEntity) return;
             const point = this.viewport.toLocal(e);
-            this.room.send('click', { x: point.x, y: point.y } as MouseMessage);
+            this.room?.send('click', { x: point.x, y: point.y } as MouseMessage);
         });
 
         window.addEventListener("keydown", (e) => {
             if(!this.currentPlayerEntity) return;
-            this.room.send('keydown', { keyCode: e.key } as KeyMessage);
+            this.room?.send('keydown', { keyCode: e.key } as KeyMessage);
         });
 
         window.addEventListener("keyup", (e) => {
             if(!this.currentPlayerEntity) return;
-            this.room.send('keyup', { keyCode: e.key } as KeyMessage);
+            this.room?.send('keyup', { keyCode: e.key } as KeyMessage);
         });
 
         this.viewport.on("wheel", (e) => {
@@ -100,10 +100,19 @@ export class Game extends PIXI.Application {
 
     }
 
-    async connect() {
-        this.room = await this.client.joinOrCreate<State>("room1");
+    async connect(roomType: string) {
 
-        this.room.state.entities.onAdd((entity: SV_Entity, sessionId: string) => {
+        //.joinOrCreate<State>(roomType);
+        this.room = await this.client.joinOrCreate(roomType) 
+
+        this.addRoomIdText(this.room.roomId)
+
+        this.room?.onLeave((code) => {
+            this.room = null;
+            console.log("left", code);
+        });
+
+        this.room?.state.entities.onAdd((entity: SV_Entity, sessionId: string) => {
 
             this.addClEntity(entity);
             const clEntity = this.getClEntity(entity.id);
@@ -114,7 +123,7 @@ export class Game extends PIXI.Application {
             }
 
             // detecting current user
-            if (entity.id === this.room.sessionId) {
+            if (entity.id === this.room?.sessionId) {
                 this.currentPlayerEntity = clEntity as CL_Player;
                 this.viewport.follow(this.currentPlayerEntity.graphics);
             }
@@ -125,7 +134,7 @@ export class Game extends PIXI.Application {
 
         });
 
-        this.room.state.entities.onRemove((entity: SV_Entity , entityId: string) => { 
+        this.room?.state.entities.onRemove((entity: SV_Entity , entityId: string) => { 
             this.getClEntity(entityId).onSVDeath();
         });
     }
@@ -165,8 +174,6 @@ export class Game extends PIXI.Application {
 
         if(this.room){
 
-            console.log("loop");
-
             if(this.room.state.isGameOver) {    
                 this.addGameOverText();
             }
@@ -190,6 +197,21 @@ export class Game extends PIXI.Application {
 
     updateParticles() {
         this.particles = this.particles.filter(particle => particle.update());
+    }
+
+    addRoomIdText(roomId: string) {
+
+        const gameOverText = new PIXI.Text(roomId, {
+            fontFamily: "Arial",
+            fontSize: 16,
+            fill: 0xffffff,
+            align: "center"
+        });
+        gameOverText.anchor.set(1, 0);
+        gameOverText.position.set(window.innerWidth - 10, 0);
+        this.stage.addChild(gameOverText);
+        return;
+
     }
 
 

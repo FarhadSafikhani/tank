@@ -1,4 +1,4 @@
-import { generateId } from "colyseus";
+import { Room, generateId } from "colyseus";
 import { Schema, type, MapSchema, filterChildren } from "@colyseus/schema";
 
 import { SV_Entity } from "./sv_entity";
@@ -19,6 +19,7 @@ export class State extends Schema {
   height = GAME_CONFIG.worldSize;
   engine: Matter.Engine;
   world: Matter.World;
+  room: Room;
 
   startTime: number = 0;
   
@@ -28,8 +29,9 @@ export class State extends Schema {
   @type({ map: SV_Entity }) entities = new MapSchema<SV_Entity>();
   @type("boolean") isGameOver: boolean = false;
 
-  constructor() {
+  constructor(room: Room) {
     super();
+    this.room = room;
     this.engine = Matter.Engine.create({ gravity: { x: 0, y: 0 }});
     this.world = this.engine.world;
     this.startTime = Date.now();
@@ -155,7 +157,6 @@ export class State extends Schema {
       return;
     }
 
-
     // delete all dead entities
     this.entities.forEach((entity, entityId) => {
       entity.dead && this.removeEntity(entityId);
@@ -194,13 +195,14 @@ export class State extends Schema {
   }
 
   onPlayerDeath(player: SV_Player) {
-    console.log("player died");
     //TODO: have a shared pool of lives for players
     this.gameOver();
   }
 
   gameOver() {
+    console.log("game over:", this.room.roomId);
     this.isGameOver = true;
+    //this.room.disconnect();
   }
 
 
