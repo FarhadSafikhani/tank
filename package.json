@@ -22,17 +22,18 @@
     "@types/redis": "^2.8.12",
     "debug": "^4.1.1",
     "parcel": "^2.12.0",
+    "pixi-viewport": "^5.0.2",
+    "pixi.js": "^7.4.0",
     "punycode": "^1.4.1",
     "ts-loader": "^9.5.1",
+    "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.4.2",
     "webpack": "^5.0.0",
     "webpack-cli": "^5.1.4",
     "webpack-dev-middleware": "^7.0.0",
     "webpack-dev-server": "^5.0.2",
-    "webpack-hot-middleware": "^2.26.1",
-    "pixi-viewport": "^5.0.2",
-    "pixi.js": "^7.4.0"
+    "webpack-hot-middleware": "^2.26.1"
   },
   "dependencies": {
     "@colyseus/monitor": "^0.15.0",
@@ -44,7 +45,6 @@
     "express-basic-auth": "^1.2.1",
     "express-jwt": "^5.3.3",
     "matter-js": "^0.19.0"
-
   },
   "browserslist": "> 0.5%, last 2 versions, not dead"
 }
