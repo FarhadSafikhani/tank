@@ -1,9 +1,9 @@
 import * as PIXI from "pixi.js";
 import { CL_Entity, EntityState } from "./cl_entity";
-import { SV_Player } from "../server/rooms/sv_player";
+import { SV_Player } from "../server/entities/sv_player";
 import { Game } from "./game";
 import { lerp } from "../common/utils";
-import { SV_Enemy } from "../server/rooms/sv_enemy";
+import { SV_Enemy } from "../server/entities/sv_enemy";
 
 
 export class CL_Enemy extends CL_Entity{

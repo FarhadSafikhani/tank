@@ -1,7 +1,7 @@
 import Matter, { Engine, IEventCollision } from "matter-js";
 import { SV_Entity } from "./sv_entity";
 import { type } from "@colyseus/schema"; 
-import { State } from "./State";
+import { BaseState } from "../rooms/sv_state_base";
 import { CollisionCategory } from "../../common/interfaces";
 import { SV_Player } from "./sv_player";
 
@@ -26,7 +26,7 @@ export class SV_Enemy extends SV_Entity {
 
     currentTarget: SV_Player | null = null;
 
-    constructor(state: State, id: string, x: number, y: number) {
+    constructor(state: BaseState, id: string, x: number, y: number) {
         super(state, id);
         this.tag = "enemy";
         this.x = x;

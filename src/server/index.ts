@@ -9,7 +9,6 @@ import { MyRoom } from "./rooms/MyRoom";
 import { WebSocketTransport } from "@colyseus/ws-transport";
 export const port = Number(process.env.PORT || 2567);
 export const endpoint = "localhost";
-//export * from '../../dist/index.html';
 
 export let STATIC_DIR: string;
 
@@ -51,17 +50,16 @@ app.get("/", (req, res) => {
 });
 
 
-
-
 // add colyseus monitor
 const auth = basicAuth({ users: { 'admin': 'admin' }, challenge: true });
 app.use("/colyseus", auth, monitor());
 
 gameServer.listen(port);
-console.log(`Listening on http://${endpoint}:${port}`, 'Env:', process.env.NODE_ENV);
 
 
 gameServer.define("room1", MyRoom);
+
+console.log(`Listening on Port: ${port}`, 'Env:', process.env.NODE_ENV);
 
 
 

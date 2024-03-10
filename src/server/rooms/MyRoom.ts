@@ -1,14 +1,14 @@
 import { Room, Client } from "colyseus";
-import { State } from "./State";
-import { SV_Player } from "./sv_player";
+import { BaseState } from "./sv_state_base";
+import { SV_Player } from "../entities/sv_player";
 import { KeyMessage, MouseMessage } from "../../common/interfaces";
 
-
-export class MyRoom extends Room<State> {
+//<BaseState>
+export class MyRoom extends Room {
 
   onCreate() {
     
-    this.setState(new State(this));
+    this.setState(new BaseState(this));
     this.state.initialize();
 
     this.onMessage("mousemove", (client, message: MouseMessage) => {

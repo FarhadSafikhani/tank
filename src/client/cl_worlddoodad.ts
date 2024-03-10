@@ -1,7 +1,7 @@
 import * as PIXI from "pixi.js";
 import { CL_Entity } from "./cl_entity";
 import { Game } from "./game";
-import { SV_WorldDoodad } from "../server/rooms/sv_worlddoodad";
+import { SV_WorldDoodad } from "../server/entities/sv_worlddoodad";
 
 
 export class CL_WorldDoodad extends CL_Entity{
