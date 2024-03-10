@@ -1,6 +1,6 @@
-import * as PIXI from "pixi.js";
-import { Viewport } from 'pixi-viewport'
+import * as PIXI from 'pixi.js';
 import { Room, Client } from "colyseus.js";
+import { Viewport } from 'pixi-viewport'
 import { State } from "../server/rooms/State";
 import { KeyMessage, MouseMessage } from "../common/interfaces";
 import { SV_Entity } from "../server/rooms/sv_entity";
@@ -14,6 +14,7 @@ import { CL_Projectile } from "./cl_projectile";
 import { Particle } from "./particle";
 import { CL_Enemy } from "./cl_enemy";
 import { SV_Enemy } from "../server/rooms/sv_enemy";
+
 //import dirtImg from '../assets/dirt.jpg';
 
 const ENDPOINT = "http://localhost:2567";

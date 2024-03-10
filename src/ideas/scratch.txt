@@ -1,4 +1,8 @@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/7.4.0/pixi.min.js"></script>
+
+
   createBody() {
+
 
         // const tankVertices  = [
         //     // Hull vertices (central rectangle) scaled by 30%
