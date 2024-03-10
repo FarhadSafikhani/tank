@@ -17,7 +17,7 @@ import { SV_Enemy } from "../server/rooms/sv_enemy";
 
 //import dirtImg from '../assets/dirt.jpg';
 
-const ENDPOINT = "http://localhost:2567";
+const ENDPOINT = window.location.origin;//"http://localhost:2567";
 
 export class Game extends PIXI.Application {
     clEntities: { [id: string]: CL_Entity } = {};
@@ -37,7 +37,7 @@ export class Game extends PIXI.Application {
         });
 
         // create a texture from an image path
-        const texture = PIXI.Texture.from(ENDPOINT+'/dirt.jpg');
+        const texture = PIXI.Texture.from('/dirt.jpg');
 
         const tilingSprite = new PIXI.TilingSprite(
             texture,
