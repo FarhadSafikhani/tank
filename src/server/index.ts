@@ -9,6 +9,7 @@ import { MyRoom } from "./rooms/MyRoom";
 import { WebSocketTransport } from "@colyseus/ws-transport";
 export const port = Number(process.env.PORT || 2567);
 export const endpoint = "localhost";
+//export * from '../../dist/index.html';
 
 export let STATIC_DIR: string;
 
@@ -38,6 +39,18 @@ app.use(express.static(assetsPath, { extensions: ['*'] }));
 // Serve static files from the "client" directory
 const clientPath = path.join(__dirname, "../client/assets");
 app.use(express.static(clientPath));
+
+// Serve JS files
+const distPath = path.join(__dirname, "../../dist");
+app.use(express.static(distPath, { extensions: ['js'] }));
+
+// Serve the client/index.html file
+const indexPath = path.join(__dirname, "../../dist/index.html");
+app.get("/", (req, res) => {
+  res.sendFile(indexPath);
+});
+
+
 
 
 // add colyseus monitor
