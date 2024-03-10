@@ -56,7 +56,7 @@ export class CL_Player extends CL_Entity{
 
     drawAngleIndicator() {
         const size = 15;
-        const position = 20;
+        const position = 22;
 
         // DRAW ANGLE INDICATOR
         const angleIndicator = new PIXI.Graphics();
@@ -66,8 +66,8 @@ export class CL_Player extends CL_Entity{
         angleIndicator.lineTo(3, 0); // Add this line to draw the arrow-like triangle
         angleIndicator.lineTo(0, -size); // Add this line to complete the triangle
         angleIndicator.endFill();
-        angleIndicator.x = Math.cos(this.entity.angle) * position * 1.2;
-        angleIndicator.y = Math.sin(this.entity.angle) * position * 1.2;
+        angleIndicator.x = position;
+        //angleIndicator.y = position * 1.2;
         this.graphicsTankBody.addChild(angleIndicator);
     }
 
