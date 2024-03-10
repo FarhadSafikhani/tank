@@ -14,3 +14,8 @@ export const enum CollisionCategory {
     ENEMY_PROJECTILE = 0x0004,
     WORLD = 0x0005
 }
+
+export interface Cords {
+    x: number,
+    y: number
+}

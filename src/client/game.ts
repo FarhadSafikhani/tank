@@ -62,7 +62,8 @@ export class Game extends PIXI.Application {
         // add viewport to stage
         this.stage.addChild(this.viewport);
 
-        this.connect("room1");
+        //this.connect("roomTest");
+        this.connect("roomBR");
 
         this.setupBindings();
 

@@ -1,22 +1,16 @@
-import { Room, generateId } from "colyseus";
-import { Schema, type, MapSchema, filterChildren } from "@colyseus/schema";
 
-import { SV_Entity } from "../entities/sv_entity";
 import { SV_Player } from "../entities/sv_player";
-import Matter, { Engine, IEventCollision, IEventTimestamped } from "matter-js";
-import { Bodies } from "matter-js";
-import { SV_WorldDoodad } from "../entities/sv_worlddoodad";
-import { SV_Projectile } from "../entities/sv_projectile";
-import { SV_Enemy } from "../entities/sv_enemy";
+import Matter, { Engine, IEventTimestamped } from "matter-js";
 import { BaseState } from "./sv_state_base";
+import { RoomBase } from "./sv_room_base";
 
 const GAME_CONFIG = {
-  worldSize: 1200
+  worldSize: 2600
 };
 
-export class BattleRoyale extends BaseState {
+export class StateBR extends BaseState {
 
-  constructor(room: Room) {
+  constructor(room: RoomBase) {
     super(room);
   }
 
@@ -24,18 +18,74 @@ export class BattleRoyale extends BaseState {
   initialize () {
     super.initialize();
     this.createWorldBounds();
+    this.createWorldInnerDoodads();
   }
 
   createWorldBounds() {
-    const wallThickness = 100;
+    const wallThickness = 200;
     const sideLength = GAME_CONFIG.worldSize;
     // Add some boundary in our world
-    // this.createWorldDoodad(0, 0, sideLength, wallThickness);
-    // this.createWorldDoodad(-sideLength/2, sideLength/2, wallThickness, sideLength + wallThickness);
-    // this.createWorldDoodad(sideLength/2, sideLength/2, wallThickness, sideLength + wallThickness);
-    // this.createWorldDoodad(0, sideLength, sideLength, wallThickness);
-    //this.createWorldDoodad(0, 0, 50, 50);
+    this.createWorldDoodad(-sideLength/2, 0, wallThickness, sideLength + wallThickness);
+    this.createWorldDoodad(0, -sideLength/2, sideLength + wallThickness, wallThickness);
+    this.createWorldDoodad(0, sideLength/2, sideLength + wallThickness, wallThickness);
+    this.createWorldDoodad(sideLength/2, 0, wallThickness, sideLength + wallThickness);
+    this.populateSpawnPoints(sideLength, wallThickness);
   }
+
+  populateSpawnPoints(sideLength: number, wallThickness: number) {
+    const edgePointCount = 8; // Number of evenly spaced points along the edge
+    const edgePadding = 100; // Distance from the edge to spawn points
+    const edgeStep = (sideLength - 2 * wallThickness - 2 * edgePadding) / (edgePointCount - 1);
+
+    this.spawnPoints = [
+      { x: -sideLength/2 + wallThickness + edgePadding, y: -sideLength/2 + wallThickness + edgePadding }, // Top-left corner
+      { x: sideLength/2 - wallThickness - edgePadding, y: -sideLength/2 + wallThickness + edgePadding }, // Top-right corner
+      { x: sideLength/2 - wallThickness - edgePadding, y: sideLength/2 - wallThickness - edgePadding }, // Bottom-right corner
+      { x: -sideLength/2 + wallThickness + edgePadding, y: sideLength/2 - wallThickness - edgePadding } // Bottom-left corner
+    ];
+
+    for (let i = 0; i < edgePointCount; i++) {
+      const x = -sideLength/2 + wallThickness + edgePadding + i * edgeStep;
+      const y = -sideLength/2 + wallThickness;
+      this.spawnPoints.push({ x, y }); // Top edge points
+    }
+
+    for (let i = 0; i < edgePointCount; i++) {
+      const x = sideLength/2 - wallThickness;
+      const y = -sideLength/2 + wallThickness + edgePadding + i * edgeStep;
+      this.spawnPoints.push({ x, y }); // Right edge points
+    }
+
+    for (let i = 0; i < edgePointCount; i++) {
+      const x = sideLength/2 - wallThickness - edgePadding - i * edgeStep;
+      const y = sideLength/2 - wallThickness;
+      this.spawnPoints.push({ x, y }); // Bottom edge points
+    }
+
+    for (let i = 0; i < edgePointCount; i++) {
+      const x = -sideLength/2 + wallThickness;
+      const y = sideLength/2 - wallThickness - edgePadding - i * edgeStep;
+      this.spawnPoints.push({ x, y }); // Left edge points
+    }
+
+
+  }
+
+  createWorldInnerDoodads() {
+    const wallThickness = 500;
+    const sideLength = GAME_CONFIG.worldSize;
+    const innerDoodadCount = 20;
+    const padding = 150; // Padding between world bounds and spawn position
+    // Add some boundary in our world
+    for (let i = 0; i < innerDoodadCount; i++) {
+      const width = Math.random() * 30 + 200;
+      const height = Math.random() * 30 + 200;
+      const x = Math.random() * (sideLength - wallThickness - padding - width) - sideLength / 2 + wallThickness / 2 + padding + width / 2;
+      const y = Math.random() * (sideLength - wallThickness - padding - height) - sideLength / 2 + wallThickness / 2 + padding + height / 2;
+      this.createWorldDoodad(x, y, width, height);
+    }
+  }
+
 
 
   update(deltaTime) {
@@ -50,7 +100,7 @@ export class BattleRoyale extends BaseState {
     });
     Matter.Engine.update(this.engine, deltaTime)
 
-    this.waveSpawner(deltaTime);
+    //this.waveSpawner(deltaTime);
   }
 
   matterAfterUpdate(engineTimeEvent: IEventTimestamped<Engine>) {
@@ -83,7 +133,7 @@ export class BattleRoyale extends BaseState {
 
   onPlayerDeath(player: SV_Player) {
     //TODO: have a shared pool of lives for players
-    this.gameOver();
+    //this.gameOver();
   }
 
   gameOver() {

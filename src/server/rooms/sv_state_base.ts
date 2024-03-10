@@ -6,6 +6,8 @@ import Matter, { Engine, IEventCollision, IEventTimestamped } from "matter-js";
 import { SV_WorldDoodad } from "../entities/sv_worlddoodad";
 import { SV_Projectile } from "../entities/sv_projectile";
 import { SV_Enemy } from "../entities/sv_enemy";
+import { RoomBase } from "./sv_room_base";
+import { Cords } from "../../common/interfaces";
 
 const GAME_CONFIG = {
   worldSize: 1200
@@ -24,7 +26,9 @@ export class BaseState extends Schema {
   @type({ map: SV_Entity }) entities = new MapSchema<SV_Entity>();
   @type("boolean") isGameOver: boolean = false;
 
-  constructor(room: Room) {
+  spawnPoints: Cords[] = [{ x: 0, y: 0}];
+
+  constructor(room: RoomBase) {
     super();
     this.room = room;
     this.engine = Matter.Engine.create({ gravity: { x: 0, y: 0 }});
@@ -90,8 +94,8 @@ export class BaseState extends Schema {
     this.addEntity(entityId, p);
   }
 
-  createPlayer(sessionId: string, position?: { x: number, y: number }) {
-    const spawnPos = position || { x: 0, y: 500 };
+  createPlayer(sessionId: string, position?: Cords) {
+    const spawnPos = position || this.pickRandomSpawnPoint();
     const p = new SV_Player(this, sessionId, spawnPos.x, spawnPos.y);
     this.addEntity(sessionId, p);
   }
@@ -164,6 +168,10 @@ export class BaseState extends Schema {
   gameOver() {
     this.isGameOver = true;
     console.log("game over:", this.room.roomId);
+  }
+
+  pickRandomSpawnPoint() {
+    return this.spawnPoints[Math.floor(Math.random() * this.spawnPoints.length)];
   }
 
 }

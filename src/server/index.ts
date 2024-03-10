@@ -5,8 +5,10 @@ import path from "path";
 import basicAuth from "express-basic-auth";
 import { monitor } from "@colyseus/monitor";
 import cors from 'cors';
-import { MyRoom } from "./rooms/MyRoom";
+import { RoomBase } from "./rooms/sv_room_base";
 import { WebSocketTransport } from "@colyseus/ws-transport";
+import { RoomTest } from "./rooms/sv_room_test";
+import { RoomBR } from "./rooms/sv_room_br";
 export const port = Number(process.env.PORT || 2567);
 export const endpoint = "localhost";
 
@@ -56,8 +58,8 @@ app.use("/colyseus", auth, monitor());
 
 gameServer.listen(port);
 
-
-gameServer.define("room1", MyRoom);
+gameServer.define("roomBR", RoomBR);
+gameServer.define("roomTest", RoomTest);
 
 console.log(`Listening on Port: ${port}`, 'Env:', process.env.NODE_ENV);
 
