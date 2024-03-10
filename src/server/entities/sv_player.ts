@@ -17,10 +17,10 @@ export class SV_Player extends SV_Entity {
     @type("int32") h: number = 40;
 
     //Tank Handling
-    accel: number = .45; //.1
-    turnRate: number = 0.04; //0.03
-    maxSpeed: number = 6;
-    friction: number = .04;
+    accel: number = .45;
+    turnRate: number = 0.03;
+    maxSpeed: number = 116;
+    friction: number = .035;
     //turretSpeed: number = 0.04;
     startingMaxHealth: number = 120;
 
@@ -76,15 +76,11 @@ export class SV_Player extends SV_Entity {
             this.state.onPlayerDeath(this);
             return;
         }
-
         
         if (this.aDown) {
-            
             Matter.Body.rotate(this.body, -this.turnRate);
-            Matter.Body.setAngularSpeed(this.body, 0);
-            
+            Matter.Body.setAngularSpeed(this.body, 0);     
         } else if (this.dDown) {
-            
             Matter.Body.rotate(this.body, +this.turnRate);
             Matter.Body.setAngularSpeed(this.body, 0);
         } 
@@ -122,15 +118,15 @@ export class SV_Player extends SV_Entity {
         }
 
 
-        // Limit velocity to maximum speed
-        const speed = Math.sqrt(this.body.velocity.x * this.body.velocity.x + this.body.velocity.y * this.body.velocity.y);
-        if (speed > this.maxSpeed) {
-            const ratio = this.maxSpeed / speed;
-            Matter.Body.setVelocity(this.body, {
-                x: this.body.velocity.x * ratio,
-                y: this.body.velocity.y * ratio
-            });
-        }
+        // // Limit velocity to maximum speed
+        // const speed = Math.sqrt(this.body.velocity.x * this.body.velocity.x + this.body.velocity.y * this.body.velocity.y);
+        // if (speed > this.maxSpeed) {
+        //     const ratio = this.maxSpeed / speed;
+        //     Matter.Body.setVelocity(this.body, {
+        //         x: this.body.velocity.x * ratio,
+        //         y: this.body.velocity.y * ratio
+        //     });
+        // }
 
 
         this.x = this.body.position.x;
