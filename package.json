@@ -4,7 +4,7 @@
   "description": "A tank game built with Colyseus and PixiJS",
   "scripts": {
     "build": "parcel build src/client/index.html",
-    "start": "npm run src/server/index.ts",
+    "start": "ts-node src/server/index.ts",
     "ss": "ts-node-dev --no-log src/server/index.ts",
     "sc": "parcel serve src/client/index.html",
     "schema-codegen": "schema-codegen src/server/rooms/*.ts --ts --output src/client/schema/",
