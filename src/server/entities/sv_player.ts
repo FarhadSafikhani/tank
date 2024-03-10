@@ -17,12 +17,12 @@ export class SV_Player extends SV_Entity {
     @type("int32") h: number = 40;
 
     //Tank Handling
-    accel: number = .15; //.1
-    turnRate: number = 0.05; //0.03
-    maxSpeed: number = 4;
-    friction: number = 0.9;
+    accel: number = .45; //.1
+    turnRate: number = 0.04; //0.03
+    maxSpeed: number = 6;
+    friction: number = .04;
     //turretSpeed: number = 0.04;
-    startingMaxHealth: number = 100;
+    startingMaxHealth: number = 120;
 
 
     body: Matter.Body;
@@ -46,8 +46,8 @@ export class SV_Player extends SV_Entity {
         
         const tankBody = Matter.Bodies.rectangle(this.x, this.y, this.w, this.h,
         {
-            isStatic: false, friction: this.friction, 
-            frictionAir: 0.01, restitution: 0.4, 
+            isStatic: false, friction: .5, 
+            frictionAir: this.friction, restitution: 0.4, 
             density: 0.4,
             chamfer: { radius: 6 },
             collisionFilter: {

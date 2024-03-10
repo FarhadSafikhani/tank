@@ -36,16 +36,6 @@ export class Game extends PIXI.Application {
             backgroundColor: 0x0c0c0c
         });
 
-        // create a texture from an image path
-        const texture = PIXI.Texture.from('/dirt.jpg');
-
-        const tilingSprite = new PIXI.TilingSprite(
-            texture,
-            window.innerWidth,
-            window.innerHeight
-        );
-        this.stage.addChild(tilingSprite);
-
         this.viewport = new Viewport({
             screenWidth: window.innerWidth,
             screenHeight: window.innerHeight,
@@ -54,13 +44,10 @@ export class Game extends PIXI.Application {
             events: this.renderer.events
         })
 
-        this.viewport.on("moved", () => {
-            tilingSprite.tilePosition.x = -this.viewport.left;
-            tilingSprite.tilePosition.y = -this.viewport.top;
-        });
-
         // add viewport to stage
         this.stage.addChild(this.viewport);
+
+        this.addTilingBackground();
 
         //this.connect("roomTest");
         this.connect("roomBR");
@@ -98,6 +85,30 @@ export class Game extends PIXI.Application {
 
         this.viewport.on("wheel", (e) => {
             console.log("WHEEL", e.deltaY);
+        });
+
+    }
+
+    addTilingBackground() {
+        // create a texture from an image path
+        const texture = PIXI.Texture.from('/dirt.jpg');
+
+        const tilingSprite = new PIXI.TilingSprite(
+            texture,
+            window.innerWidth,
+            window.innerHeight
+        );
+        this.stage.addChildAt(tilingSprite, 0); 
+
+        this.viewport.on("moved", () => {
+            tilingSprite.tilePosition.x = -this.viewport.left;
+            tilingSprite.tilePosition.y = -this.viewport.top;
+        });
+
+        // Resize the tiling sprite on window resize
+        window.addEventListener("resize", () => {
+            tilingSprite.width = window.innerWidth;
+            tilingSprite.height = window.innerHeight;
         });
 
     }
