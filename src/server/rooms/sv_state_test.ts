@@ -51,7 +51,7 @@ export class StateTest extends BaseState {
     });
     Matter.Engine.update(this.engine, deltaTime)
 
-    this.waveSpawner(deltaTime);
+    //this.waveSpawner(deltaTime);
   }
 
   matterAfterUpdate(engineTimeEvent: IEventTimestamped<Engine>) {
@@ -84,7 +84,7 @@ export class StateTest extends BaseState {
 
   onPlayerDeath(player: SV_Player) {
     //TODO: have a shared pool of lives for players
-    this.gameOver();
+    //this.gameOver();
   }
 
   gameOver() {

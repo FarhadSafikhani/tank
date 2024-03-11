@@ -17,7 +17,7 @@ import { SV_Enemy } from "../server/entities/sv_enemy";
 
 //import dirtImg from '../assets/dirt.jpg';
 
-const ENDPOINT = window.location.origin;//"http://localhost:2567";
+const ENDPOINT = window.location.origin; //"http://localhost:2567";
 
 export class Game extends PIXI.Application {
     clEntities: { [id: string]: CL_Entity } = {};
@@ -49,8 +49,8 @@ export class Game extends PIXI.Application {
 
         this.addTilingBackground();
 
-        //this.connect("roomTest");
-        this.connect("roomBR");
+        this.connect("roomTest");
+        //this.connect("roomBR");
 
         this.setupBindings();
 
@@ -122,7 +122,6 @@ export class Game extends PIXI.Application {
 
         this.room?.onLeave((code) => {
             this.room = null;
-            console.log("left", code);
         });
 
         this.room?.state.entities.onAdd((entity: SV_Entity, sessionId: string) => {

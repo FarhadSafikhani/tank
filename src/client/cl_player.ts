@@ -77,8 +77,8 @@ export class CL_Player extends CL_Entity{
         const lineLength = 35; // adjust the length of the line as needed
         const tankCenterX = 0;
         const tankCenterY = 0;
-        const lineEndX = tankCenterX + Math.cos(this.entity.turretAngle) * lineLength;
-        const lineEndY = tankCenterY + Math.sin(this.entity.turretAngle) * lineLength;
+        const lineEndX = tankCenterX + lineLength;
+        const lineEndY = tankCenterY;
         const turret = new PIXI.Graphics();
         turret.lineStyle(6, { r: 0, g: 200, b: 0 }); // Set the line color to dark green
         turret.beginFill(0x006400); // Set the fill color to dark green

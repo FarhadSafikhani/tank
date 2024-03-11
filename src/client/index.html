@@ -11,6 +11,7 @@
 
     <style type="text/css">
         * {margin:0; padding:0;}
+
         body {
             background-color: #000;
             overflow: hidden;
@@ -35,12 +36,22 @@
             z-index: 100;
         }
 
+        #ui {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+        }
+
     </style>
+
 </head>
+
 <body>
-    <div class="options">
-    </div>
-    <canvas id="matter"></canvas>
-    <!-- <div class="test"></div> -->
+    <div class="options"></div>
+    <div id="ui"></div>
 </body>
+
 </html>
