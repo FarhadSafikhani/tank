@@ -49,8 +49,8 @@ export class Game extends PIXI.Application {
 
         this.addTilingBackground();
 
-        this.connect("roomTest");
-        //this.connect("roomBR");
+        //this.connect("roomTest");
+        this.connect("roomBR");
 
         this.setupBindings();
 
