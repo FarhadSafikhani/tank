@@ -67,7 +67,7 @@ export class Game extends PIXI.Application {
             this.room?.send('mousemove', { x: point.x, y: point.y } as MouseMessage);
         });
 
-        window.addEventListener("click", (e) => {
+        window.addEventListener("mousedown", (e) => {
             if(!this.currentPlayerEntity) return;
             const point = this.viewport.toLocal(e);
             this.room?.send('click', { x: point.x, y: point.y } as MouseMessage);
