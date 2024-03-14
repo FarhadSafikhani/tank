@@ -28,29 +28,32 @@ export class Game extends PIXI.Application {
     room: null | Room<BaseState>;
     
     viewport: Viewport;
-
+    
     constructor () {
         super({
             width: window.innerWidth,
             height: window.innerHeight,
-            backgroundColor: 0x0c0c0c
+            backgroundColor: 0x0c0c0c,
         });
 
         this.viewport = new Viewport({
-            screenWidth: window.innerWidth,
-            screenHeight: window.innerHeight,
-            worldWidth: 1000,
-            worldHeight: 1000,
+            
+            // screenWidth: window.innerWidth,
+            // screenHeight: window.innerHeight,
+            // worldWidth: 1000,
+            // worldHeight: 1000,
             events: this.renderer.events
+
         })
+
 
         // add viewport to stage
         this.stage.addChild(this.viewport);
 
         this.addTilingBackground();
 
-        //this.connect("roomTest");
-        this.connect("roomBR");
+        this.connect("roomTest");
+        //this.connect("roomBR");
 
         this.setupBindings();
 
@@ -86,6 +89,12 @@ export class Game extends PIXI.Application {
         this.viewport.on("wheel", (e) => {
             console.log("WHEEL", e.deltaY);
         });
+
+        // Listen for the resize event and resize the game screen initially
+        window.onresize = () => {
+            this.viewport.resize(window.innerWidth, window.innerHeight);
+            this.renderer.resize(window.innerWidth, window.innerHeight);
+        };
 
     }
 

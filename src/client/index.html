@@ -37,12 +37,26 @@
         }
 
         #ui {
-            display: block;
             position: absolute;
             top: 0;
             left: 0;
             bottom: 0;
             right: 0;
+        }
+
+        .ui-br {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+        }
+
+        .ui-text {
+            color: #fff;
+            text-align: center;
+            font-size: 24px;
+            font-family: Arial, sans-serif;
         }
 
     </style>
@@ -51,7 +65,11 @@
 
 <body>
     <div class="options"></div>
-    <div id="ui"></div>
+    <div id="ui">
+        <div class="ui-br">
+            <div class="ui-text room-name">ABCD</div>
+        </div>
+    </div>
 </body>
 
 </html>
