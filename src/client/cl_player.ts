@@ -3,6 +3,7 @@ import { CL_Entity, EntityState } from "./cl_entity";
 import { SV_Player } from "../server/entities/sv_player";
 import { Game } from "./game";
 import { lerp } from "../common/utils";
+import { CL_Match } from "./match";
 
 
 export class CL_Player extends CL_Entity{
@@ -19,15 +20,12 @@ export class CL_Player extends CL_Entity{
     isCLientEntity: boolean = false;
     muzzleScale: number = 0;
 
-    constructor(game: Game, entity: SV_Player){
-        super(game, entity);
+    constructor(match: CL_Match, entity: SV_Player){
+        super(match, entity);
         this.drawAngleIndicator();
         this.drawTurret();
         this.createHealthBar()
-        if(!game.room){
-            throw new Error("Game room is not set. On creating entity " +  entity.id);
-        }
-        this.isCLientEntity = game.room.sessionId === entity.id;
+        this.isCLientEntity = match.room.sessionId === entity.id;
     }
 
     createGraphics(): PIXI.Graphics {
@@ -47,7 +45,7 @@ export class CL_Player extends CL_Entity{
         this.graphicsTankBody.endFill();
         graphics.addChild(this.graphicsTankBody);
 
-        this.game.viewport.addChild(graphics);
+        this.match.game.viewport.addChild(graphics);
 
         return graphics;
     }
@@ -189,6 +187,16 @@ export class CL_Player extends CL_Entity{
 
         this.muzzleScale += 0.1;
         this.graphicsMuzzleFlash.scale.set(this.muzzleScale);
+    }
+
+    // update(): void {
+    //     super.update();
+    //     console.log("CL_Entity update", this.state)
+    // }
+
+    destroy(): void {
+        this.match.game.viewport.pause = true;
+        super.destroy();
     }
 
 

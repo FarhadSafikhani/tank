@@ -2,6 +2,7 @@ import * as PIXI from "pixi.js";
 import { SV_Entity } from "../server/entities/sv_entity";
 import { Game } from "./game";
 import e from "express";
+import { CL_Match } from "./match";
 
 
 export const enum EntityState {
@@ -15,12 +16,12 @@ export const enum EntityState {
 export class CL_Entity{
     entity: SV_Entity;
     graphics: PIXI.Graphics;
-    game: Game;
+    match: CL_Match;
     
     state: EntityState = EntityState.VOID;
 
-    constructor(game: Game, entity: SV_Entity){
-        this.game = game;
+    constructor(match: CL_Match, entity: SV_Entity){
+        this.match = match;
         this.entity = entity;
         this.graphics = this.createGraphics();
         this.state = EntityState.ALIVE;
@@ -52,9 +53,9 @@ export class CL_Entity{
     }
 
     destroy(){ 
-        this.game.viewport.removeChild(this.graphics);
+        this.match.game.viewport.removeChild(this.graphics);
         this.graphics.destroy();
-        this.game.removeClEntity(this.entity.id);
+        this.match.removeClEntity(this.entity.id);
     }
 
 

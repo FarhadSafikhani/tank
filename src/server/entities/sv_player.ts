@@ -218,7 +218,7 @@ export class SV_Player extends SV_Entity {
 
         this.shots++;
         
-        //this.healthCurr -= 10;
+        //this.healthCurr -= 330;
         
         const spawnX = this.x + Math.cos(this.turretAngle) * 40;
         const spawnY = this.y + Math.sin(this.turretAngle) * 40;

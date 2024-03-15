@@ -4,6 +4,7 @@ import { SV_Player } from "../server/entities/sv_player";
 import { Game } from "./game";
 import { lerp } from "../common/utils";
 import { SV_Enemy } from "../server/entities/sv_enemy";
+import { CL_Match } from "./match";
 
 
 export class CL_Enemy extends CL_Entity{
@@ -13,8 +14,8 @@ export class CL_Enemy extends CL_Entity{
     graphicsHealthBar: PIXI.Graphics;
 
 
-    constructor(game: Game, entity: SV_Enemy){
-        super(game, entity);
+    constructor(match: CL_Match, entity: SV_Enemy){
+        super(match, entity);
         this.createHealthBar();
     }
 
@@ -29,7 +30,7 @@ export class CL_Enemy extends CL_Entity{
         g.drawCircle(0, 0, this.entity.size);
         g.endFill();
 
-        this.game.viewport.addChild(g);
+        this.match.game.viewport.addChild(g);
 
         return g;
     }
