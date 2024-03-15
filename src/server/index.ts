@@ -32,6 +32,8 @@ const gameServer = new Server({
   })
 });
 
+app.use('/favicon.ico', express.static(__dirname + '../client/assets/favicon.ico'));
+
 // Serve static files with the .jpg extension from the "assets" directory
 const assetsPath = path.join(__dirname, "../assets");
 app.use(express.static(assetsPath, { extensions: ['*'] }));
