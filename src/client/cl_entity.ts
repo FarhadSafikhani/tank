@@ -55,7 +55,7 @@ export class CL_Entity{
     destroy(){ 
         this.match.game.viewport.removeChild(this.graphics);
         this.graphics.destroy();
-        this.match.removeClEntity(this.entity.id);
+        this.match.em.removeClEntity(this.entity.id);
     }
 
 

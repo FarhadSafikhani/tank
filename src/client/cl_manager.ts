@@ -1,11 +1,12 @@
 import { Game } from "./game";
+import { CL_Match } from "./match";
 
 export class CL_Manager {
 
-    game: Game;
+    match: CL_Match;
 
-    constructor(game: Game) {
-        this.game = game;
+    constructor(match: CL_Match) {
+        this.match = match;
     }
 
     update() {}

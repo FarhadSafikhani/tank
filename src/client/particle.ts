@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js";
-import { Game } from "./game";
+import { CL_Match } from "./match";
 
 export class Particle {
 
@@ -7,10 +7,10 @@ export class Particle {
     velocity: { x: number; y: number; };
     lifespan: number;
     lifespanMax: number = 20;
-    game: Game;
+    match: CL_Match;
 
-    constructor(game: Game, x: number, y: number) {
-        this.game = game;
+    constructor(match: CL_Match, x: number, y: number) {
+        this.match = match;
 
         this.graphic = new PIXI.Graphics();
         this.graphic.beginFill({r: 255, g: 255, b: 0}); // Yellow color
@@ -25,10 +25,10 @@ export class Particle {
         };
 
         this.lifespan = this.lifespanMax;
-        this.game.viewport.addChild(this.graphic);
+        this.match.game.viewport.addChild(this.graphic);
     }
 
-    update() {
+    update(): boolean {
         this.graphic.x += this.velocity.x;
         this.graphic.y += this.velocity.y;
         this.lifespan--;
@@ -36,10 +36,10 @@ export class Particle {
         this.graphic.alpha = this.lifespan / this.lifespanMax; // Fade out effect
 
         if (this.lifespan <= 0) {
-            this.game.viewport.removeChild(this.graphic);
+            this.match.game.viewport.removeChild(this.graphic);
             this.graphic.destroy();
             return false;
-        }
+        };
         return true;
     }
 }

@@ -189,11 +189,6 @@ export class CL_Player extends CL_Entity{
         this.graphicsMuzzleFlash.scale.set(this.muzzleScale);
     }
 
-    // update(): void {
-    //     super.update();
-    //     console.log("CL_Entity update", this.state)
-    // }
-
     destroy(): void {
         this.match.game.viewport.pause = true;
         super.destroy();

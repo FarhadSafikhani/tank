@@ -15,14 +15,16 @@ import { Particle } from "./particle";
 import { CL_Enemy } from "./cl_enemy";
 import { SV_Enemy } from "../server/entities/sv_enemy";
 import { Game } from './game';
+import { CL_EntityManager } from './cl_manager_entity';
 
 //import dirtImg from '../assets/dirt.jpg';
 
 const ENDPOINT = window.location.origin; //"http://localhost:2567";
 
 export class CL_Match {
-    clEntities: { [id: string]: CL_Entity } = {};
-    particles: Particle[] = [];
+
+    em: CL_EntityManager;
+
     currentPlayerEntity: CL_Player;
 
     active: boolean = false;
@@ -31,6 +33,8 @@ export class CL_Match {
     room: Room<BaseState>;
     
     constructor (game: Game, room: Room<BaseState>) {
+
+        this.em = new CL_EntityManager(this);
         
         this.active = true;
         this.game = game;
@@ -109,8 +113,8 @@ export class CL_Match {
 
         this.room.state.entities.onAdd((entity: SV_Entity, sessionId: string) => {
 
-            this.addClEntity(entity);
-            const clEntity = this.getClEntity(entity.id);
+            this.em.addClEntity(entity);
+            const clEntity = this.em.getClEntity(entity.id);
 
             if(!clEntity) {
                 console.error("clEntity not found");
@@ -130,45 +134,12 @@ export class CL_Match {
         });
 
         this.room.state.entities.onRemove((entity: SV_Entity , entityId: string) => { 
-            this.getClEntity(entityId).onSVDeath();
+            this.em.getClEntity(entityId).onSVDeath();
         });
-    }
-
-
-    getClEntity(entityId: string) {
-        return this.clEntities[entityId];
-    }
-
-    addClEntity(entity: SV_Entity) {
-        
-        let clEntity: CL_Entity;
-        if (entity.tag === "player") {
-            clEntity = new CL_Player(this, entity as SV_Player);
-        }
-        else if (entity.tag === "wdoodad") {
-            clEntity = new CL_WorldDoodad(this, entity as SV_WorldDoodad);
-        }
-        else if (entity.tag === "projectile") {
-            clEntity = new CL_Projectile(this, entity as SV_Projectile);
-        }
-        else if (entity.tag === "enemy") {
-            clEntity = new CL_Enemy(this, entity as SV_Enemy);
-        }
-        else {
-            console.error("Unknown entity type");
-            return;
-        }
-
-        this.clEntities[entity.id] = clEntity;
-    }
-
-    removeClEntity(entityId: string) {
-        delete this.clEntities[entityId];
     }
 
     tick() {
 
-        
         if(!this.active){
             return;
         }
@@ -181,23 +152,9 @@ export class CL_Match {
             return;
         }
 
-        for (let id in this.clEntities) {
-            this.getClEntity(id).update();
-        }
-
-        //this.updateParticles();
+        this.em.update();
 
         requestAnimationFrame(this.tick.bind(this));
-    }
-
-
-    //TOOO: move to particle manager
-    addParticle(x: number, y: number) {
-        this.particles.push(new Particle(this.game, x, y));
-    }
-
-    updateParticles() {
-        this.particles = this.particles.filter(particle => particle.update());
     }
 
     addRoomIdText(roomId: string) {
@@ -214,7 +171,6 @@ export class CL_Match {
         return;
 
     }
-
 
     addGameOverText() {
 
