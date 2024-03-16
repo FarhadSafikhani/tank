@@ -84,12 +84,12 @@ export class StateTest extends BaseState {
 
   onPlayerDeath(player: SV_Player) {
     //TODO: have a shared pool of lives for players
-    //this.gameOver();
+    this.gameOver();
   }
 
   gameOver() {
     console.log("game over:", this.room.roomId);
-    this.isGameOver = true;
+    //this.isGameOver = true;
     //this.room.disconnect();
   }
 

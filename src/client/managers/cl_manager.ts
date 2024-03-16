@@ -1,5 +1,5 @@
-import { Game } from "./game";
-import { CL_Match } from "./match";
+import { Game } from "../game";
+import { CL_Match } from "../match";
 
 export class CL_Manager {
 

@@ -1,21 +1,12 @@
 import * as PIXI from 'pixi.js';
 import { Room, Client } from "colyseus.js";
-import { Viewport } from 'pixi-viewport'
 import { BaseState } from "../server/rooms/sv_state_base";
 import { KeyMessage, MouseMessage } from "../common/interfaces";
 import { SV_Entity } from "../server/entities/sv_entity";
-import { SV_Player } from "../server/entities/sv_player";
-import { CL_Entity } from "./cl_entity";
 import { CL_Player } from "./cl_player";
-import { SV_WorldDoodad } from "../server/entities/sv_worlddoodad";
-import { CL_WorldDoodad } from "./cl_worlddoodad";
-import { SV_Projectile } from "../server/entities/sv_projectile";
-import { CL_Projectile } from "./cl_projectile";
-import { Particle } from "./particle";
-import { CL_Enemy } from "./cl_enemy";
-import { SV_Enemy } from "../server/entities/sv_enemy";
 import { Game } from './game';
-import { CL_EntityManager } from './cl_manager_entity';
+import { CL_EntityManager } from './managers/cl_manager_entity';
+import { CL_UiManager } from './managers/cl_manager_ui';
 
 //import dirtImg from '../assets/dirt.jpg';
 
@@ -24,6 +15,7 @@ const ENDPOINT = window.location.origin; //"http://localhost:2567";
 export class CL_Match {
 
     em: CL_EntityManager;
+    uim: CL_UiManager;
 
     currentPlayerEntity: CL_Player;
 
@@ -35,6 +27,7 @@ export class CL_Match {
     constructor (game: Game, room: Room<BaseState>) {
 
         this.em = new CL_EntityManager(this);
+        this.uim = new CL_UiManager(this);
         
         this.active = true;
         this.game = game;
@@ -104,7 +97,7 @@ export class CL_Match {
     onConnected(room: Room<BaseState>) {
         console.log("Connected to server");
 
-        this.addRoomIdText(this.room.roomId)
+        this.uim.updateText("room-id", this.room.roomId);
 
         this.room.onLeave((code) => {
             //this.room = null;
@@ -144,11 +137,10 @@ export class CL_Match {
             return;
         }
 
-
         if(this.room.state.isGameOver) {    
             console.log("Game Over");
             this.active = false;
-            this.addGameOverText();
+            this.uim.toggleElement("gameover", true);
             return;
         }
 
@@ -157,33 +149,4 @@ export class CL_Match {
         requestAnimationFrame(this.tick.bind(this));
     }
 
-    addRoomIdText(roomId: string) {
-
-        const gameOverText = new PIXI.Text(roomId, {
-            fontFamily: "Arial",
-            fontSize: 16,
-            fill: 0xffffff,
-            align: "center"
-        });
-        gameOverText.anchor.set(1, 0);
-        gameOverText.position.set(window.innerWidth - 10, 0);
-        this.game.stage.addChild(gameOverText);
-        return;
-
-    }
-
-    addGameOverText() {
-
-        const gameOverText = new PIXI.Text("Game Over", {
-            fontFamily: "Arial",
-            fontSize: 48,
-            fill: 0xffffff,
-            align: "center"
-        });
-        gameOverText.anchor.set(0.5);
-        gameOverText.position.set(window.innerWidth / 2, window.innerHeight / 2);
-        this.game.stage.addChild(gameOverText);
-        return;
-
-    }
 }

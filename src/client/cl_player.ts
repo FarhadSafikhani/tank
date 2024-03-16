@@ -20,6 +20,8 @@ export class CL_Player extends CL_Entity{
     isCLientEntity: boolean = false;
     muzzleScale: number = 0;
 
+    localKia: boolean = false;
+
     constructor(match: CL_Match, entity: SV_Player){
         super(match, entity);
         this.drawAngleIndicator();
@@ -152,12 +154,28 @@ export class CL_Player extends CL_Entity{
     }
 
     onChange(): void {
+
+        if(this.localKia != this.entity.kia){
+            if(this.entity.kia){
+                this.onKia();
+            }else{
+                this.onRespawn();
+            }
+            this.localKia = this.entity.kia;
+        }
         
         if(this.entity.shots > this.localShots){
             this.localShots = this.entity.shots;
             this.onShot();
         }
+
         this.updateHealthBar();
+
+        
+        // if(this.localKia){
+        //     return;
+        // }
+        
     }
 
     onShot(){
@@ -165,6 +183,7 @@ export class CL_Player extends CL_Entity{
         this.graphicsMuzzleFlash.scale.set(this.muzzleScale);
         this.graphicsMuzzleFlash.alpha = 1;
         this.animateMuzzleFlash();
+        this.match.uim.updateText("shots", this.entity.shots);
     }
 
     aliveTick(): void {
@@ -194,5 +213,14 @@ export class CL_Player extends CL_Entity{
         super.destroy();
     }
 
+    onKia(): void {
+        console.log("kia");
+        this.graphics.alpha = 0;
+    }
+
+    onRespawn(): void {
+        console.log("respawn");
+        this.graphics.alpha = 1;
+    }
 
 }

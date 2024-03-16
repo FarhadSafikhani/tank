@@ -1,6 +1,6 @@
 import Matter, { Engine, IEventCollision } from "matter-js";
 import { SV_Entity } from "./sv_entity";
-import { type } from "@colyseus/schema"; 
+import { type, MapSchema } from "@colyseus/schema";
 import { BaseState } from "../rooms/sv_state_base";
 import { CollisionCategory } from "../../common/interfaces";
 
@@ -15,14 +15,21 @@ export class SV_Player extends SV_Entity {
     @type("int32") healthMax: number = 0;
     @type("int32") w: number = 60;
     @type("int32") h: number = 40;
+    @type("int32") respawnTimeNext: number = 0;
 
-    //Tank Handling
+    //knocked out of action but not "dead" aka dont remove from game yet
+    @type("boolean") kia: boolean = false;
+
+    @type({ map: "int32" }) matchStats = new MapSchema<number>();
+
+    //Tank Handling, Balance
     accel: number = .45;
     turnRate: number = 0.03;
     maxSpeed: number = 116;
     friction: number = .035;
     //turretSpeed: number = 0.04;
     startingMaxHealth: number = 120;
+    respawnTime: number = 3000;
 
 
     body: Matter.Body;
@@ -70,10 +77,25 @@ export class SV_Player extends SV_Entity {
 
         if(this.dead) return;
 
+        
+
+        if(this.kia) {
+            
+            if(Date.now() > this.respawnTimeNext) {
+                this.respawn();
+            } else {
+                return;
+            }
+            
+        }
+
+        
+
         if(this.healthCurr <= 0) {
             this.healthCurr = 0;
-            this.dead = true;
-            this.state.onPlayerDeath(this);
+            this.killedInAction();
+            // this.dead = true;
+            // this.state.onPlayerDeath(this);
             return;
         }
         
@@ -214,11 +236,17 @@ export class SV_Player extends SV_Entity {
 
     onClick(x: number, y: number) {
 
-        if(this.dead) return;
+        if(this.dead || this.kia) return;
+
+        this.shoot();
+        
+    }
+
+    shoot() {
 
         this.shots++;
         
-        //this.healthCurr -= 330;
+        this.healthCurr -= 330;
         
         const spawnX = this.x + Math.cos(this.turretAngle) * 40;
         const spawnY = this.y + Math.sin(this.turretAngle) * 40;
@@ -237,7 +265,7 @@ export class SV_Player extends SV_Entity {
         const moveY = Math.sin(spawnAngle) * moveMagnitude;
         Matter.Body.setPosition(this.body, { x: this.body.position.x + moveX, y: this.body.position.y + moveY });
 
-        
+        this.matchStats.set("shots", this.shots);
     }
 
 
@@ -246,6 +274,18 @@ export class SV_Player extends SV_Entity {
         //     console.log("collision start", this.tag , "is hit by", otherEntity.tag);
         // }
         // this.dead = true;
+    }
+
+    killedInAction() {
+        this.kia = true;
+        this.respawnTimeNext = Date.now() + this.respawnTime;
+        Matter.Body.setAngularSpeed(this.body, 0);
+        Matter.Body.setVelocity(this.body, { x: 0, y: 0 }); 
+    }
+
+    respawn() {
+        this.kia = false;
+        this.healthCurr = this.healthMax;
     }
 
     
