@@ -15,7 +15,7 @@ export class SV_Player extends SV_Entity {
     @type("int32") healthMax: number = 0;
     @type("int32") w: number = 60;
     @type("int32") h: number = 40;
-    @type("int32") respawnTimeNext: number = 0;
+    @type("int32") respawnTimeLeft: number = 0;
 
     //knocked out of action but not "dead" aka dont remove from game yet
     @type("boolean") kia: boolean = false;
@@ -26,12 +26,12 @@ export class SV_Player extends SV_Entity {
     accel: number = .45;
     turnRate: number = 0.03;
     maxSpeed: number = 116;
-    friction: number = .035;
+    friction: number = .03;
     //turretSpeed: number = 0.04;
     startingMaxHealth: number = 120;
     respawnTime: number = 3000;
 
-
+    respawnTimeNext = 0;
     body: Matter.Body;
     wDown: boolean = false;
     sDown: boolean = false;
@@ -53,9 +53,9 @@ export class SV_Player extends SV_Entity {
         
         const tankBody = Matter.Bodies.rectangle(this.x, this.y, this.w, this.h,
         {
-            isStatic: false, friction: .5, 
-            frictionAir: this.friction, restitution: 0.4, 
-            density: 0.4,
+            isStatic: false, friction: .3, 
+            frictionAir: this.friction, restitution: 0.6, 
+            density: .8,
             chamfer: { radius: 6 },
             collisionFilter: {
                 category: CollisionCategory.PLAYER, // category for projectiles
@@ -77,19 +77,18 @@ export class SV_Player extends SV_Entity {
 
         if(this.dead) return;
 
-        
-
         if(this.kia) {
             
-            if(Date.now() > this.respawnTimeNext) {
+            if(Date.now() >= this.respawnTimeNext) {
+                this.respawnTimeLeft = 0;
                 this.respawn();
             } else {
+                this.respawnTimeLeft = this.respawnTimeNext - Date.now();
                 return;
             }
             
         }
 
-        
 
         if(this.healthCurr <= 0) {
             this.healthCurr = 0;
@@ -246,7 +245,7 @@ export class SV_Player extends SV_Entity {
 
         this.shots++;
         
-        this.healthCurr -= 330;
+        //this.healthCurr -= 330;
         
         const spawnX = this.x + Math.cos(this.turretAngle) * 40;
         const spawnY = this.y + Math.sin(this.turretAngle) * 40;
@@ -284,6 +283,11 @@ export class SV_Player extends SV_Entity {
     }
 
     respawn() {
+        const spawnPos = this.state.pickRandomSpawnPoint();
+        Matter.Body.setPosition(this.body, { x: spawnPos.x, y: spawnPos.y });
+        Matter.Body.setAngularSpeed(this.body, 0);
+        Matter.Body.setVelocity(this.body, { x: 0, y: 0 }); 
+        
         this.kia = false;
         this.healthCurr = this.healthMax;
     }

@@ -40,3 +40,21 @@
     border-radius: 5px;
     font-size: 57px;
 }
+
+#respawn-panel{
+    display: none;
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 57px;
+    width: 600px;
+}
+
+#respawn-killer{
+    margin-bottom: 20px;
+    color: red;
+}

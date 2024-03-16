@@ -183,15 +183,31 @@ export class CL_Player extends CL_Entity{
         this.graphicsMuzzleFlash.scale.set(this.muzzleScale);
         this.graphicsMuzzleFlash.alpha = 1;
         this.animateMuzzleFlash();
-        this.match.uim.updateText("shots", this.entity.shots);
+        this.isCLientEntity && this.match.uim.updateText("shots", this.entity.shots);
     }
 
     aliveTick(): void {
+
+        this.animateMuzzleFlash();
+        
+        if(this.localKia){
+
+            if(this.isCLientEntity){
+                const t = this.entity.respawnTimeLeft;
+                const seconds = Math.floor(t / 1000);
+                const milliseconds = Math.round((t % 1000) / 100) % 10;
+                const formattedTime = `${seconds}.${milliseconds}s`;
+                this.match.uim.updateText("respawn-timer", formattedTime);
+            }
+
+            return
+        }
+
+
         this.graphics.x = lerp(this.graphics.x, this.entity.x, 0.2);
         this.graphics.y = lerp(this.graphics.y, this.entity.y, 0.2);
         this.graphicsTankBody.rotation = this.entity.angle;
-        this.graphicsTurret.rotation = this.entity.turretAngle;
-        this.animateMuzzleFlash();
+        this.graphicsTurret.rotation = this.entity.turretAngle;  
     }
 
     animateMuzzleFlash() {
@@ -214,13 +230,17 @@ export class CL_Player extends CL_Entity{
     }
 
     onKia(): void {
-        console.log("kia");
         this.graphics.alpha = 0;
+        this.isCLientEntity && this.match.uim.toggleElement("respawn-panel", true);
     }
 
     onRespawn(): void {
-        console.log("respawn");
+        this.graphics.x = this.entity.x;
+        this.graphics.y = this.entity.y;
+        this.graphicsTankBody.rotation = this.entity.angle;
+        this.graphicsTurret.rotation = this.entity.turretAngle;
         this.graphics.alpha = 1;
+        this.isCLientEntity && this.match.uim.toggleElement("respawn-panel", false);
     }
 
 }
