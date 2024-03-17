@@ -3,6 +3,7 @@ import { SV_Entity } from "./sv_entity";
 import { type, MapSchema } from "@colyseus/schema";
 import { BaseState } from "../rooms/sv_state_base";
 import { CollisionCategory } from "../../common/interfaces";
+import { SV_Enemy } from "./sv_enemy";
 
 export class SV_Player extends SV_Entity {
 
@@ -16,6 +17,8 @@ export class SV_Player extends SV_Entity {
     @type("int32") w: number = 60;
     @type("int32") h: number = 40;
     @type("int32") respawnTimeLeft: number = 0;
+    @type("string") name: string = "";
+    @type("string") lastKillerName: string = "";
 
     //knocked out of action but not "dead" aka dont remove from game yet
     @type("boolean") kia: boolean = false;
@@ -39,7 +42,10 @@ export class SV_Player extends SV_Entity {
     dDown: boolean = false;
     turretAngleTarget: number = 0;
 
-    constructor(state: BaseState, id: string, x: number, y: number) {
+    lastKillerId: string = "";
+
+
+    constructor(state: BaseState, id: string, x: number, y: number, name: string) {
         super(state, id);
         this.tag = "player";
         this.x = x;
@@ -47,6 +53,7 @@ export class SV_Player extends SV_Entity {
         this.body = this.createBody();
         this.healthMax = this.startingMaxHealth;
         this.healthCurr = this.healthMax;
+        this.name = name;
     }
 
     createBody() {
@@ -290,6 +297,16 @@ export class SV_Player extends SV_Entity {
         
         this.kia = false;
         this.healthCurr = this.healthMax;
+    }
+
+    takeDamage(damage: number, attacker: SV_Entity) {
+        console.log("player taking damage", damage, 'from', attacker.name);
+        this.healthCurr -= damage;
+        if(this.healthCurr <= 0 && attacker){
+            this.lastKillerId = attacker.id;
+            this.lastKillerName = attacker.name;
+        }
+
     }
 
     

@@ -95,7 +95,6 @@ export class CL_Match {
     }
 
     onConnected(room: Room<BaseState>) {
-        console.log("Connected to server");
 
         this.uim.updateText("room-id", this.room.roomId);
 
@@ -118,6 +117,9 @@ export class CL_Match {
             if (entity.id === this.room.sessionId) {
                 this.currentPlayerEntity = clEntity as CL_Player;
                 this.game.viewport.follow(this.currentPlayerEntity.graphics);
+                //this.currentPlayerEntity.entity.playerName = "s";
+                console.log(this.currentPlayerEntity.entity.name)
+
             }
 
             entity.onChange(() => {
@@ -138,7 +140,6 @@ export class CL_Match {
         }
 
         if(this.room.state.isGameOver) {    
-            console.log("Game Over");
             this.active = false;
             this.uim.toggleElement("gameover", true);
             return;

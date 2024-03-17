@@ -9,6 +9,7 @@ import { RoomBase } from "./rooms/sv_room_base";
 import { WebSocketTransport } from "@colyseus/ws-transport";
 import { RoomTest } from "./rooms/sv_room_test";
 import { RoomBR } from "./rooms/sv_room_br";
+import { StateBR } from "./rooms/sv_state_br";
 export const port = Number(process.env.PORT || 2567);
 export const endpoint = "localhost";
 

@@ -12,6 +12,7 @@ export class SV_Entity extends Schema {
     state: BaseState;
     body: Matter.Body | undefined;
     dead: boolean = false;
+    name: string = "baseentity";
 
     constructor(state: BaseState, id: string) {
         super();

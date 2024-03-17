@@ -23,6 +23,7 @@
 
 
 #room-id {
+    display: none;
     position: absolute;
     top: 5px;
     right: 5px;
@@ -56,5 +57,22 @@
 
 #respawn-killer{
     margin-bottom: 20px;
+}
+
+#respawn-killer-name{
     color: red;
+}
+
+button, input{
+    padding: 10px;
+}
+#player-name-panel{
+    display: none;
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    border-radius: 5px;
 }

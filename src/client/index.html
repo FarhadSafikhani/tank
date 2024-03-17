@@ -21,11 +21,17 @@
             <div id="room-id" class="ui-text">ROOMID</div>
             <div id="gameover" class="ui-text">GAME OVER</div>
             <div id="respawn-panel" class="ui-text">
-                <div id="respawn-killer">{killer-name} killed you.</div>
-                Respawning
+                <div id="respawn-killer"><span id="respawn-killer-name">- - -</span> killed you.</div>
+                <div>Respawning</div>
                 <div id="respawn-timer">00:00</div>
             </div>
-            <div id="shots" class="ui-text">0</div>
+            
+            <!-- <div id="shots" class="ui-text">0</div> -->
+        </div>
+
+        <div id="player-name-panel" class="ui-text">
+            <input type="text" id="player-name-input" placeholder="Pick a player name" />
+            <button id="player-name-submit-button">Play</button>
         </div>
     </div>
 </body>

@@ -183,7 +183,7 @@ export class CL_Player extends CL_Entity{
         this.graphicsMuzzleFlash.scale.set(this.muzzleScale);
         this.graphicsMuzzleFlash.alpha = 1;
         this.animateMuzzleFlash();
-        this.isCLientEntity && this.match.uim.updateText("shots", this.entity.shots);
+        //this.isCLientEntity && this.match.uim.updateText("shots", this.entity.shots);
     }
 
     aliveTick(): void {
@@ -232,6 +232,7 @@ export class CL_Player extends CL_Entity{
     onKia(): void {
         this.graphics.alpha = 0;
         this.isCLientEntity && this.match.uim.toggleElement("respawn-panel", true);
+        this.isCLientEntity && this.match.uim.updateText("respawn-killer-name", this.entity.lastKillerName);
     }
 
     onRespawn(): void {

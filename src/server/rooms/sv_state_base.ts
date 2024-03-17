@@ -94,9 +94,8 @@ export class BaseState extends Schema {
     this.addEntity(entityId, p);
   }
 
-  createPlayer(sessionId: string, position?: Cords) {
-    const spawnPos = position || this.pickRandomSpawnPoint();
-    const p = new SV_Player(this, sessionId, spawnPos.x, spawnPos.y);
+  createPlayer(sessionId: string, position: Cords, options: any) {
+    const p = new SV_Player(this, sessionId, position.x, position.y, options && options['userName'] || 'anon');
     this.addEntity(sessionId, p);
   }
 
@@ -106,7 +105,7 @@ export class BaseState extends Schema {
     this.addEntity(entityId, p);
   }
 
-  createEnemy(position: { x: number, y: number }) {
+  createEnemy(position: Cords) {
     const entityId = generateId();
     const p = new SV_Enemy(this, entityId, position.x, position.y);
     this.addEntity(entityId, p);

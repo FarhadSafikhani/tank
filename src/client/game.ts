@@ -36,8 +36,25 @@ export class Game extends PIXI.Application {
 
         this.setupBindings();
 
-        //this.connect("roomTest");
-        this.connect("roomBR"); 
+        //const room = await client.reconnect(cachedReconnectionToken);
+
+        
+        
+
+        //TODO: move to a user class
+        const userName = localStorage.getItem("userName");
+        if(userName) {
+            this.pickRoom();
+        }
+
+        else{   
+            // const userName = prompt("Please enter your name", "Harry Potter");
+            // if (userName != null) {
+            //     localStorage.setItem("userName", userName);
+            //     this.pickRoom();
+            // }
+            document.getElementById("player-name-panel")!.style.display = "block";
+        }
         
     }
 
@@ -53,13 +70,36 @@ export class Game extends PIXI.Application {
             this.renderer.resize(window.innerWidth, window.innerHeight);
         };
 
+        document.getElementById("player-name-submit-button")!.onclick = () => {
+            this.setUserName();
+        }
     }
 
+    setUserName() {
+        const userName = (document.getElementById("player-name-input") as HTMLInputElement).value;
+        const sanitizedUserName = this.sanitizeUserName(userName);
+        if(sanitizedUserName && sanitizedUserName.length > 0) {
+            localStorage.setItem("userName", sanitizedUserName);
+            this.pickRoom();
+            document.getElementById("player-name-panel")!.style.display = "none";
+        }
+    }
+
+    sanitizeUserName(userName: string): string {
+        // Remove unwanted characters or spaces from the username
+        //const sanitizedUserName = userName.replace(/[^\x00-\x7F]/g, '');
+        return userName.trim();
+    }
+
+    pickRoom() {
+        //this.connect("roomTest");
+        this.connect("roomBR");
+    }
 
     async connect(roomType: string) {
 
         //.joinOrCreate<State>(roomType);
-        this.room = await this.client.joinOrCreate(roomType);
+        this.room = await this.client.joinOrCreate(roomType, {"userName": localStorage.getItem("userName")});
         this.match = new CL_Match(this, this.room);
 
     }

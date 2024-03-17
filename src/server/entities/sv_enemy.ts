@@ -14,7 +14,7 @@ export class SV_Enemy extends SV_Entity {
     @type("int32") healthMax: number = 0;
     @type("int32") size: number = 26;
 
-
+    name: string = "";
     accel: number = .15; 
     turnRate: number = 1; 
     maxSpeed: number = 3;
@@ -34,6 +34,7 @@ export class SV_Enemy extends SV_Entity {
         this.body = this.createBody();
         this.healthMax = this.startingMaxHealth;
         this.healthCurr = this.healthMax;
+        this.name = "Grunt";
     }
 
     createBody() {
@@ -131,6 +132,16 @@ export class SV_Enemy extends SV_Entity {
                 player.healthCurr -= this.damage;
             }
         }
+
+    }
+
+    takeDamage(damage: number, attacker: SV_Entity) {
+        console.log("player taking damage", damage, );
+        this.healthCurr -= damage;
+        // if(this.healthCurr <= 0 && attacker){
+        //     this.lastKillerId = attacker.id;
+        //     this.lastKillerName = attacker.name;
+        // }
 
     }
 

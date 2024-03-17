@@ -39,7 +39,7 @@ export class RoomBase extends Room {
   }
 
   onJoin(client: Client, options: any) {
-    this.state.createPlayer(client.sessionId, { x: 0, y: 0 });
+    console.log("client joined:", client.sessionId, options);
   }
 
   onLeave(client: Client) {
