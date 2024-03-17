@@ -42,14 +42,7 @@ export class Game extends PIXI.Application {
         const userName = localStorage.getItem("userName");
         if(userName) {
             this.pickRoom();
-        }
-
-        else{   
-            // const userName = prompt("Please enter your name", "Harry Potter");
-            // if (userName != null) {
-            //     localStorage.setItem("userName", userName);
-            //     this.pickRoom();
-            // }
+        } else {   
             document.getElementById("player-name-panel")!.style.display = "block";
         }
         
