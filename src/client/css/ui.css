@@ -25,7 +25,7 @@
 #room-id {
     display: none;
     position: absolute;
-    top: 5px;
+    bottom: 5px;
     right: 5px;
     user-select: text;
 }
@@ -76,3 +76,33 @@ button, input{
     padding: 10px;
     border-radius: 5px;
 }
+
+#kill-message-area{
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.toaster-message{
+    color: #fff;
+    background-color: #ff1b1b70;
+    border-radius: 10px;
+    margin-bottom: 5px;
+    padding: 10px;
+    transition: all .5s;
+    position: relative;
+    right: 0;
+}
+.toaster-message.fade-out{
+    opacity: 0;
+    transform: translateX(100%);
+}
+.toaster-message.message-blue{
+    background-color: #0066ff70;
+}
+
+

@@ -97,6 +97,7 @@ export class CL_Match {
     onConnected(room: Room<BaseState>) {
 
         this.uim.updateText("room-id", this.room.roomId);
+        this.uim.toggleElement("room-id", true);
 
         this.room.onLeave((code) => {
             //this.room = null;

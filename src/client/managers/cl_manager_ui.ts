@@ -29,4 +29,19 @@ export class CL_UiManager extends CL_Manager {
         el.style.display = on ? "block" : "none";
     }
 
+    addToasterMessage(containerId: string, message: string, specialClass?: string) {
+        const el = document.createElement("div");
+        el.className = "toaster-message";
+        specialClass && el.classList.add(specialClass);
+        el.innerText = message;
+        const container = this.getElementById(containerId);
+        container.insertBefore(el, container.firstChild);
+        setTimeout(() => {
+            el.classList.add("fade-out");
+            setTimeout(() => {
+                el.remove();
+            }, 1000);
+        }, 5000);
+    }
+
 }

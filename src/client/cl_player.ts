@@ -31,6 +31,8 @@ export class CL_Player extends CL_Entity{
         if(this.isCLientEntity){
             this.match.currentPlayerEntity = this;
             this.match.game.viewport.follow(this.graphics);
+        } else {
+            this.match.uim.addToasterMessage("kill-message-area", this.entity.name + " has joined the game", "message-blue");
         }
     }
 
@@ -239,6 +241,7 @@ export class CL_Player extends CL_Entity{
         this.graphics.alpha = 0;
         this.isCLientEntity && this.match.uim.toggleElement("respawn-panel", true);
         this.isCLientEntity && this.match.uim.updateText("respawn-killer-name", this.entity.lastKillerName);
+        this.match.uim.addToasterMessage("kill-message-area", this.entity.lastKillerName + " killed " + this.entity.name);
     }
 
     onRespawn(): void {
