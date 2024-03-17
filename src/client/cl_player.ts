@@ -115,7 +115,7 @@ export class CL_Player extends CL_Entity{
     
         // Draw the base of the flash
         flash.beginFill(0xFFFFFF);
-        flash.drawEllipse(x, y, 6, 2); // x, y, width, height
+        flash.drawEllipse(x, y, 9, 3); // x, y, width, height
         flash.endFill();
     
         // Add some glow to make it look more like a flash
@@ -206,7 +206,7 @@ export class CL_Player extends CL_Entity{
                 this.match.uim.updateText("respawn-timer", formattedTime);
             }
 
-            return
+            //return
         }
 
 
@@ -238,19 +238,30 @@ export class CL_Player extends CL_Entity{
     }
 
     onKia(): void {
-        this.graphics.alpha = 0;
+        
+        for (let i = 0; i < 15; i++) {
+            this.match.em.addParticle(this.entity.x, this.entity.y, 10);  
+        }
+
+        const colorMatrix = new PIXI.ColorMatrixFilter();
+        this.graphics.filters = [colorMatrix];
+        colorMatrix.greyscale(0.5, false);
+
         this.isCLientEntity && this.match.uim.toggleElement("respawn-panel", true);
         this.isCLientEntity && this.match.uim.updateText("respawn-killer-name", this.entity.lastKillerName);
         this.match.uim.addToasterMessage("kill-message-area", this.entity.lastKillerName + " killed " + this.entity.name);
+        this.graphicsHealthBar.alpha = 0;
     }
 
     onRespawn(): void {
+        this.graphics.filters = [];
         this.graphics.x = this.entity.x;
         this.graphics.y = this.entity.y;
         this.graphicsTankBody.rotation = this.entity.angle;
         this.graphicsTurret.rotation = this.entity.turretAngle;
         this.graphics.alpha = 1;
         this.isCLientEntity && this.match.uim.toggleElement("respawn-panel", false);
+        this.graphicsHealthBar.alpha = 1;
     }
 
 }

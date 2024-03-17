@@ -91,20 +91,30 @@ export class SV_Player extends SV_Entity {
                 this.respawn();
             } else {
                 this.respawnTimeLeft = this.respawnTimeNext - Date.now();
-                return;
             }
             
+        } else {
+
+            if(this.healthCurr <= 0) {
+                this.healthCurr = 0;
+                this.killedInAction();
+                // this.dead = true;
+                // this.state.onPlayerDeath(this);
+                return;
+            }    
+
+            this.updateMovement();
+            this.updateTurretAngle();
         }
 
+        this.x = this.body.position.x;
+        this.y = this.body.position.y;
+        this.angle = this.body.angle;
 
-        if(this.healthCurr <= 0) {
-            this.healthCurr = 0;
-            this.killedInAction();
-            // this.dead = true;
-            // this.state.onPlayerDeath(this);
-            return;
-        }
-        
+    }
+
+    updateMovement() {
+
         if (this.aDown) {
             Matter.Body.rotate(this.body, -this.turnRate);
             Matter.Body.setAngularSpeed(this.body, 0);     
@@ -145,7 +155,7 @@ export class SV_Player extends SV_Entity {
             });
         }
 
-
+        
         // // Limit velocity to maximum speed
         // const speed = Math.sqrt(this.body.velocity.x * this.body.velocity.x + this.body.velocity.y * this.body.velocity.y);
         // if (speed > this.maxSpeed) {
@@ -155,13 +165,6 @@ export class SV_Player extends SV_Entity {
         //         y: this.body.velocity.y * ratio
         //     });
         // }
-
-
-        this.x = this.body.position.x;
-        this.y = this.body.position.y;
-        this.angle = this.body.angle;
-        
-        this.updateTurretAngle();
 
     }
 
@@ -260,13 +263,13 @@ export class SV_Player extends SV_Entity {
 
         this.state.createProjectile(this, spawnX, spawnY, spawnAngle);
 
-        const forceMagnitude = -1; //kickback force - gradual
+        const forceMagnitude = -.5; //kickback force - gradual
         const forceX = Math.cos(spawnAngle) * forceMagnitude;
         const forceY = Math.sin(spawnAngle) * forceMagnitude;
         Matter.Body.applyForce(this.body, { x: this.x, y: this.y }, { x: -forceX, y: -forceY });
 
         // Move the tank along the same vector as the applied force
-        const moveMagnitude = 5; //kickback force - sudden
+        const moveMagnitude = 3; //kickback force - sudden
         const moveX = Math.cos(spawnAngle) * moveMagnitude;
         const moveY = Math.sin(spawnAngle) * moveMagnitude;
         Matter.Body.setPosition(this.body, { x: this.body.position.x + moveX, y: this.body.position.y + moveY });

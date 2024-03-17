@@ -62,9 +62,8 @@ export class CL_EntityManager extends CL_Manager{
         delete this.clEntities[entityId];
     }
 
-    //TOOO: move to particle manager
-    addParticle(x: number, y: number) {
-        this.particles.push(new Particle(this.match, x, y));
+    addParticle(x: number, y: number, size: number) {
+        this.particles.push(new Particle(this.match, x, y, size));
     }
 
     updateParticles() {

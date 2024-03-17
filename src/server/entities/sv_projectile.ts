@@ -21,7 +21,7 @@ export class SV_Projectile extends SV_Entity {
     // configs
     w: number = 25;
     h: number = 7;
-    initialSpeed: number = 10; //40
+    initialSpeed: number = 15; //40
     damage: number = 32;
     maxAge: number = 1800;
     
@@ -54,7 +54,7 @@ export class SV_Projectile extends SV_Entity {
         
         const body = Matter.Bodies.rectangle(this.x, this.y, this.w, this.h,
         {
-            isStatic: false, frictionAir: 0, friction: 0, restitution: 0.5, density: 0.2,
+            isStatic: false, frictionAir: 0, friction: .5, restitution: 0.6, density: 0.3,
             collisionFilter: {
                 category: CollisionCategory.PROJECTILE,
                 mask: CollisionCategory.PLAYER | CollisionCategory.WORLD, 
