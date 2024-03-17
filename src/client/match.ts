@@ -115,10 +115,6 @@ export class CL_Match {
 
             // detecting current user
             if (entity.id === this.room.sessionId) {
-                this.currentPlayerEntity = clEntity as CL_Player;
-                this.game.viewport.follow(this.currentPlayerEntity.graphics);
-                //this.currentPlayerEntity.entity.playerName = "s";
-                console.log(this.currentPlayerEntity.entity.name)
 
             }
 

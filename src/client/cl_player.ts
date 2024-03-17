@@ -28,6 +28,8 @@ export class CL_Player extends CL_Entity{
         this.drawTurret();
         this.createHealthBar()
         this.isCLientEntity = match.room.sessionId === entity.id;
+        this.match.currentPlayerEntity = this;
+        this.match.game.viewport.follow(this.graphics);
     }
 
     createGraphics(): PIXI.Graphics {
@@ -225,7 +227,9 @@ export class CL_Player extends CL_Entity{
     }
 
     destroy(): void {
-        this.match.game.viewport.pause = true;
+        if(this.isCLientEntity){
+            this.match.game.viewport.pause = true;
+        }
         super.destroy();
     }
 
