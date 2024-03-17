@@ -38,9 +38,6 @@ export class Game extends PIXI.Application {
 
         //const room = await client.reconnect(cachedReconnectionToken);
 
-        
-        
-
         //TODO: move to a user class
         const userName = localStorage.getItem("userName");
         if(userName) {
