@@ -23,7 +23,7 @@ export class SV_Projectile extends SV_Entity {
     h: number = 7;
     initialSpeed: number = 15; //40
     damage: number = 32;
-    maxAge: number = 1800;
+    maxAge: number = 1500;
     
 
     constructor(state: BaseState, id: string, caster: SV_Entity, x: number, y: number, angle: number) {

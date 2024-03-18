@@ -98,3 +98,49 @@
     
     //     return flash;
     // }
+
+
+        updateTurretAngle() {
+        // const minSnapDistance = 0.05;
+    
+        // // Ensure turretAngle is always within 0 to 2*PI range
+        // this.turretAngle = (this.turretAngle + 2 * Math.PI) % (2 * Math.PI);
+    
+        // // Calculate the difference in angles, taking into account angle wrapping
+        // let angleDiff = (this.turretAngleTarget - this.turretAngle + Math.PI) % (2 * Math.PI) - Math.PI;
+    
+        // // Adjust angleDiff to be within the range -PI to PI for direct rotation
+        // if (angleDiff > Math.PI) {
+        //     angleDiff -= 2 * Math.PI;
+        // } else if (angleDiff < -Math.PI) {
+        //     angleDiff += 2 * Math.PI;
+        // }
+    
+        // // Determine the step to move the turret by, ensuring it does not overshoot the target angle
+        // let step = Math.sign(angleDiff) * Math.min(Math.abs(angleDiff), this.turretSpeed);
+    
+        // // If the absolute difference is greater than a minimum threshold, update the angle by a fixed step
+        // if (Math.abs(angleDiff) > minSnapDistance) {
+        //     this.turretAngle += step;
+    
+        //     // Normalize the turret angle to stay within the 0 to 2*PI range
+        //     this.turretAngle = (this.turretAngle + 2 * Math.PI) % (2 * Math.PI);
+        // } else {
+        //     // If the turret is close enough to the target angle, snap directly to the target angle
+        //     this.turretAngle = this.turretAngleTarget;
+        // }
+        this.turretAngle = this.turretAngleTarget;
+    }
+
+
+
+            
+        // // Limit velocity to maximum speed
+        // const speed = Math.sqrt(this.body.velocity.x * this.body.velocity.x + this.body.velocity.y * this.body.velocity.y);
+        // if (speed > this.maxSpeed) {
+        //     const ratio = this.maxSpeed / speed;
+        //     Matter.Body.setVelocity(this.body, {
+        //         x: this.body.velocity.x * ratio,
+        //         y: this.body.velocity.y * ratio
+        //     });
+        // }

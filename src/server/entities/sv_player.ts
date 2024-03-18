@@ -4,6 +4,8 @@ import { type, MapSchema } from "@colyseus/schema";
 import { BaseState } from "../rooms/sv_state_base";
 import { CollisionCategory } from "../../common/interfaces";
 import { SV_Enemy } from "./sv_enemy";
+import { SV_Weapon } from "../weapons/sv_weapon";
+import { SV_Weapon_120mm } from "../weapons/sv_weapon_120mm";
 
 export class SV_Player extends SV_Entity {
 
@@ -11,7 +13,6 @@ export class SV_Player extends SV_Entity {
     @type("float64") vy: number = 0;
     @type("float64") turretAngle: number = 0;
     @type("string") verts: string = "";
-    @type("int32") shots: number = 0;
     @type("int32") healthCurr: number = 0;
     @type("int32") healthMax: number = 0;
     @type("int32") w: number = 60;
@@ -24,6 +25,7 @@ export class SV_Player extends SV_Entity {
     @type("boolean") kia: boolean = false;
 
     @type({ map: "int32" }) matchStats = new MapSchema<number>();
+    @type(SV_Weapon) currentWeapon: SV_Weapon;
 
     //Tank Handling, Balance
     accel: number = .45;
@@ -44,7 +46,6 @@ export class SV_Player extends SV_Entity {
 
     lastKillerId: string = "";
 
-
     constructor(state: BaseState, id: string, x: number, y: number, name: string) {
         super(state, id);
         this.tag = "player";
@@ -54,6 +55,7 @@ export class SV_Player extends SV_Entity {
         this.healthMax = this.startingMaxHealth;
         this.healthCurr = this.healthMax;
         this.name = name;
+        this.currentWeapon = new SV_Weapon_120mm(this);
     }
 
     createBody() {
@@ -66,7 +68,8 @@ export class SV_Player extends SV_Entity {
             chamfer: { radius: 6 },
             collisionFilter: {
                 category: CollisionCategory.PLAYER, // category for projectiles
-                mask: CollisionCategory.PROJECTILE | CollisionCategory.PLAYER | CollisionCategory.ENEMY | CollisionCategory.ENEMY_PROJECTILE // mask for other objects (e.g., players)
+                mask: CollisionCategory.PROJECTILE | CollisionCategory.PLAYER | 
+                CollisionCategory.ENEMY | CollisionCategory.ENEMY_PROJECTILE // mask for other objects (e.g., players)
                 // group: 1
             },
         });
@@ -111,6 +114,8 @@ export class SV_Player extends SV_Entity {
         this.y = this.body.position.y;
         this.angle = this.body.angle;
 
+        this.currentWeapon.update();
+
     }
 
     updateMovement() {
@@ -154,49 +159,9 @@ export class SV_Player extends SV_Entity {
                 y: -sideVy * reductionFactor
             });
         }
-
-        
-        // // Limit velocity to maximum speed
-        // const speed = Math.sqrt(this.body.velocity.x * this.body.velocity.x + this.body.velocity.y * this.body.velocity.y);
-        // if (speed > this.maxSpeed) {
-        //     const ratio = this.maxSpeed / speed;
-        //     Matter.Body.setVelocity(this.body, {
-        //         x: this.body.velocity.x * ratio,
-        //         y: this.body.velocity.y * ratio
-        //     });
-        // }
-
     }
 
     updateTurretAngle() {
-        // const minSnapDistance = 0.05;
-    
-        // // Ensure turretAngle is always within 0 to 2*PI range
-        // this.turretAngle = (this.turretAngle + 2 * Math.PI) % (2 * Math.PI);
-    
-        // // Calculate the difference in angles, taking into account angle wrapping
-        // let angleDiff = (this.turretAngleTarget - this.turretAngle + Math.PI) % (2 * Math.PI) - Math.PI;
-    
-        // // Adjust angleDiff to be within the range -PI to PI for direct rotation
-        // if (angleDiff > Math.PI) {
-        //     angleDiff -= 2 * Math.PI;
-        // } else if (angleDiff < -Math.PI) {
-        //     angleDiff += 2 * Math.PI;
-        // }
-    
-        // // Determine the step to move the turret by, ensuring it does not overshoot the target angle
-        // let step = Math.sign(angleDiff) * Math.min(Math.abs(angleDiff), this.turretSpeed);
-    
-        // // If the absolute difference is greater than a minimum threshold, update the angle by a fixed step
-        // if (Math.abs(angleDiff) > minSnapDistance) {
-        //     this.turretAngle += step;
-    
-        //     // Normalize the turret angle to stay within the 0 to 2*PI range
-        //     this.turretAngle = (this.turretAngle + 2 * Math.PI) % (2 * Math.PI);
-        // } else {
-        //     // If the turret is close enough to the target angle, snap directly to the target angle
-        //     this.turretAngle = this.turretAngleTarget;
-        // }
         this.turretAngle = this.turretAngleTarget;
     }
 
@@ -244,39 +209,10 @@ export class SV_Player extends SV_Entity {
     }
 
     onMouseDown(x: number, y: number) {
-
         if(this.dead || this.kia) return;
-
-        this.shoot();
-        
-    }
-
-    shoot() {
-
-        this.shots++;
-        
+        this.currentWeapon.fire(this.turretAngle);
         //this.healthCurr -= 330;
-        
-        const spawnX = this.x + Math.cos(this.turretAngle) * 40;
-        const spawnY = this.y + Math.sin(this.turretAngle) * 40;
-        const spawnAngle = Math.atan2(this.y - spawnY, this.x - spawnX);
-
-        this.state.createProjectile(this, spawnX, spawnY, spawnAngle);
-
-        const forceMagnitude = -.5; //kickback force - gradual
-        const forceX = Math.cos(spawnAngle) * forceMagnitude;
-        const forceY = Math.sin(spawnAngle) * forceMagnitude;
-        Matter.Body.applyForce(this.body, { x: this.x, y: this.y }, { x: -forceX, y: -forceY });
-
-        // Move the tank along the same vector as the applied force
-        const moveMagnitude = 3; //kickback force - sudden
-        const moveX = Math.cos(spawnAngle) * moveMagnitude;
-        const moveY = Math.sin(spawnAngle) * moveMagnitude;
-        Matter.Body.setPosition(this.body, { x: this.body.position.x + moveX, y: this.body.position.y + moveY });
-
-        this.matchStats.set("shots", this.shots);
     }
-
 
     onCollisionStart(otherEntity: SV_Entity, collision: IEventCollision<Engine>) {
         // if(this.body && otherEntity && otherEntity.body) {

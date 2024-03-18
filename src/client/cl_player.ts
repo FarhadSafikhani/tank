@@ -169,13 +169,15 @@ export class CL_Player extends CL_Entity{
             }
             this.localKia = this.entity.kia;
         }
-        
-        if(this.entity.shots > this.localShots){
-            this.localShots = this.entity.shots;
+
+        if(this.entity.currentWeapon.shots > this.localShots){
+            this.localShots = this.entity.currentWeapon.shots;
             this.onShot();
         }
 
         this.updateHealthBar();
+
+        this.entity.currentWeapon.cooldownLeftMs && console.log(this.entity.currentWeapon.cooldownLeftMs)
 
         
         // if(this.localKia){
