@@ -18,17 +18,15 @@ export class Game extends PIXI.Application {
     match: CL_Match;
 
     constructor () {
+        const gameCanvas = document.getElementById("game-canvas") as HTMLCanvasElement;
         super({
-            width: window.innerWidth,
-            height: window.innerHeight,
+            view: gameCanvas,
+            width: 1920,
+            height: 1080,
             backgroundColor: 0x0c0c0c,
         });
 
-        this.viewport = new Viewport({     
-            // screenWidth: window.innerWidth,
-            // screenHeight: window.innerHeight,
-            // worldWidth: 1000,
-            // worldHeight: 1000,
+        this.viewport = new Viewport({
             events: this.renderer.events
         });
 
@@ -45,24 +43,50 @@ export class Game extends PIXI.Application {
         } else {   
             document.getElementById("player-name-panel")!.style.display = "block";
         }
+
+        setTimeout(() => {
+            this.resizeView();
+        }, 0);
         
     }
 
     setupBindings() {
-       
+        
 
         this.viewport.on("wheel", (e) => {
             console.log("WHEEL", e.deltaY);
         });
 
         window.onresize = () => {
-            this.viewport.resize(window.innerWidth, window.innerHeight);
-            this.renderer.resize(window.innerWidth, window.innerHeight);
+            this.resizeView()
         };
 
         document.getElementById("player-name-submit-button")!.onclick = () => {
             this.setUserName();
         }
+    }
+
+    public resizeView(): void {
+
+        const maxw = 1920;
+        const maxh = 1080;
+        const ratio = maxw / maxh;
+
+        const w = Math.min(maxw, window.innerWidth);
+        const h = Math.min(maxh, window.innerHeight);
+
+        this.renderer.resize(w, h);
+        this.viewport.resize(w, h);
+
+        const gameCanvas = document.getElementById("game-canvas") as HTMLCanvasElement;
+        const parentElement = document.getElementById("canvas-container") as HTMLCanvasElement;
+        parentElement.appendChild(document.getElementById("game-canvas")!);
+
+        const verticalMargin = (window.innerHeight - gameCanvas.clientHeight) /2;
+        const horizontalMargin = (window.innerWidth - gameCanvas.clientWidth) /2;
+        gameCanvas.style.top = `${verticalMargin}px`;
+        gameCanvas.style.left = `${horizontalMargin}px`;
+
     }
 
     setUserName() {

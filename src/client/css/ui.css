@@ -105,4 +105,8 @@ button, input{
     background-color: #0066ff70;
 }
 
+#game-canvas{
+    position:absolute;
+}
+
 
