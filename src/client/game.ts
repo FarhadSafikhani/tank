@@ -3,6 +3,7 @@ import { Room, Client } from "colyseus.js";
 import { Viewport } from 'pixi-viewport'
 import { BaseState } from "../server/rooms/sv_state_base";
 import { CL_Match } from './match';
+import { KeyMessage, MouseMessage } from '../common/interfaces';
 
 //import dirtImg from '../assets/dirt.jpg';
 
@@ -52,7 +53,6 @@ export class Game extends PIXI.Application {
 
     setupBindings() {
         
-
         this.viewport.on("wheel", (e) => {
             console.log("WHEEL", e.deltaY);
         });
@@ -60,6 +60,24 @@ export class Game extends PIXI.Application {
         window.onresize = () => {
             this.resizeView()
         };
+
+        this.viewport.on("mousemove", (e) => {
+            const point = this.viewport.toLocal(e.global);
+            this.room?.send('mousemove', { x: point.x, y: point.y } as MouseMessage);
+        });
+
+        window.addEventListener("mousedown", (e) => {
+            const point = this.viewport.toLocal(e);
+            this.room?.send('mousedown', { x: point.x, y: point.y } as MouseMessage);
+        });
+
+        window.addEventListener("keydown", (e) => {
+            this.room?.send('keydown', { keyCode: e.key } as KeyMessage);
+        });
+
+        window.addEventListener("keyup", (e) => {
+            this.room?.send('keyup', { keyCode: e.key } as KeyMessage);
+        });
 
         document.getElementById("player-name-submit-button")!.onclick = () => {
             this.setUserName();

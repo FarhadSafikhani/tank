@@ -243,7 +243,7 @@ export class SV_Player extends SV_Entity {
         }
     }
 
-    onClick(x: number, y: number) {
+    onMouseDown(x: number, y: number) {
 
         if(this.dead || this.kia) return;
 

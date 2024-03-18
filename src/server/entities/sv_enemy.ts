@@ -136,7 +136,6 @@ export class SV_Enemy extends SV_Entity {
     }
 
     takeDamage(damage: number, attacker: SV_Entity) {
-        console.log("player taking damage", damage, );
         this.healthCurr -= damage;
         // if(this.healthCurr <= 0 && attacker){
         //     this.lastKillerId = attacker.id;

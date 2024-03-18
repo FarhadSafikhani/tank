@@ -36,38 +36,11 @@ export class CL_Match {
         this.addTilingBackground();
 
         this.onConnected(room);
-        this.setupBindings();
         
         //start the engine
         this.tick();
         
     }
-
-    setupBindings() {
-        this.game.viewport.on("mousemove", (e) => {
-            if(!this.currentPlayerEntity) return;
-            const point = this.game.viewport.toLocal(e.global);
-            this.room.send('mousemove', { x: point.x, y: point.y } as MouseMessage);
-        });
-
-        window.addEventListener("mousedown", (e) => {
-            if(!this.currentPlayerEntity) return;
-            const point = this.game.viewport.toLocal(e);
-            this.room.send('click', { x: point.x, y: point.y } as MouseMessage);
-        });
-
-        window.addEventListener("keydown", (e) => {
-            if(!this.currentPlayerEntity) return;
-            this.room.send('keydown', { keyCode: e.key } as KeyMessage);
-        });
-
-        window.addEventListener("keyup", (e) => {
-            if(!this.currentPlayerEntity) return;
-            this.room.send('keyup', { keyCode: e.key } as KeyMessage);
-        });
-
-    }
-
 
 
     addTilingBackground() {
@@ -114,11 +87,7 @@ export class CL_Match {
                 return;
             }
 
-            // detecting current user
-            if (entity.id === this.room.sessionId) {
-
-            }
-
+            //TODO: maybe instead of update all entities every tick, only update the ones that have changed
             entity.onChange(() => {
                 clEntity.onChange();
             });

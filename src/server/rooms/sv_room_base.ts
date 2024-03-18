@@ -28,8 +28,8 @@ export class RoomBase extends Room {
       this.getClientEntity(client.sessionId)?.onKeyUp(message.keyCode);
     });
 
-    this.onMessage("click", (client, message: MouseMessage) => {
-      this.getClientEntity(client.sessionId)?.onClick(message.x, message.y);
+    this.onMessage("mousedown", (client, message: MouseMessage) => {
+      this.getClientEntity(client.sessionId)?.onMouseDown(message.x, message.y);
     });
   }
 
