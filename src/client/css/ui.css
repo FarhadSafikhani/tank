@@ -109,4 +109,29 @@ button, input{
     position:absolute;
 }
 
+#cooldown-bar{
+    background-color: #808080a1;
+    border-radius: 10px;
+    width: 240px;
+    height: 10px;
+    position: absolute;
+    bottom: 10%;
+    left: 50%;
+    overflow: hidden;
+    transform: translateX(-50%);
+    opacity: 0;
+    
+}
+#cooldown-bar.active{
+    opacity: 1;
+    transition: opacity 0.25s;
+}
+
+#cooldown-bar-fill{
+    background-color: #c19f00;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
 

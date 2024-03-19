@@ -21,6 +21,7 @@ export class CL_Player extends CL_Entity{
     muzzleScale: number = 0;
 
     localKia: boolean = false;
+    localCooldownLeftMs: number = 0;
 
     constructor(match: CL_Match, entity: SV_Player){
         super(match, entity);
@@ -177,7 +178,19 @@ export class CL_Player extends CL_Entity{
 
         this.updateHealthBar();
 
-        this.entity.currentWeapon.cooldownLeftMs && console.log(this.entity.currentWeapon.cooldownLeftMs)
+        if(this.isCLientEntity && this.localCooldownLeftMs != this.entity.currentWeapon.cooldownLeftMs){
+            this.localCooldownLeftMs = this.entity.currentWeapon.cooldownLeftMs;
+            const percent = (1 - (this.localCooldownLeftMs / this.entity.currentWeapon.cooldownMaxMs))  * 100;
+            
+            
+            this.match.uim.updateBar("cooldown-bar-fill", percent);
+            if(percent < 100){
+                this.match.uim.toggleClass("cooldown-bar", "active", true);
+            } else {
+                this.match.uim.toggleClass("cooldown-bar", "active", false);
+            }
+        }
+        
 
         
         // if(this.localKia){

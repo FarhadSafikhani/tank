@@ -13,6 +13,12 @@ export class CL_UiManager extends CL_Manager {
     update() {
     }
 
+    getElement(id: string): HTMLElement {
+        const h = document.getElementById(id);
+        if (!h) throw new Error("Element not found: " + id);
+        return h;
+    }
+
     getElementById(id: string): HTMLElement {
         const h = document.getElementById(id);
         if (!h) throw new Error("Element not found: " + id);
@@ -42,6 +48,20 @@ export class CL_UiManager extends CL_Manager {
                 el.remove();
             }, 1000);
         }, 5000);
+    }
+
+    updateBar(id: string, percent: number) {
+        const el = this.getElementById(id);
+        el.style.width = percent + "%";
+    }
+
+    toggleClass(id: string, className: string, on: boolean) {
+        const el = this.getElementById(id);
+        if (on) {
+            el.classList.add(className);
+        } else {
+            el.classList.remove(className);
+        }
     }
 
 }
