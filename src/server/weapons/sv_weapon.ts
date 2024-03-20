@@ -7,7 +7,7 @@ export class SV_Weapon extends Schema{
     @type("string") tag: string = "base_weapon";
     @type("int32") shots: number = 0;
     @type("int32") cooldownLeftMs: number = 0;
-    @type("int32") cooldownMaxMs: number = 1000;
+    @type("int32") cooldownMaxMs: number = 30;
 
     cooldownEndsMs: number = 0;
     caster: SV_Entity;
