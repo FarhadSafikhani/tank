@@ -3,9 +3,9 @@ import { SV_Entity } from "./sv_entity";
 import { type, MapSchema } from "@colyseus/schema";
 import { BaseState } from "../rooms/sv_state_base";
 import { CollisionCategory } from "../../common/interfaces";
-import { SV_Enemy } from "./sv_enemy";
 import { SV_Weapon } from "../weapons/sv_weapon";
 import { SV_Weapon_120mm } from "../weapons/sv_weapon_120mm";
+import { SV_Weapon_25mm } from "../weapons/sv_weapon_25mm";
 
 export class SV_Player extends SV_Entity {
 
@@ -46,8 +46,8 @@ export class SV_Player extends SV_Entity {
 
     lastKillerId: string = "";
 
-    constructor(state: BaseState, id: string, x: number, y: number, name: string) {
-        super(state, id);
+    constructor(state: BaseState, id: string, x: number, y: number, name: string, team: number) {
+        super(state, id, team);
         this.tag = "player";
         this.x = x;
         this.y = y;
@@ -55,7 +55,9 @@ export class SV_Player extends SV_Entity {
         this.healthMax = this.startingMaxHealth;
         this.healthCurr = this.healthMax;
         this.name = name;
-        this.currentWeapon = new SV_Weapon_120mm(this);
+        
+        //this.currentWeapon = new SV_Weapon_120mm(this);
+        this.currentWeapon = new SV_Weapon_25mm(this);
     }
 
     createBody() {
@@ -67,10 +69,11 @@ export class SV_Player extends SV_Entity {
             density: .8,
             chamfer: { radius: 6 },
             collisionFilter: {
+                group: -this.team, //group for collision filtering
                 category: CollisionCategory.PLAYER, // category for projectiles
                 mask: CollisionCategory.PROJECTILE | CollisionCategory.PLAYER | 
-                CollisionCategory.ENEMY | CollisionCategory.ENEMY_PROJECTILE // mask for other objects (e.g., players)
-                // group: 1
+                CollisionCategory.ENEMY | CollisionCategory.ENEMY_PROJECTILE, // mask for other objects (e.g., players)
+                
             },
         });
 

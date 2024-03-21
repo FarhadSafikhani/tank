@@ -39,7 +39,9 @@ export class CL_Match {
         
         //start the engine
         this.tick();
-        
+
+        //TODO: load textures needed for match
+        // /25mm.png
     }
 
 

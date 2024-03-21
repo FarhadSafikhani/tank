@@ -8,6 +8,9 @@ import { SV_Projectile } from "../entities/sv_projectile";
 import { SV_Enemy } from "../entities/sv_enemy";
 import { RoomBase } from "./sv_room_base";
 import { Cords } from "../../common/interfaces";
+import { SV_Projectile_25mm } from "../entities/sv_projectile_25mm";
+import { SV_Weapon } from "../weapons/sv_weapon";
+import { SV_Projectile120mm } from "../entities/sv_projectile_120mm";
 
 const GAME_CONFIG = {
   worldSize: 1200
@@ -22,6 +25,7 @@ export class BaseState extends Schema {
   room: Room;
   startTime: number = 0;
   matterBodies: { [entityId: string]: Matter.Body } = {};
+  nextTeam: number = 1;
 
   @type({ map: SV_Entity }) entities = new MapSchema<SV_Entity>();
   @type("boolean") isGameOver: boolean = false;
@@ -94,14 +98,28 @@ export class BaseState extends Schema {
     this.addEntity(entityId, p);
   }
 
-  createPlayer(sessionId: string, position: Cords, options: any) {
-    const p = new SV_Player(this, sessionId, position.x, position.y, options && options['userName'] || 'anon');
+  createPlayer(sessionId: string, position: Cords, team: number, clientOptions: any) {
+    const username = clientOptions && clientOptions['userName'] || 'anon';
+    const p = new SV_Player(this, sessionId, position.x, position.y, username, team);
     this.addEntity(sessionId, p);
   }
 
-  createProjectile(caster: SV_Entity, x: number, y: number, angle: number) {
+  createProjectile(weapon: SV_Weapon, x: number, y: number, angle: number) {
     const entityId = generateId();
-    const p = new SV_Projectile(this, entityId, caster, x, y, angle);
+    console.log("createProjectile", weapon.tag, entityId);
+    if(weapon.tag === "25mm") {
+      const p = new SV_Projectile_25mm(this, entityId, weapon.caster, x, y, angle);
+      this.addEntity(entityId, p);
+      return;
+    }
+
+    if(weapon.tag === "120mm") {
+      const p = new SV_Projectile120mm(this, entityId, weapon.caster, x, y, angle);
+      this.addEntity(entityId, p);
+      return;
+    }
+
+    const p = new SV_Projectile(this, entityId, weapon.caster, x, y, angle);
     this.addEntity(entityId, p);
   }
 
@@ -171,6 +189,10 @@ export class BaseState extends Schema {
 
   pickRandomSpawnPoint() {
     return this.spawnPoints[Math.floor(Math.random() * this.spawnPoints.length)];
+  }
+
+  getNextTeam() {
+    return this.nextTeam++;
   }
 
 }

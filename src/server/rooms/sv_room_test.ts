@@ -10,17 +10,10 @@ export class RoomTest extends RoomBase {
     this.state.initialize();
   }
 
-  onJoin(client: Client, options: any) {
-    
-    super.onJoin(client, options);
-    // const e = (this.state as BaseState).getEntity(client.sessionId);
-    // if(e) {
-    //   console.log('prev player found:', e.id);
-    //   return;
-    // }
-
-    this.getState().createPlayer(client.sessionId, {x: 0, y: 0}, options);
-
+  onJoin(client: Client, clientOptions: any) {
+    super.onJoin(client, clientOptions);
+    const nextTeam = this.getState().getNextTeam();
+    this.getState().createPlayer(client.sessionId, {x: 0, y: 0}, nextTeam, clientOptions);
   }
 
   getState(){

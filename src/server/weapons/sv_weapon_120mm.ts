@@ -21,24 +21,15 @@ export class SV_Weapon_120mm extends SV_Weapon {
 
         this.cooldownEndsMs = Date.now() + this.cooldownMaxMs;
 
-        // console.log("weapon fired");
-        //     this.shots++;
-        //     this.cooldownEndsMs = Date.now() + this.cooldownMaxMs;
-
-        console.log("weapon fired");
-
         this.shots++;
         
-        
+        const spawnX = this.caster.x + Math.cos(angle) * 40;
+        const spawnY = this.caster.y + Math.sin(angle) * 40;
+        const spawnAngle = Math.atan2(this.caster.y - spawnY, this.caster.x - spawnX);
+        this.caster.state.createProjectile(this, spawnX, spawnY, spawnAngle);
 
         if(this.caster.body){
 
-            const spawnX = this.caster.x + Math.cos(angle) * 40;
-            const spawnY = this.caster.y + Math.sin(angle) * 40;
-            const spawnAngle = Math.atan2(this.caster.y - spawnY, this.caster.x - spawnX);
-    
-            this.caster.state.createProjectile(this.caster, spawnX, spawnY, spawnAngle);
-    
             const forceMagnitude = -.5; //kickback force - gradual
             const forceX = Math.cos(spawnAngle) * forceMagnitude;
             const forceY = Math.sin(spawnAngle) * forceMagnitude;
@@ -51,9 +42,8 @@ export class SV_Weapon_120mm extends SV_Weapon {
             Matter.Body.setPosition(this.caster.body, { x: this.caster.body.position.x + moveX, y: this.caster.body.position.y + moveY });
     
             //this.caster.matchStats.set("shots", this.caster.shots);
-
         }
-
+        
     }
 
     update() {

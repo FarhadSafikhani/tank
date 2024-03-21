@@ -38,8 +38,8 @@ export class RoomBase extends Room {
     this.state.initialize();
   }
 
-  onJoin(client: Client, options: any) {
-    console.log("client joined:", client.sessionId, options);
+  onJoin(client: Client, clientOptions: any) {
+    console.log("client joined:", client.sessionId, clientOptions);
   }
 
   onLeave(client: Client) {

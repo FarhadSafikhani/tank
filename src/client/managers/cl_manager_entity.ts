@@ -11,6 +11,8 @@ import { CL_Projectile } from "../cl_projectile";
 import { CL_WorldDoodad } from "../cl_worlddoodad";
 import { CL_Match } from "../match";
 import { Particle } from "../particle";
+import { CL_Projectile_25mm } from "../cl_projectile_25mm";
+import { CL_Projectile_120mm } from "../cl_projectile_120mm";
 
 export class CL_EntityManager extends CL_Manager{
 
@@ -38,21 +40,29 @@ export class CL_EntityManager extends CL_Manager{
     addClEntity(entity: SV_Entity) {
         
         let clEntity: CL_Entity;
-        if (entity.tag === "player") {
-            clEntity = new CL_Player(this.match, entity as SV_Player);
-        }
-        else if (entity.tag === "wdoodad") {
-            clEntity = new CL_WorldDoodad(this.match, entity as SV_WorldDoodad);
-        }
-        else if (entity.tag === "projectile") {
-            clEntity = new CL_Projectile(this.match, entity as SV_Projectile);
-        }
-        else if (entity.tag === "enemy") {
-            clEntity = new CL_Enemy(this.match, entity as SV_Enemy);
-        }
-        else {
-            console.error("Unknown entity type");
-            return;
+        console.log("entity.tag", entity.tag);
+        switch (entity.tag) {
+            case "player":
+                clEntity = new CL_Player(this.match, entity as SV_Player);
+                break;
+            case "wdoodad":
+                clEntity = new CL_WorldDoodad(this.match, entity as SV_WorldDoodad);
+                break;
+            case "projectile":
+                clEntity = new CL_Projectile(this.match, entity as SV_Projectile);
+                break;
+            case "120mm":
+                clEntity = new CL_Projectile_120mm(this.match, entity as SV_Projectile);
+                break;
+            case "25mm":
+                clEntity = new CL_Projectile_25mm(this.match, entity as SV_Projectile);
+                break;
+            case "enemy":
+                clEntity = new CL_Enemy(this.match, entity as SV_Enemy);
+                break;
+            default:
+                throw new Error("Unknown entity type");
+                return;
         }
 
         this.clEntities[entity.id] = clEntity;

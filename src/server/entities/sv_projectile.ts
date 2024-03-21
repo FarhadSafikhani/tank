@@ -45,6 +45,7 @@ export class SV_Projectile extends SV_Entity {
 
     createBody() {
 
+        
         /*
             category?: number | undefined; // The category of colliding bodies
             mask?: number | undefined; // determines the category of objects that this body can collide with
@@ -52,13 +53,14 @@ export class SV_Projectile extends SV_Entity {
             never collide if group is negative
         */
         
+
         const body = Matter.Bodies.rectangle(this.x, this.y, this.w, this.h,
         {
             isStatic: false, frictionAir: 0, friction: .5, restitution: 0.6, density: 0.3,
             collisionFilter: {
+                group: -this.caster.team, //set group -1 if projectiles should not collide with each other
                 category: CollisionCategory.PROJECTILE,
-                mask: CollisionCategory.PLAYER | CollisionCategory.WORLD, 
-                group: -1 //set group -1 if projectiles should not collide with each other
+                mask: CollisionCategory.PLAYER | CollisionCategory.WORLD,  
             }
         });
         
