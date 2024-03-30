@@ -6,7 +6,7 @@ import { SV_Weapon } from "./sv_weapon";
 
 export class SV_Weapon_25mm extends SV_Weapon {
 
-    cooldownMaxMs: number = 44;
+    cooldownMaxMs: number = 200;
 
     constructor(caster: SV_Entity) {
         super(caster);

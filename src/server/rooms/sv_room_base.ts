@@ -31,6 +31,10 @@ export class RoomBase extends Room {
     this.onMessage("mousedown", (client, message: MouseMessage) => {
       this.getClientEntity(client.sessionId)?.onMouseDown(message.x, message.y);
     });
+
+    this.onMessage("mouseup", (client, message: MouseMessage) => {
+      this.getClientEntity(client.sessionId)?.onMouseUp(message.x, message.y);
+    });
   }
 
   setupState() {

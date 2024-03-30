@@ -13,7 +13,7 @@ export class SV_Projectile120mm extends SV_Projectile {
     w: number = 25;
     h: number = 7;
     initialSpeed: number = 15; //40
-    damage: number = 32;
+    damage: number = 36;
     maxAge: number = 1500;
     
 
@@ -32,7 +32,7 @@ export class SV_Projectile120mm extends SV_Projectile {
 
         const body = Matter.Bodies.rectangle(this.x, this.y, this.w, this.h,
         {
-            isStatic: false, frictionAir: 0, friction: .5, restitution: 0.6, density: 0.3,
+            isStatic: false, frictionAir: 0, friction: .05, restitution: 0.6, density: 0.3,
             collisionFilter: {
                 group: -this.caster.team, //set group -1 if projectiles should not collide with each other
                 category: CollisionCategory.PROJECTILE,

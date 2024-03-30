@@ -42,6 +42,7 @@ export class SV_Player extends SV_Entity {
     sDown: boolean = false;
     aDown: boolean = false;
     dDown: boolean = false;
+    mDown: boolean = false;
     turretAngleTarget: number = 0;
 
     lastKillerId: string = "";
@@ -117,6 +118,10 @@ export class SV_Player extends SV_Entity {
         this.y = this.body.position.y;
         this.angle = this.body.angle;
 
+        if(this.mDown){
+            this.currentWeapon.fire(this.turretAngle);
+        }
+        
         this.currentWeapon.update();
 
     }
@@ -212,9 +217,11 @@ export class SV_Player extends SV_Entity {
     }
 
     onMouseDown(x: number, y: number) {
-        if(this.dead || this.kia) return;
-        this.currentWeapon.fire(this.turretAngle);
-        //this.healthCurr -= 330;
+        this.mDown = true;
+    }
+
+    onMouseUp(x: number, y: number) {
+        this.mDown = false;
     }
 
     onCollisionStart(otherEntity: SV_Entity, collision: IEventCollision<Engine>) {

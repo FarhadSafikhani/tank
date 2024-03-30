@@ -14,7 +14,7 @@ export class SV_Projectile_25mm extends SV_Projectile {
     h: number = 4;
     initialSpeed: number = 20; //40
     damage: number = 10;
-    maxAge: number = 711100;
+    maxAge: number = 700;
     
 
     constructor(state: BaseState, id: string, caster: SV_Entity, x: number, y: number, angle: number) {

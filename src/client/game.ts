@@ -71,6 +71,11 @@ export class Game extends PIXI.Application {
             this.room?.send('mousedown', { x: point.x, y: point.y } as MouseMessage);
         });
 
+        window.addEventListener("mouseup", (e) => {
+            const point = this.viewport.toLocal(e);
+            this.room?.send('mouseup', { x: point.x, y: point.y } as MouseMessage);
+        });
+
         window.addEventListener("keydown", (e) => {
             this.room?.send('keydown', { keyCode: e.key } as KeyMessage);
         });
