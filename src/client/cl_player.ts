@@ -171,16 +171,16 @@ export class CL_Player extends CL_Entity{
             this.localKia = this.entity.kia;
         }
 
-        if(this.entity.currentWeapon.shots > this.localShots){
-            this.localShots = this.entity.currentWeapon.shots;
+        if(this.entity.mainWeapon.shots > this.localShots){
+            this.localShots = this.entity.mainWeapon.shots;
             this.onShot();
         }
 
         this.updateHealthBar();
 
-        if(this.isCLientEntity && this.localCooldownLeftMs != this.entity.currentWeapon.cooldownLeftMs){
-            this.localCooldownLeftMs = this.entity.currentWeapon.cooldownLeftMs;
-            const percent = (1 - (this.localCooldownLeftMs / this.entity.currentWeapon.cooldownMaxMs))  * 100;
+        if(this.isCLientEntity && this.localCooldownLeftMs != this.entity.mainWeapon.cooldownLeftMs){
+            this.localCooldownLeftMs = this.entity.mainWeapon.cooldownLeftMs;
+            const percent = (1 - (this.localCooldownLeftMs / this.entity.mainWeapon.cooldownMaxMs))  * 100;
             
             
             this.match.uim.updateBar("cooldown-bar-fill", percent);

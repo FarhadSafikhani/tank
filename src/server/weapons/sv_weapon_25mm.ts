@@ -1,12 +1,10 @@
-import Matter from "matter-js";
-import { type } from "@colyseus/schema";
 import { SV_Entity } from "../entities/sv_entity";
 import { SV_Weapon } from "./sv_weapon";
 
 
 export class SV_Weapon_25mm extends SV_Weapon {
 
-    cooldownMaxMs: number = 200;
+    cooldownMaxMs: number = 300;
 
     constructor(caster: SV_Entity) {
         super(caster);

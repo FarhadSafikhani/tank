@@ -106,7 +106,6 @@ export class BaseState extends Schema {
 
   createProjectile(weapon: SV_Weapon, x: number, y: number, angle: number) {
     const entityId = generateId();
-    console.log("createProjectile", weapon.tag, entityId);
     if(weapon.tag === "25mm") {
       const p = new SV_Projectile_25mm(this, entityId, weapon.caster, x, y, angle);
       this.addEntity(entityId, p);

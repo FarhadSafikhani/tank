@@ -1,6 +1,7 @@
 export interface MouseMessage {
     x: number;
     y: number;
+    button: number;
 }
 
 export interface KeyMessage {

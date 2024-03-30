@@ -25,7 +25,8 @@ export class SV_Player extends SV_Entity {
     @type("boolean") kia: boolean = false;
 
     @type({ map: "int32" }) matchStats = new MapSchema<number>();
-    @type(SV_Weapon) currentWeapon: SV_Weapon;
+    @type(SV_Weapon) mainWeapon: SV_Weapon;
+    @type(SV_Weapon) secondaryWeapon: SV_Weapon;
 
     //Tank Handling, Balance
     accel: number = .5;
@@ -43,6 +44,7 @@ export class SV_Player extends SV_Entity {
     aDown: boolean = false;
     dDown: boolean = false;
     mDown: boolean = false;
+    rmDown: boolean = false;
     turretAngleTarget: number = 0;
 
     lastKillerId: string = "";
@@ -57,8 +59,8 @@ export class SV_Player extends SV_Entity {
         this.healthCurr = this.healthMax;
         this.name = name;
         
-        //this.currentWeapon = new SV_Weapon_120mm(this);
-        this.currentWeapon = new SV_Weapon_25mm(this);
+        this.mainWeapon = new SV_Weapon_120mm(this);
+        this.secondaryWeapon = new SV_Weapon_25mm(this);
     }
 
     createBody() {
@@ -118,11 +120,16 @@ export class SV_Player extends SV_Entity {
         this.y = this.body.position.y;
         this.angle = this.body.angle;
 
+        if(this.rmDown){
+            this.secondaryWeapon.fire(this.turretAngle);
+        }
+
         if(this.mDown){
-            this.currentWeapon.fire(this.turretAngle);
+            this.mainWeapon.fire(this.turretAngle);
         }
         
-        this.currentWeapon.update();
+        this.mainWeapon.update();
+        this.secondaryWeapon.update();
 
     }
 
@@ -222,6 +229,14 @@ export class SV_Player extends SV_Entity {
 
     onMouseUp(x: number, y: number) {
         this.mDown = false;
+    }
+
+    onRightMouseDown(x: number, y: number) {
+        this.rmDown = true;
+    }
+
+    onRightMouseUp(x: number, y: number) {
+        this.rmDown = false;
     }
 
     onCollisionStart(otherEntity: SV_Entity, collision: IEventCollision<Engine>) {

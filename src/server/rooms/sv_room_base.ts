@@ -29,11 +29,19 @@ export class RoomBase extends Room {
     });
 
     this.onMessage("mousedown", (client, message: MouseMessage) => {
-      this.getClientEntity(client.sessionId)?.onMouseDown(message.x, message.y);
+      if (message.button === 0){
+        this.getClientEntity(client.sessionId)?.onMouseDown(message.x, message.y);
+      } else if (message.button === 2){
+        this.getClientEntity(client.sessionId)?.onRightMouseDown(message.x, message.y);
+      }
     });
 
     this.onMessage("mouseup", (client, message: MouseMessage) => {
-      this.getClientEntity(client.sessionId)?.onMouseUp(message.x, message.y);
+      if(message.button === 0){
+        this.getClientEntity(client.sessionId)?.onMouseUp(message.x, message.y);
+      } else if (message.button === 2){
+        this.getClientEntity(client.sessionId)?.onRightMouseUp(message.x, message.y);
+      }
     });
   }
 
