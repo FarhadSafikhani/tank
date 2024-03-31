@@ -40,7 +40,6 @@ export class CL_EntityManager extends CL_Manager{
     addClEntity(entity: SV_Entity) {
         
         let clEntity: CL_Entity;
-        console.log("entity.tag", entity.tag);
         switch (entity.tag) {
             case "player":
                 clEntity = new CL_Player(this.match, entity as SV_Player);

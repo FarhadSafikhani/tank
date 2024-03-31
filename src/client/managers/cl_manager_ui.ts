@@ -10,13 +10,10 @@ export class CL_UiManager extends CL_Manager {
         this.domConatiner = this.getElementById("ui-br");
     }
 
-    update() {
-    }
+    update() {}
 
-    getElement(id: string): HTMLElement {
-        const h = document.getElementById(id);
-        if (!h) throw new Error("Element not found: " + id);
-        return h;
+    getElement(cssQuery: string): HTMLElement | null{
+        return document.querySelector(cssQuery);
     }
 
     getElementById(id: string): HTMLElement {
@@ -50,13 +47,13 @@ export class CL_UiManager extends CL_Manager {
         }, 5000);
     }
 
-    updateBar(id: string, percent: number) {
-        const el = this.getElementById(id);
+    updateBar(el: HTMLElement, percent: number) {
+        //const el = this.getElementById(id);
         el.style.width = percent + "%";
     }
 
-    toggleClass(id: string, className: string, on: boolean) {
-        const el = this.getElementById(id);
+    toggleClass(id: string | HTMLElement, className: string, on: boolean) {
+        const el = typeof(id) === "string" ? this.getElementById(id) : id;
         if (on) {
             el.classList.add(className);
         } else {

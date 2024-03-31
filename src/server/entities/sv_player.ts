@@ -29,7 +29,7 @@ export class SV_Player extends SV_Entity {
     @type(SV_Weapon) secondaryWeapon: SV_Weapon;
 
     //Tank Handling, Balance
-    accel: number = .5;
+    accel: number = .42;
     turnRate: number = 0.03;
     maxSpeed: number = 116;
     friction: number = .03;

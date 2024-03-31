@@ -4,6 +4,10 @@ import { SV_Player } from "../server/entities/sv_player";
 import { Game } from "./game";
 import { lerp } from "../common/utils";
 import { CL_Match } from "./match";
+import { CL_Weapon } from "./weapons/cl_weapon";
+import { SV_Weapon } from "../server/weapons/sv_weapon";
+import { CL_Weapon_25mm } from "./weapons/cl_weapon_25mm";
+import { CL_Weapon_120mm } from "./weapons/cl_weapon_120mm";
 
 
 export class CL_Player extends CL_Entity{
@@ -21,7 +25,9 @@ export class CL_Player extends CL_Entity{
     muzzleScale: number = 0;
 
     localKia: boolean = false;
-    localCooldownLeftMs: number = 0;
+
+    mainWeapon: CL_Weapon | undefined;
+    secondaryWeapon: CL_Weapon | undefined;
 
     constructor(match: CL_Match, entity: SV_Player){
         super(match, entity);
@@ -32,9 +38,28 @@ export class CL_Player extends CL_Entity{
         if(this.isCLientEntity){
             this.match.currentPlayerEntity = this;
             this.match.game.viewport.follow(this.graphics);
+            this.mainWeapon = this.setupWeapon(entity.mainWeapon);
+            //this.secondaryWeapon = this.setupWeapon(entity.mainWeapon);
         } else {
             this.match.uim.addToasterMessage("kill-message-area", this.entity.name + " has joined the game", "message-blue");
         }
+
+    }
+
+    setupWeapon(svWeapon: SV_Weapon): CL_Weapon{
+        let weapon: CL_Weapon;
+        switch(svWeapon.tag){
+            case "25mm":
+                weapon = new CL_Weapon_25mm(this, svWeapon);
+                break;
+            case "120mm":
+                weapon = new CL_Weapon_120mm(this, svWeapon);
+                break;
+            default:
+                throw new Error("Unknown weapon tag: " + svWeapon.tag);
+                break;
+        }
+        return weapon;
     }
 
     createGraphics(): PIXI.Graphics {
@@ -178,25 +203,8 @@ export class CL_Player extends CL_Entity{
 
         this.updateHealthBar();
 
-        if(this.isCLientEntity && this.localCooldownLeftMs != this.entity.mainWeapon.cooldownLeftMs){
-            this.localCooldownLeftMs = this.entity.mainWeapon.cooldownLeftMs;
-            const percent = (1 - (this.localCooldownLeftMs / this.entity.mainWeapon.cooldownMaxMs))  * 100;
-            
-            
-            this.match.uim.updateBar("cooldown-bar-fill", percent);
-            if(percent < 100){
-                this.match.uim.toggleClass("cooldown-bar", "active", true);
-            } else {
-                this.match.uim.toggleClass("cooldown-bar", "active", false);
-            }
-        }
-        
-
-        
-        // if(this.localKia){
-        //     return;
-        // }
-        
+        this.mainWeapon?.update();
+ 
     }
 
     onShot(){
