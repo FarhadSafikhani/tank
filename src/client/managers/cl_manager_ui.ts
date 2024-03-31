@@ -4,10 +4,12 @@ import { CL_Manager } from "./cl_manager";
 export class CL_UiManager extends CL_Manager {
 
     domConatiner: HTMLElement;
+    weaponsContainer: HTMLElement;
 
     constructor(match: CL_Match) {
         super(match);
         this.domConatiner = this.getElementById("ui-br");
+        this.weaponsContainer = this.getElementById('ui-weapons-container');
     }
 
     update() {}
@@ -61,4 +63,34 @@ export class CL_UiManager extends CL_Manager {
         }
     }
 
+    create(data: ElementOptions) {
+		var element = document.createElement(data.type || "div");
+
+        // Add id
+        if (data.id) {
+            element.id = data.id;
+        }
+		
+        // Add classes
+		(data.class || "").split(" ").forEach(c => element.classList.add(c));
+
+        // Add html
+		if (data.html) {
+			element.innerHTML = data.html;
+		}
+		
+        // Append to parent
+        (data.parent || document.querySelector('body'))?.appendChild(element);
+
+		return element;
+	};
+
+}
+
+interface ElementOptions {
+    type?: string;
+    id?: string;
+    class?: string;
+    html?: string;
+    parent?: HTMLElement;
 }

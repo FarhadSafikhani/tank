@@ -19,13 +19,17 @@ export class CL_Weapon_120mm extends CL_Weapon {
     }
 
     setupUi() {
-        const weaponsContainer = document.getElementById('ui-weapons-container');
-        if (weaponsContainer) {
-            weaponsContainer.innerHTML += `<div id="cooldown-bar-120mm" class="ui-text cooldown-bar">
-            <div class="cooldown-bar-fill"></div></div>`;
-        }
-        this.htmlUiContainer = this.match.uim.getElement('#cooldown-bar-120mm')!;
-        this.htmlUiBar = this.match.uim.getElement('#cooldown-bar-120mm .cooldown-bar-fill')!;
+
+        this.htmlUiContainer = this.match.uim.create({
+            id: 'cooldown-bar-120mm',
+            class: 'ui-text cooldown-bar',
+            parent: this.match.uim.weaponsContainer
+        });
+
+        this.htmlUiBar = this.match.uim.create({
+            class: 'cooldown-bar-fill',
+            parent: this.htmlUiContainer
+        });
     }
 
     update() {

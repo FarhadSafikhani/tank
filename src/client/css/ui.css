@@ -137,3 +137,10 @@ button, input{
     left: 0;
 }
 
+#cooldown-bar-120mm{
+    margin-bottom: 30px;
+}
+
+#cooldown-bar-25mm{
+    margin-bottom: 10px;
+}

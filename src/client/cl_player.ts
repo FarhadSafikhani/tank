@@ -39,7 +39,7 @@ export class CL_Player extends CL_Entity{
             this.match.currentPlayerEntity = this;
             this.match.game.viewport.follow(this.graphics);
             this.mainWeapon = this.setupWeapon(entity.mainWeapon);
-            //this.secondaryWeapon = this.setupWeapon(entity.mainWeapon);
+            this.secondaryWeapon = this.setupWeapon(entity.secondaryWeapon);
         } else {
             this.match.uim.addToasterMessage("kill-message-area", this.entity.name + " has joined the game", "message-blue");
         }
@@ -204,7 +204,7 @@ export class CL_Player extends CL_Entity{
         this.updateHealthBar();
 
         this.mainWeapon?.update();
- 
+        this.secondaryWeapon?.update();
     }
 
     onShot(){
