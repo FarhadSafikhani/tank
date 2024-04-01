@@ -13,6 +13,7 @@ import { CL_Match } from "../match";
 import { Particle } from "../particle";
 import { CL_Projectile_25mm } from "../cl_projectile_25mm";
 import { CL_Projectile_120mm } from "../cl_projectile_120mm";
+import { CL_Projectile_50cal } from "../cl_projectile_50cal";
 
 export class CL_EntityManager extends CL_Manager{
 
@@ -55,6 +56,9 @@ export class CL_EntityManager extends CL_Manager{
                 break;
             case "25mm":
                 clEntity = new CL_Projectile_25mm(this.match, entity as SV_Projectile);
+                break;
+            case "50cal":
+                clEntity = new CL_Projectile_50cal(this.match, entity as SV_Projectile);
                 break;
             case "enemy":
                 clEntity = new CL_Enemy(this.match, entity as SV_Enemy);

@@ -6,6 +6,7 @@ import { CollisionCategory } from "../../common/interfaces";
 import { SV_Weapon } from "../weapons/sv_weapon";
 import { SV_Weapon_120mm } from "../weapons/sv_weapon_120mm";
 import { SV_Weapon_25mm } from "../weapons/sv_weapon_25mm";
+import { SV_Weapon_50cal } from "../weapons/sv_weapon_50cal";
 
 export class SV_Player extends SV_Entity {
 
@@ -60,7 +61,8 @@ export class SV_Player extends SV_Entity {
         this.name = name;
         
         this.mainWeapon = new SV_Weapon_120mm(this);
-        this.secondaryWeapon = new SV_Weapon_25mm(this);
+        //this.secondaryWeapon = new SV_Weapon_25mm(this);
+        this.secondaryWeapon = new SV_Weapon_50cal(this);
     }
 
     createBody() {
@@ -69,7 +71,7 @@ export class SV_Player extends SV_Entity {
         {
             isStatic: false, friction: .3, 
             frictionAir: this.friction, restitution: 0.6, 
-            density: .8,
+            density: 1,
             chamfer: { radius: 6 },
             collisionFilter: {
                 group: -this.team, //group for collision filtering

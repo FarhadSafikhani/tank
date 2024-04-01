@@ -8,6 +8,7 @@ import { CL_Weapon } from "./weapons/cl_weapon";
 import { SV_Weapon } from "../server/weapons/sv_weapon";
 import { CL_Weapon_25mm } from "./weapons/cl_weapon_25mm";
 import { CL_Weapon_120mm } from "./weapons/cl_weapon_120mm";
+import { CL_Weapon_50cal } from "./weapons/cl_weapon_50cal";
 
 
 export class CL_Player extends CL_Entity{
@@ -55,6 +56,9 @@ export class CL_Player extends CL_Entity{
             case "120mm":
                 weapon = new CL_Weapon_120mm(this, svWeapon);
                 break;
+            case "50cal":
+                weapon = new CL_Weapon_50cal(this, svWeapon);
+                break;  
             default:
                 throw new Error("Unknown weapon tag: " + svWeapon.tag);
                 break;

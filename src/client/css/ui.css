@@ -129,12 +129,21 @@ button, input{
     transition: opacity 0.25s;
 }
 
-.cooldown-bar-fill{
-    background-color: #c19f00;
+.bar-fill{
+    
     height: 100%;
     position: absolute;
     top: 0;
     left: 0;
+}
+.bar-fill.cooldown{
+    background-color: #c19f00;
+}
+.bar-fill.replenish{
+    background-color: #386e19;
+    top: auto;
+    bottom: 0;
+    height: 7px;
 }
 
 #ui-weapons-container{

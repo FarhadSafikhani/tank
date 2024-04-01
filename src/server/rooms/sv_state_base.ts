@@ -11,6 +11,7 @@ import { Cords } from "../../common/interfaces";
 import { SV_Projectile_25mm } from "../entities/sv_projectile_25mm";
 import { SV_Weapon } from "../weapons/sv_weapon";
 import { SV_Projectile120mm } from "../entities/sv_projectile_120mm";
+import { SV_Projectile_50cal } from "../entities/sv_projectile_50cal";
 
 const GAME_CONFIG = {
   worldSize: 1200
@@ -114,6 +115,12 @@ export class BaseState extends Schema {
 
     if(weapon.tag === "120mm") {
       const p = new SV_Projectile120mm(this, entityId, weapon.caster, x, y, angle);
+      this.addEntity(entityId, p);
+      return;
+    }
+
+    if(weapon.tag === "50cal") {
+      const p = new SV_Projectile_50cal(this, entityId, weapon.caster, x, y, angle);
       this.addEntity(entityId, p);
       return;
     }
