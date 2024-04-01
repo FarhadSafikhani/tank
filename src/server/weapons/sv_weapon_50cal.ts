@@ -34,9 +34,7 @@ export class SV_Weapon_50cal extends SV_Weapon {
                 this.roundsNextReplenishMs = Date.now() + this.roundsReplenishMaxMs;
                 this.roundsLeft = Math.min(this.roundsMax, this.roundsLeft + this.roundsReplenishCount);
             }
-
         }
-
 
     }
 

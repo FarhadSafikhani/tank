@@ -9,10 +9,11 @@ export class SV_Weapon_25mm extends SV_Weapon {
     
     @type("int32") roundsLeft: number;
     roundsNextReplenishMs: number = 0;
+    @type("int32") roundsReplenishTimeLeftMs: number = 0;
 
     cooldownMaxMs: number = 300;
-    roundsMax: number = 25;
-    roundsReplenishMs: number = 5000;
+    @type("int32") roundsMax: number = 25;
+    @type("int32") roundsReplenishMaxMs: number = 5000;
     roundsReplenishCount: number = 5;
 
     constructor(caster: SV_Entity) {
@@ -23,10 +24,16 @@ export class SV_Weapon_25mm extends SV_Weapon {
 
     update() {
         this.cooldownLeftMs = Math.max(0, this.cooldownEndsMs - Date.now());
+        
+        if(this.roundsLeft == this.roundsMax){
+            this.roundsNextReplenishMs = 0;
+        } else {
+            this.roundsReplenishTimeLeftMs = Math.max(0, this.roundsNextReplenishMs - Date.now());
 
-        if(this.roundsLeft < this.roundsMax && Date.now() >= this.roundsNextReplenishMs) {
-            this.roundsNextReplenishMs = Date.now() + this.roundsReplenishMs;
-            this.roundsLeft = Math.min(this.roundsMax, this.roundsLeft + this.roundsReplenishCount);
+            if(this.roundsLeft < this.roundsMax && Date.now() >= this.roundsNextReplenishMs) {
+                this.roundsNextReplenishMs = Date.now() + this.roundsReplenishMaxMs;
+                this.roundsLeft = Math.min(this.roundsMax, this.roundsLeft + this.roundsReplenishCount);
+            }
         }
 
     }
@@ -49,7 +56,7 @@ export class SV_Weapon_25mm extends SV_Weapon {
         
         this.roundsLeft--;
         if(this.roundsNextReplenishMs === 0){
-            this.roundsNextReplenishMs = Date.now() + this.roundsReplenishMs;
+            this.roundsNextReplenishMs = Date.now() + this.roundsReplenishMaxMs;
         }
         
     }

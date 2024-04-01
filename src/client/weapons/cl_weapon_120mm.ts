@@ -29,7 +29,7 @@ export class CL_Weapon_120mm extends CL_Weapon {
         });
 
         this.htmlUiBar = this.match.uim.create({
-            class: 'bar-fill',
+            class: 'bar-fill cooldown',
             parent: this.htmlUiContainer,
             prepend: true
         });

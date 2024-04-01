@@ -10,10 +10,13 @@ export class CL_Weapon_25mm extends CL_Weapon {
     svWeapon: SV_Weapon_25mm;
 
     localCooldownLeftMs: number = -1;
+    localReplenishLeftMs: number = -1;
+    localRoundsLeft: number = -1;
 
     htmlUiContainer: HTMLElement;
     htmlUiBar: HTMLElement;
     ammoCounter: HTMLElement;
+    replenishBar: HTMLElement;
 
     constructor(player: CL_Player, svWeapon: SV_Weapon){
         super(player, svWeapon);
@@ -28,8 +31,14 @@ export class CL_Weapon_25mm extends CL_Weapon {
             html: '<div class="weapon-name">25mm</div>'
         });
 
+        this.replenishBar = this.match.uim.create({
+            class: 'bar-fill replenish',
+            parent: this.htmlUiContainer,
+            prepend: true
+        });
+
         this.htmlUiBar = this.match.uim.create({
-            class: 'bar-fill',
+            class: 'bar-fill cooldown',
             parent: this.htmlUiContainer,
             prepend: true
         });
@@ -37,13 +46,13 @@ export class CL_Weapon_25mm extends CL_Weapon {
         this.ammoCounter = this.match.uim.create({
             class: 'weapon-ammo',
             parent: this.htmlUiContainer,
-            html: '25'
+            html: 'xxx'
         });
 
     }
 
     update() {
-
+        
         if(!this.player.isCLientEntity){
             return;
         }
@@ -54,7 +63,24 @@ export class CL_Weapon_25mm extends CL_Weapon {
             this.match.uim.updateBar(this.htmlUiBar, percent);
         }
 
-        this.ammoCounter.innerText = this.svWeapon.roundsLeft.toString();
+        if(this.localRoundsLeft != this.svWeapon.roundsLeft){
+            this.localRoundsLeft = this.svWeapon.roundsLeft;
+            this.ammoCounter.innerText = this.svWeapon.roundsLeft.toString();
+
+            if(this.svWeapon.roundsLeft == this.svWeapon.roundsMax){
+                this.match.uim.updateBar(this.replenishBar, 0);
+                return;
+            }
+        }
+
+        if(this.localReplenishLeftMs != this.svWeapon.roundsReplenishTimeLeftMs){
+            this.localReplenishLeftMs = this.svWeapon.roundsReplenishTimeLeftMs;
+            if(this.svWeapon.roundsLeft == this.svWeapon.roundsMax){
+                return;
+            }
+            const percent = Math.max(0, Math.min(100, (1 - (this.localReplenishLeftMs / this.svWeapon.roundsReplenishMaxMs)) * 100));
+            this.match.uim.updateBar(this.replenishBar, percent);
+        }
 
     }  
  

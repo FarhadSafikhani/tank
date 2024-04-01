@@ -26,10 +26,10 @@ export class CL_Weapon_50cal extends CL_Weapon {
     setupUi() {
 
         this.htmlUiContainer = this.match.uim.create({
-            id: 'weapon-ui-25mm',
+            id: 'weapon-ui-50cal',
             class: 'ui-text weapon-ui',
             parent: this.match.uim.weaponsContainer,
-            html: '<div class="weapon-name">25mm</div>'
+            html: '<div class="weapon-name">50cal</div>'
         });
 
         this.replenishBar = this.match.uim.create({
@@ -44,12 +44,10 @@ export class CL_Weapon_50cal extends CL_Weapon {
             prepend: true
         });
 
-
-
         this.ammoCounter = this.match.uim.create({
             class: 'weapon-ammo',
             parent: this.htmlUiContainer,
-            html: '25'
+            html: 'xxx'
         });
 
     }
@@ -74,37 +72,18 @@ export class CL_Weapon_50cal extends CL_Weapon {
                 this.match.uim.updateBar(this.replenishBar, 0);
                 return;
             }
-
         }
 
         if(this.localReplenishLeftMs != this.svWeapon.roundsReplenishTimeLeftMs){
             this.localReplenishLeftMs = this.svWeapon.roundsReplenishTimeLeftMs;
 
-            if(this.svWeapon.roundsLeft == this.svWeapon.roundsMax){
-                
+            if(this.svWeapon.roundsLeft == this.svWeapon.roundsMax){     
                 return;
             }
 
             const percent = Math.max(0, Math.min(100, (1 - (this.localReplenishLeftMs / this.svWeapon.roundsReplenishMaxMs)) * 100));
             this.match.uim.updateBar(this.replenishBar, percent);
-
-
-            // if(this.localRoundsLeft == 0){
-
-            //     const percent = Math.max(0, Math.min(100, (1 - (this.localReplenishLeftMs / this.svWeapon.roundsReplenishMaxMs)) * 100));
-            //     console.log("replenishing", percent, this.localReplenishLeftMs, this.svWeapon.roundsReplenishMaxMs);
-            //     this.match.uim.updateBar(this.replenishBar, percent);
-
-            // } else {
-            //     this.match.uim.updateBar(this.replenishBar, 0);
-            // }
         }
-
-
-
-
-
-
 
     }  
  

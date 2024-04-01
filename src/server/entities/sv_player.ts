@@ -61,8 +61,8 @@ export class SV_Player extends SV_Entity {
         this.name = name;
         
         this.mainWeapon = new SV_Weapon_120mm(this);
-        //this.secondaryWeapon = new SV_Weapon_25mm(this);
-        this.secondaryWeapon = new SV_Weapon_50cal(this);
+        this.secondaryWeapon = new SV_Weapon_25mm(this);
+        //this.secondaryWeapon = new SV_Weapon_50cal(this);
     }
 
     createBody() {
