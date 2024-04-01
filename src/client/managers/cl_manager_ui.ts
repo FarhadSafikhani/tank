@@ -79,8 +79,8 @@ export class CL_UiManager extends CL_Manager {
 			element.innerHTML = data.html;
 		}
 		
-        // Append to parent
-        (data.parent || document.querySelector('body'))?.appendChild(element);
+        // Append or Prepend to parent
+        data.prepend ? data.parent.prepend(element) : data.parent.appendChild(element);
 
 		return element;
 	};
@@ -92,5 +92,6 @@ interface ElementOptions {
     id?: string;
     class?: string;
     html?: string;
-    parent?: HTMLElement;
+    parent: HTMLElement;
+    prepend?: boolean;
 }

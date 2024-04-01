@@ -9,10 +9,11 @@ export class CL_Weapon_120mm extends CL_Weapon {
     
     svWeapon: SV_Weapon_120mm;
 
-    localCooldownLeftMs: number = 0;
+    localCooldownLeftMs: number = -1;
 
-    htmlUiContainer: HTMLElement;
+
     htmlUiBar: HTMLElement;
+    htmlUiContainer: HTMLElement;
 
     constructor(player: CL_Player, svWeapon: SV_Weapon){
         super(player, svWeapon);
@@ -21,25 +22,30 @@ export class CL_Weapon_120mm extends CL_Weapon {
     setupUi() {
 
         this.htmlUiContainer = this.match.uim.create({
-            id: 'cooldown-bar-120mm',
-            class: 'ui-text cooldown-bar',
-            parent: this.match.uim.weaponsContainer
+            id: 'weapon-ui-120mm',
+            class: 'ui-text weapon-ui',
+            parent: this.match.uim.weaponsContainer,
+            html: '<div class="weapon-name">120mm</div><div class="weapon-ammo">♾</div>'
         });
 
         this.htmlUiBar = this.match.uim.create({
             class: 'cooldown-bar-fill',
-            parent: this.htmlUiContainer
+            parent: this.htmlUiContainer,
+            prepend: true
         });
+
     }
 
     update() {
 
-        if(this.player.isCLientEntity && this.localCooldownLeftMs != this.svWeapon.cooldownLeftMs){
+        if(!this.player.isCLientEntity){
+            return;
+        }
+
+        if(this.localCooldownLeftMs != this.svWeapon.cooldownLeftMs){
             this.localCooldownLeftMs = this.svWeapon.cooldownLeftMs;
             const percent = (1 - (this.localCooldownLeftMs / this.svWeapon.cooldownMaxMs)) * 100;
-            
             this.match.uim.updateBar(this.htmlUiBar, percent);
-            this.match.uim.toggleClass(this.htmlUiContainer, "active", percent < 100);
         }
 
     }    

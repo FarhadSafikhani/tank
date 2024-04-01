@@ -137,10 +137,34 @@ button, input{
     left: 0;
 }
 
-#cooldown-bar-120mm{
-    margin-bottom: 30px;
+#ui-weapons-container{
+    display: flex;
+    position: absolute;
+    bottom: 10%;
+    left: 0;
+    right: 0;
+    align-content: center;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
-#cooldown-bar-25mm{
-    margin-bottom: 10px;
+.weapon-ui{
+    position: relative;
+    width: 80px;
+    height: 80px;
+    border: 2px solid black;
+    background: gray;
+    margin: 5px; 
+    color: black;
+}
+
+.weapon-name{
+    position: relative;
+    padding: 2px;
+}
+
+.weapon-ammo{
+    position: relative;
+    font-size: 50px;
+    line-height: 50px;
 }
