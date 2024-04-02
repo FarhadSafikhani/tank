@@ -263,6 +263,8 @@ export class SV_Player extends SV_Entity {
         
         this.kia = false;
         this.healthCurr = this.healthMax;
+        this.mainWeapon.reInit();
+        this.secondaryWeapon.reInit();
     }
 
     takeDamage(damage: number, attacker: SV_Entity) {

@@ -2,11 +2,8 @@ import { SV_Entity } from "../entities/sv_entity";
 import { SV_Weapon } from "./sv_weapon";
 import { Schema, type } from "@colyseus/schema";
 
-
 export class SV_Weapon_25mm extends SV_Weapon {
 
-    
-    
     @type("int32") roundsLeft: number;
     roundsNextReplenishMs: number = 0;
     @type("int32") roundsReplenishTimeLeftMs: number = 0;
@@ -23,15 +20,16 @@ export class SV_Weapon_25mm extends SV_Weapon {
     }
 
     update() {
-        this.cooldownLeftMs = Math.max(0, this.cooldownEndsMs - Date.now());
+        const now = Date.now();
+        this.cooldownLeftMs = Math.max(0, this.cooldownEndsMs - now);
         
         if(this.roundsLeft == this.roundsMax){
             this.roundsNextReplenishMs = 0;
         } else {
-            this.roundsReplenishTimeLeftMs = Math.max(0, this.roundsNextReplenishMs - Date.now());
+            this.roundsReplenishTimeLeftMs = Math.max(0, this.roundsNextReplenishMs - now);
 
-            if(this.roundsLeft < this.roundsMax && Date.now() >= this.roundsNextReplenishMs) {
-                this.roundsNextReplenishMs = Date.now() + this.roundsReplenishMaxMs;
+            if(this.roundsLeft < this.roundsMax && now >= this.roundsNextReplenishMs) {
+                this.roundsNextReplenishMs = now + this.roundsReplenishMaxMs;
                 this.roundsLeft = Math.min(this.roundsMax, this.roundsLeft + this.roundsReplenishCount);
             }
         }
@@ -62,10 +60,15 @@ export class SV_Weapon_25mm extends SV_Weapon {
     }
 
 
-
-
     canFire(): boolean {
         return super.canFire() && this.roundsLeft > 0;
+    }
+
+    reInit(): void {
+        super.reInit();
+        this.roundsLeft = this.roundsMax;
+        this.roundsNextReplenishMs = 0;
+        this.roundsReplenishTimeLeftMs = 0;
     }
 
     

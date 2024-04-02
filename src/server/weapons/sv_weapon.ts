@@ -28,6 +28,11 @@ export class SV_Weapon extends Schema{
     update() {
 
     }    
+
+    reInit() {
+        this.cooldownEndsMs = 0;
+        this.cooldownLeftMs = 0;
+    }
 }
 
 
