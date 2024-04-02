@@ -61,8 +61,8 @@ export class SV_Player extends SV_Entity {
         this.name = name;
         
         this.mainWeapon = new SV_Weapon_120mm(this);
-        this.secondaryWeapon = new SV_Weapon_25mm(this);
-        //this.secondaryWeapon = new SV_Weapon_50cal(this);
+        //this.secondaryWeapon = new SV_Weapon_25mm(this);
+        this.secondaryWeapon = new SV_Weapon_50cal(this);
     }
 
     createBody() {
@@ -95,6 +95,10 @@ export class SV_Player extends SV_Entity {
 
         if(this.dead) return;
 
+        this.x = this.body.position.x;
+        this.y = this.body.position.y;
+        this.angle = this.body.angle;
+
         if(this.kia) {
             
             if(Date.now() >= this.respawnTimeNext) {
@@ -116,20 +120,16 @@ export class SV_Player extends SV_Entity {
 
             this.updateMovement();
             this.updateTurretAngle();
+
+            if(this.rmDown){
+                this.secondaryWeapon.fire(this.turretAngle);
+            }
+    
+            if(this.mDown){
+                this.mainWeapon.fire(this.turretAngle);
+            }
         }
 
-        this.x = this.body.position.x;
-        this.y = this.body.position.y;
-        this.angle = this.body.angle;
-
-        if(this.rmDown){
-            this.secondaryWeapon.fire(this.turretAngle);
-        }
-
-        if(this.mDown){
-            this.mainWeapon.fire(this.turretAngle);
-        }
-        
         this.mainWeapon.update();
         this.secondaryWeapon.update();
 
