@@ -12,6 +12,7 @@ import { SV_Projectile_25mm } from "../entities/sv_projectile_25mm";
 import { SV_Weapon } from "../weapons/sv_weapon";
 import { SV_Projectile120mm } from "../entities/sv_projectile_120mm";
 import { SV_Projectile_50cal } from "../entities/sv_projectile_50cal";
+import { SV_Vehicle } from "../vehicle/sv_vehicle";
 
 const GAME_CONFIG = {
   worldSize: 1200
@@ -28,6 +29,7 @@ export class BaseState extends Schema {
   matterBodies: { [entityId: string]: Matter.Body } = {};
   nextTeam: number = 1;
 
+  @type({ map: SV_Player }) players = new MapSchema<SV_Player>();
   @type({ map: SV_Entity }) entities = new MapSchema<SV_Entity>();
   @type("boolean") isGameOver: boolean = false;
 
@@ -102,7 +104,13 @@ export class BaseState extends Schema {
   createPlayer(sessionId: string, position: Cords, team: number, clientOptions: any) {
     const username = clientOptions && clientOptions['userName'] || 'anon';
     const p = new SV_Player(this, sessionId, position.x, position.y, username, team);
-    this.addEntity(sessionId, p);
+    this.players.set(sessionId, p);
+  }
+
+  createVehicle(player: SV_Player, x: number, y: number) {
+    const p = new SV_Vehicle(player, x, y);
+    this.addEntity(player.id, p);
+    return p;
   }
 
   createProjectile(weapon: SV_Weapon, x: number, y: number, angle: number) {
@@ -161,6 +169,16 @@ export class BaseState extends Schema {
     delete this.matterBodies[entityId];
   }
 
+  removePlayer(sessionId: string) {
+    const p = this.players.get(sessionId);
+    if(!p) {
+      console.error("removePlayer not found:", sessionId);
+      return;
+    }
+    p.onLeave();
+    this.players.delete(sessionId);
+  }
+
   update(deltaTime) {
 
     if(this.isGameOver) {
@@ -176,11 +194,17 @@ export class BaseState extends Schema {
   }
 
   matterAfterUpdate(engineTimeEvent: IEventTimestamped<Engine>) {
+    const d = engineTimeEvent['delta'];
+
     this.entities.forEach((entity, entityId) => {
-      entity.update(engineTimeEvent['delta']);
+      entity.update(d);
 
       // touch all satic entities for filtering by distance...
       // entity['$changes'].touch(0);
+    });
+
+    this.players.forEach((player, sessionId) => {
+      player.update(d);
     });
   }
 

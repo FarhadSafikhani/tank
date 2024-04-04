@@ -85,6 +85,7 @@ export class SV_Projectile extends SV_Entity {
     }
 
     onCollisionStart(otherEntity: SV_Entity, collision: IEventCollision<Engine>) {
+        //TODO: destructable component in entity takes damage
         if(this.body && otherEntity && otherEntity.body) {
             if(otherEntity.tag === "player"){
                 const player = otherEntity as SV_Player;

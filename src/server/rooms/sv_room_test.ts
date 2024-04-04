@@ -16,7 +16,12 @@ export class RoomTest extends RoomBase {
     this.getState().createPlayer(client.sessionId, {x: 0, y: 0}, nextTeam, clientOptions);
   }
 
-  getState(){
+  onLeave(client: Client<any, any>): void {
+    super.onLeave(client);
+    this.getState().removePlayer(client.sessionId);
+  }
+
+  getState(): StateTest {
     return this.state as StateTest;
   }
 

@@ -55,10 +55,11 @@ export class RoomBase extends Room {
   }
 
   onLeave(client: Client) {
-    const entity = this.state.entities[client.sessionId] as SV_Player;
+    console.log("client left:", client.sessionId);
+    // const entity = this.state.entities[client.sessionId] as SV_Player;
 
-    // entity may be already dead.
-    if (entity) { entity.dead = true; }
+    // // entity may be already dead.
+    // if (entity) { entity.dead = true; }
   }
 
   getClientEntity(sessionId: string): SV_Player | undefined {
