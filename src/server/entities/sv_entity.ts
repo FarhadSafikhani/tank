@@ -30,4 +30,9 @@ export class SV_Entity extends Schema {
 
     onCollisionStart(otherEntity: SV_Entity, collision: IEventCollision<Engine>) {}
 
+
+    //TODO: destructable component in entity takes damage
+    isDestructable: boolean = false;
+    takeDamage(damage: number, attacker: SV_Entity) {}
+
 }

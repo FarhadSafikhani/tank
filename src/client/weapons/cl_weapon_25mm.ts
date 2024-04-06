@@ -1,6 +1,7 @@
 import { SV_Weapon } from "../../server/weapons/sv_weapon";
 import { SV_Weapon_25mm } from "../../server/weapons/sv_weapon_25mm";
-import { CL_Player } from "../cl_player";
+import { CL_Vehicle } from "../cl_vehicle";
+import { CL_Match } from "../match";
 import { CL_Weapon } from "./cl_weapon";
 
 
@@ -18,32 +19,32 @@ export class CL_Weapon_25mm extends CL_Weapon {
     ammoCounter: HTMLElement;
     replenishBar: HTMLElement;
 
-    constructor(player: CL_Player, svWeapon: SV_Weapon){
-        super(player, svWeapon);
+    constructor(vehicle: CL_Vehicle, svWeapon: SV_Weapon){
+        super(vehicle, svWeapon);
     }
 
     setupUi() {
 
-        this.htmlUiContainer = this.match.uim.create({
+        this.htmlUiContainer = this.vehicle.match.uim.create({
             id: 'weapon-ui-25mm',
             class: 'ui-text weapon-ui',
-            parent: this.match.uim.weaponsContainer,
+            parent: this.vehicle.match.uim.weaponsContainer,
             html: '<div class="weapon-name">25mm</div>'
         });
 
-        this.replenishBar = this.match.uim.create({
+        this.replenishBar = this.vehicle.match.uim.create({
             class: 'bar-fill replenish',
             parent: this.htmlUiContainer,
             prepend: true
         });
 
-        this.htmlUiBar = this.match.uim.create({
+        this.htmlUiBar = this.vehicle.match.uim.create({
             class: 'bar-fill cooldown',
             parent: this.htmlUiContainer,
             prepend: true
         });
 
-        this.ammoCounter = this.match.uim.create({
+        this.ammoCounter = this.vehicle.match.uim.create({
             class: 'weapon-ammo',
             parent: this.htmlUiContainer,
             html: 'xxx'
@@ -53,14 +54,14 @@ export class CL_Weapon_25mm extends CL_Weapon {
 
     update() {
         
-        if(!this.player.isCLientEntity){
+        if(!this.vehicle.isCLientVehicle){
             return;
         }
 
         if(this.localCooldownLeftMs != this.svWeapon.cooldownLeftMs){
             this.localCooldownLeftMs = this.svWeapon.cooldownLeftMs;
             const percent = (1 - (this.localCooldownLeftMs / this.svWeapon.cooldownMaxMs)) * 100;
-            this.match.uim.updateBar(this.htmlUiBar, percent);
+            this.vehicle.match.uim.updateBar(this.htmlUiBar, percent);
         }
 
         if(this.localRoundsLeft != this.svWeapon.roundsLeft){
@@ -68,7 +69,7 @@ export class CL_Weapon_25mm extends CL_Weapon {
             this.ammoCounter.innerText = this.svWeapon.roundsLeft.toString();
 
             if(this.svWeapon.roundsLeft == this.svWeapon.roundsMax){
-                this.match.uim.updateBar(this.replenishBar, 0);
+                this.vehicle.match.uim.updateBar(this.replenishBar, 0);
                 return;
             }
         }
@@ -79,7 +80,7 @@ export class CL_Weapon_25mm extends CL_Weapon {
                 return;
             }
             const percent = Math.max(0, Math.min(100, (1 - (this.localReplenishLeftMs / this.svWeapon.roundsReplenishMaxMs)) * 100));
-            this.match.uim.updateBar(this.replenishBar, percent);
+            this.vehicle.match.uim.updateBar(this.replenishBar, percent);
         }
 
     }  

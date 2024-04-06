@@ -54,16 +54,6 @@ export class StateTest extends BaseState {
     //this.waveSpawner(deltaTime);
   }
 
-  matterAfterUpdate(engineTimeEvent: IEventTimestamped<Engine>) {
-    this.entities.forEach((entity, entityId) => {
-      entity.update(engineTimeEvent['delta']);
-
-      // touch all satic entities for filtering by distance...
-      // entity['$changes'].touch(0);
-    });
-  }
-
-
   nextSpawnTime = Date.now();
 
   //TODO: move to a wave manager
@@ -77,7 +67,6 @@ export class StateTest extends BaseState {
     const y = Math.random() * GAME_CONFIG.worldSize - GAME_CONFIG.worldSize / 2;
     //padd the x and y
     const spawnPos = { x: x < 0 ? x - padding : x + padding, y: y < 0 ? y - padding : y + padding };
-    //console.log("spawning enemy at", spawnPos);
     this.createEnemy(spawnPos);
     this.nextSpawnTime = Date.now() + 2000;
   }
@@ -88,9 +77,7 @@ export class StateTest extends BaseState {
   }
 
   gameOver() {
-    console.log("game over:", this.room.roomId);
-    //this.isGameOver = true;
-    //this.room.disconnect();
+
   }
 
 

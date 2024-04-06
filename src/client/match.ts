@@ -3,10 +3,12 @@ import { Room, Client } from "colyseus.js";
 import { BaseState } from "../server/rooms/sv_state_base";
 import { KeyMessage, MouseMessage } from "../common/interfaces";
 import { SV_Entity } from "../server/entities/sv_entity";
-import { CL_Player } from "./cl_player";
+import { CL_Vehicle } from "./cl_vehicle";
 import { Game } from './game';
 import { CL_EntityManager } from './managers/cl_manager_entity';
 import { CL_UiManager } from './managers/cl_manager_ui';
+import { SV_Player } from '../server/entities/sv_player';
+import { CL_Player } from './cl_player';
 
 //import dirtImg from '../assets/dirt.jpg';
 
@@ -17,7 +19,11 @@ export class CL_Match {
     em: CL_EntityManager;
     uim: CL_UiManager;
 
-    currentPlayerEntity: CL_Player;
+    //TODO: player manager?
+    players: { [id: string]: CL_Player } = {};
+
+    currentPlayerVehcile: CL_Vehicle;
+    currentClientPlayer: CL_Player;
 
     active: boolean = false;
 
@@ -81,13 +87,7 @@ export class CL_Match {
 
         this.room.state.entities.onAdd((entity: SV_Entity, sessionId: string) => {
 
-            this.em.addClEntity(entity);
-            const clEntity = this.em.getClEntity(entity.id);
-
-            if(!clEntity) {
-                console.error("clEntity not found");
-                return;
-            }
+            const clEntity = this.em.addClEntity(entity);
 
             //TODO: maybe instead of update all entities every tick, only update the ones that have changed
             entity.onChange(() => {
@@ -99,6 +99,20 @@ export class CL_Match {
         this.room.state.entities.onRemove((entity: SV_Entity , entityId: string) => { 
             this.em.getClEntity(entityId).onSVDeath();
         });
+
+        this.room.state.players.onAdd((player: SV_Player, sessionId: string) => {
+            
+            this.players[sessionId] = new CL_Player(this, player);
+            player.onChange(() => {
+                this.players[sessionId]?.onChange();
+            });
+        });
+
+        this.room.state.players.onRemove((player: SV_Player, sessionId: string) => { 
+            this.players[player.id]?.onLeave();
+            delete this.players[player.id];
+        });
+
     }
 
     tick() {

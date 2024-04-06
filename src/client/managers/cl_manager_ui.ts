@@ -35,12 +35,14 @@ export class CL_UiManager extends CL_Manager {
     }
 
     addToasterMessage(containerId: string, message: string, specialClass?: string) {
-        const el = document.createElement("div");
-        el.className = "toaster-message";
-        specialClass && el.classList.add(specialClass);
-        el.innerText = message;
-        const container = this.getElementById(containerId);
-        container.insertBefore(el, container.firstChild);
+        
+        const el = this.create({
+            parent: this.getElementById(containerId),
+            html: message,
+            class: "toaster-message " + (specialClass || ""),
+            prepend: true
+        });
+
         setTimeout(() => {
             el.classList.add("fade-out");
             setTimeout(() => {
@@ -54,8 +56,7 @@ export class CL_UiManager extends CL_Manager {
         el.style.width = percent + "%";
     }
 
-    toggleClass(id: string | HTMLElement, className: string, on: boolean) {
-        const el = typeof(id) === "string" ? this.getElementById(id) : id;
+    toggleClass(el: HTMLElement, className: string, on: boolean) {
         if (on) {
             el.classList.add(className);
         } else {
@@ -72,7 +73,7 @@ export class CL_UiManager extends CL_Manager {
         }
 		
         // Add classes
-		(data.class || "").split(" ").forEach(c => element.classList.add(c));
+		(data.class || "").trim().split(" ").forEach(c => element.classList.add(c));
 
         // Add html
 		if (data.html) {

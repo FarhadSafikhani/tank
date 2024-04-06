@@ -16,11 +16,14 @@ export class SV_Vehicle extends SV_Entity {
     @type("string") verts: string = "";
     @type("int32") healthCurr: number = 0;
     @type("int32") healthMax: number = 0;
+    @type("boolean") isKia: boolean = false;
     @type("int32") w: number = 60;
     @type("int32") h: number = 40;
     @type(SV_Weapon) mainWeapon: SV_Weapon;
     @type(SV_Weapon) secondaryWeapon: SV_Weapon;
 
+    isDestructable: boolean = true;
+    
     player: SV_Player;
     body: Matter.Body;
 
@@ -34,7 +37,8 @@ export class SV_Vehicle extends SV_Entity {
     constructor(player: SV_Player, x: number, y: number) {
         super(player.state, player.id, player.team);
         this.player = player;
-        this.tag = "tank-medium";
+        this.name = player.name;
+        this.tag = "vehicle";
         this.x = x;
         this.y = y;
         this.body = this.createBody();
@@ -75,23 +79,18 @@ export class SV_Vehicle extends SV_Entity {
 
         if(this.dead) return;
 
+        this.mainWeapon.update();
+        this.secondaryWeapon.update();
+
+        if(!this.isKia){
+            this.updateMovement();
+            this.player.rmDown && this.secondaryWeapon.fire(this.turretAngle);
+            this.player.mDown && this.mainWeapon.fire(this.turretAngle);
+        }
+
         this.x = this.body.position.x;
         this.y = this.body.position.y;
         this.angle = this.body.angle;
-
-        if(this.healthCurr <= 0) {
-            this.healthCurr = 0;
-            this.player.killedInAction();
-            return;
-        }    
-
-        this.updateMovement();
-
-        this.player.rmDown && this.secondaryWeapon.fire(this.turretAngle);
-        this.player.mDown && this.mainWeapon.fire(this.turretAngle);
-    
-        this.mainWeapon.update();
-        this.secondaryWeapon.update();
 
     }
 
@@ -139,17 +138,24 @@ export class SV_Vehicle extends SV_Entity {
     }
 
     takeDamage(damage: number, attacker: SV_Entity) {
-        if(this.dead || this.player.kia || this.healthCurr <= 0) return;
-        // console.log("player taking damage", damage, 'from', attacker.name);
+        
+        if(this.dead || this.player.isKia || this.healthCurr <= 0) return;
+        
         this.healthCurr -= damage;
         if(this.healthCurr <= 0 && attacker){
+            this.healthCurr = 0;
+            this.isKia = true;
+            this.player.killedInAction();
             this.player.lastKillerId = attacker.id;
             this.player.lastKillerName = attacker.name;
         }
     }
 
     onMouseMove(mx: number, my: number) {
-        this.turretAngle = Math.atan2(mx - this.y, my - this.x);
+        if(this.isKia){
+            return;
+        }
+        this.turretAngle = Math.atan2(my - this.y, mx - this.x);
     }
 
     respawn() {
@@ -161,6 +167,7 @@ export class SV_Vehicle extends SV_Entity {
         this.healthCurr = this.healthMax;
         this.mainWeapon.reInit();
         this.secondaryWeapon.reInit();
+        this.isKia = false;
     }
 
 }

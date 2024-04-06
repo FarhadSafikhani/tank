@@ -17,30 +17,30 @@ export class RoomBase extends Room {
 
   setupBindings() {
     this.onMessage("mousemove", (client, message: MouseMessage) => {
-      this.getClientEntity(client.sessionId)?.onMouseMove(message.x, message.y);
+      this.getPlayerById(client.sessionId)?.onMouseMove(message.x, message.y);
     });
 
     this.onMessage("keydown", (client, message: KeyMessage) => {
-      this.getClientEntity(client.sessionId)?.onKeyDown(message.keyCode);
+      this.getPlayerById(client.sessionId)?.onKeyDown(message.keyCode);
     });
 
     this.onMessage("keyup", (client, message: KeyMessage) => {
-      this.getClientEntity(client.sessionId)?.onKeyUp(message.keyCode);
+      this.getPlayerById(client.sessionId)?.onKeyUp(message.keyCode);
     });
 
     this.onMessage("mousedown", (client, message: MouseMessage) => {
       if (message.button === 0){
-        this.getClientEntity(client.sessionId)?.onMouseDown(message.x, message.y);
+        this.getPlayerById(client.sessionId)?.onMouseDown(message.x, message.y);
       } else if (message.button === 2){
-        this.getClientEntity(client.sessionId)?.onRightMouseDown(message.x, message.y);
+        this.getPlayerById(client.sessionId)?.onRightMouseDown(message.x, message.y);
       }
     });
 
     this.onMessage("mouseup", (client, message: MouseMessage) => {
       if(message.button === 0){
-        this.getClientEntity(client.sessionId)?.onMouseUp(message.x, message.y);
+        this.getPlayerById(client.sessionId)?.onMouseUp(message.x, message.y);
       } else if (message.button === 2){
-        this.getClientEntity(client.sessionId)?.onRightMouseUp(message.x, message.y);
+        this.getPlayerById(client.sessionId)?.onRightMouseUp(message.x, message.y);
       }
     });
   }
@@ -56,14 +56,11 @@ export class RoomBase extends Room {
 
   onLeave(client: Client) {
     console.log("client left:", client.sessionId);
-    // const entity = this.state.entities[client.sessionId] as SV_Player;
-
-    // // entity may be already dead.
-    // if (entity) { entity.dead = true; }
+    //this.state.players.delete(client.sessionId);
   }
 
-  getClientEntity(sessionId: string): SV_Player | undefined {
-    return this.state.entities[sessionId];
+  getPlayerById(sessionId: string): SV_Player | undefined {
+    return this.state.players.get(sessionId);
   }
 
   startTheGameLoop() {

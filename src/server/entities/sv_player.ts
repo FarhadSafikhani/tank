@@ -8,7 +8,7 @@ export class SV_Player extends Schema{
     @type("string") name: string = "";
     @type("int32") team: number = 0;
     @type("string") lastKillerName: string = "";
-    @type("boolean") kia: boolean = false;
+    @type("boolean") isKia: boolean = false;
     @type({ map: "int32" }) matchStats = new MapSchema<number>();
     @type(SV_Vehicle) vehicle: SV_Vehicle;
     @type("string") id: string;
@@ -99,18 +99,18 @@ export class SV_Player extends Schema{
     }
 
     killedInAction() {
-        if(this.kia) { return; }
-        this.kia = true;
+        if(this.isKia) { return; }
+        this.isKia = true;
         this.respawnTimeNext = Date.now() + this.respawnTime;
     }
 
     respawn() {
-        this.kia = false;
+        this.isKia = false;
         this.vehicle.respawn();
     }
 
     update(engineDeltaTime) {
-        if(this.kia) {
+        if(this.isKia) {
             if(Date.now() >= this.respawnTimeNext) {
                 this.respawnTimeLeft = 0;
                 this.respawn();
@@ -123,7 +123,7 @@ export class SV_Player extends Schema{
 
     onLeave() {
         this.vehicle.dead = true;
-        this.kia = true;
+        this.isKia = true;
     }
 
     

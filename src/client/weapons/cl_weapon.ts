@@ -1,16 +1,14 @@
 import { SV_Weapon } from "../../server/weapons/sv_weapon";
-import { CL_Player } from "../cl_player";
+import { CL_Vehicle } from "../cl_vehicle";
 import { CL_Match } from "../match";
 
 export class CL_Weapon {
 
-    player: CL_Player;
-    match: CL_Match;
+    vehicle: CL_Vehicle;
     svWeapon: SV_Weapon;
 
-    constructor(player: CL_Player, svWeapon: SV_Weapon) {
-        this.player = player;
-        this.match = this.player.match;
+    constructor(vehicle: CL_Vehicle, svWeapon: SV_Weapon) {
+        this.vehicle = vehicle;
         this.svWeapon = svWeapon;
         this.setupUi();
     }

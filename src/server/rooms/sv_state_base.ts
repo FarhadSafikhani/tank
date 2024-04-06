@@ -214,7 +214,6 @@ export class BaseState extends Schema {
 
   gameOver() {
     this.isGameOver = true;
-    console.log("game over:", this.room.roomId);
   }
 
   pickRandomSpawnPoint() {

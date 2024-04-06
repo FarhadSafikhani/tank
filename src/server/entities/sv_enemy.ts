@@ -4,6 +4,7 @@ import { type } from "@colyseus/schema";
 import { BaseState } from "../rooms/sv_state_base";
 import { CollisionCategory } from "../../common/interfaces";
 import { SV_Player } from "./sv_player";
+import { SV_Vehicle } from "../vehicle/sv_vehicle";
 
 export class SV_Enemy extends SV_Entity {
 
@@ -24,7 +25,9 @@ export class SV_Enemy extends SV_Entity {
 
     body: Matter.Body;
 
-    currentTarget: SV_Player | null = null;
+    isDestructable: boolean = true;
+
+    currentTarget: SV_Vehicle | null = null;
 
     constructor(state: BaseState, id: string, x: number, y: number) {
         super(state, id);
@@ -105,18 +108,18 @@ export class SV_Enemy extends SV_Entity {
 
     }
 
-    acquireTarget(): SV_Player | null {
+    acquireTarget(): SV_Vehicle | null {
     
         //chase the nearby players
         const players = this.state.entities.values();
-        let closestPlayer: SV_Player | null = null;
+        let closestPlayer: SV_Vehicle | null = null;
         let closestDistance = 999999;
         for(let player of players) {
             if(player.tag === "player") {
                 const distance = Math.sqrt(Math.pow(player.x - this.x, 2) + Math.pow(player.y - this.y, 2));
                 if(distance < closestDistance) {
                     closestDistance = distance;
-                    closestPlayer = player as SV_Player;
+                    closestPlayer = player as SV_Vehicle;
                 }
             }
         }
@@ -126,13 +129,11 @@ export class SV_Enemy extends SV_Entity {
     }
 
     onCollisionStart(otherEntity: SV_Entity, collision: IEventCollision<Engine>) {
-        if(this.body && otherEntity && otherEntity.body) {
-            if(otherEntity.tag === "player"){
-                const player = otherEntity as SV_Player;
-                player.healthCurr -= this.damage;
+        if(this.body && otherEntity && otherEntity.body && otherEntity.isDestructable && !this.dead && !otherEntity.dead && otherEntity.team !== this.team) {
+            if(otherEntity instanceof SV_Vehicle){
+                otherEntity.takeDamage(this.damage, this);
             }
         }
-
     }
 
     takeDamage(damage: number, attacker: SV_Entity) {

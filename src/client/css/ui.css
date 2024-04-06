@@ -104,6 +104,9 @@ button, input{
 .toaster-message.message-blue{
     background-color: #0066ff70;
 }
+.toaster-message.message-gray{
+    background-color: #28292c;
+}
 
 #game-canvas{
     position:absolute;

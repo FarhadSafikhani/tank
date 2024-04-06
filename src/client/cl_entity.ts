@@ -33,11 +33,11 @@ export class CL_Entity{
     }
 
     update(){
-        if(this.state === EntityState.ALIVE){
+        if(this.state === EntityState.ALIVE) {
             this.aliveTick();
-        } else if(this.state === EntityState.DYING){
+        } else if(this.state === EntityState.DYING) {
             this.dieTick();
-        } else if(this.state === EntityState.DISPOSED){
+        } else if(this.state === EntityState.DISPOSED) {
             this.destroy();
         }
     }

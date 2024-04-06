@@ -54,7 +54,7 @@ export class Game extends PIXI.Application {
     setupBindings() {
         
         this.viewport.on("wheel", (e) => {
-            console.log("WHEEL", e.deltaY);
+            //e.deltaY
         });
 
         window.onresize = () => {
@@ -129,8 +129,8 @@ export class Game extends PIXI.Application {
     }
 
     pickRoom() {
-        //this.connect("roomTest");
-        this.connect("roomBR");
+        this.connect("roomTest");
+        //this.connect("roomBR");
     }
 
     async connect(roomType: string) {
