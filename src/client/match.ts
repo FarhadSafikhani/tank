@@ -15,7 +15,7 @@ import { CL_Player } from './cl_player';
 const ENDPOINT = window.location.origin; //"http://localhost:2567";
 
 export class CL_Match {
-
+    
     em: CL_EntityManager;
     uim: CL_UiManager;
 
@@ -29,6 +29,8 @@ export class CL_Match {
 
     game: Game;
     room: Room<BaseState>;
+
+    public readonly hueShifts = [0, 0, 90, 240, 270, 180, 300, 150, 60, 120, 210];
     
     constructor (game: Game, room: Room<BaseState>) {
 
@@ -130,6 +132,15 @@ export class CL_Match {
         this.em.update();
 
         requestAnimationFrame(this.tick.bind(this));
+    }
+
+    getTeamHueShift(team: number): number {
+
+        if(team < this.hueShifts.length){
+            return this.hueShifts[team];
+        }
+
+        return Math.round(Math.random() * 360);
     }
 
 }

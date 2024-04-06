@@ -42,6 +42,7 @@ export class CL_Vehicle extends CL_Entity{
             this.mainWeapon = this.setupWeapon(entity.mainWeapon);
             this.secondaryWeapon = this.setupWeapon(entity.secondaryWeapon);
         }
+        this.addColorFilter(this.graphics, this.match.getTeamHueShift(this.entity.team));
     }
 
     setupWeapon(svWeapon: SV_Weapon): CL_Weapon{
@@ -81,7 +82,7 @@ export class CL_Vehicle extends CL_Entity{
         graphics.addChild(this.graphicsTankBody);
 
         this.match.game.viewport.addChild(graphics);
-
+        
         return graphics;
     }
 
@@ -254,6 +255,14 @@ export class CL_Vehicle extends CL_Entity{
 
         this.graphicsHealthBar.alpha = 0;
     }
+    
+    addColorFilter(graphics: PIXI.Graphics, shift: number): void {
+        const colorMatrix = new PIXI.ColorMatrixFilter();
+        graphics.filters = [colorMatrix];
+        //const c = new PIXI.Color({r: 111, g: 125, b: 255}).toNumber();
+        //colorMatrix.tint(c, false);
+        colorMatrix.hue(shift, true);
+    }
 
     onRespawn(): void {
         this.graphics.filters = [];
@@ -263,6 +272,7 @@ export class CL_Vehicle extends CL_Entity{
         this.graphicsTurret.rotation = this.entity.turretAngle;
         this.graphics.alpha = 1;
         this.graphicsHealthBar.alpha = 1;
+        this.addColorFilter(this.graphics, this.match.getTeamHueShift(this.entity.team));
     }
 
 }
