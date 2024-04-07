@@ -221,7 +221,18 @@ export class BaseState extends Schema {
   }
 
   getNextTeam() {
-    return this.nextTeam++;
+    let nextTeam = 1;
+    const teamIds = new Set<number>();
+    this.players.forEach((player) => {
+      teamIds.add(player.team);
+    });
+
+
+    while (teamIds.has(nextTeam)) {
+      nextTeam++;
+    }
+
+    return nextTeam;
   }
 
 }

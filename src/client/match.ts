@@ -29,8 +29,6 @@ export class CL_Match {
 
     game: Game;
     room: Room<BaseState>;
-
-    public readonly hueShifts = [0, 0, 90, 240, 270, 180, 300, 150, 60, 120, 210];
     
     constructor (game: Game, room: Room<BaseState>) {
 
@@ -134,13 +132,5 @@ export class CL_Match {
         requestAnimationFrame(this.tick.bind(this));
     }
 
-    getTeamHueShift(team: number): number {
-
-        if(team < this.hueShifts.length){
-            return this.hueShifts[team];
-        }
-
-        return Math.round(Math.random() * 360);
-    }
 
 }

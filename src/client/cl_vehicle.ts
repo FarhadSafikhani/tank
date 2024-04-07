@@ -30,6 +30,8 @@ export class CL_Vehicle extends CL_Entity{
     mainWeapon: CL_Weapon | undefined;
     secondaryWeapon: CL_Weapon | undefined;
 
+    colorFilter: PIXI.ColorMatrixFilter;
+
     constructor(match: CL_Match, entity: SV_Vehicle){
         super(match, entity);
         this.drawAngleIndicator();
@@ -42,7 +44,8 @@ export class CL_Vehicle extends CL_Entity{
             this.mainWeapon = this.setupWeapon(entity.mainWeapon);
             this.secondaryWeapon = this.setupWeapon(entity.secondaryWeapon);
         }
-        this.addColorFilter(this.graphics, this.match.getTeamHueShift(this.entity.team));
+        this.colorFilter = CL_Vehicle.getColorFilterByTeam(this.entity.team);
+        this.resetColorFilter(this.graphics);
     }
 
     setupWeapon(svWeapon: SV_Weapon): CL_Weapon{
@@ -76,7 +79,7 @@ export class CL_Vehicle extends CL_Entity{
         this.graphicsTankBody = new PIXI.Graphics();
         // Create a closed path by connecting the vertices
         this.graphicsTankBody.clear();
-        this.graphicsTankBody.beginFill( { r: 0, g: 155, b: 0 }); // Set the fill color
+        this.graphicsTankBody.beginFill( { r: 155, g: 155, b: 155 }); // Set the fill color g155 0 0
         this.graphicsTankBody.drawPolygon(tankVertices);
         this.graphicsTankBody.endFill();
         graphics.addChild(this.graphicsTankBody);
@@ -92,7 +95,7 @@ export class CL_Vehicle extends CL_Entity{
 
         // DRAW ANGLE INDICATOR
         const angleIndicator = new PIXI.Graphics();
-        angleIndicator.lineStyle(3, { r: 0, g: 200, b: 0 }); 
+        angleIndicator.lineStyle(3, { r: 200, g: 200, b: 200 }); 
         angleIndicator.moveTo(0, -size);
         angleIndicator.lineTo(0, size);
         angleIndicator.lineTo(3, 0); // Add this line to draw the arrow-like triangle
@@ -112,7 +115,7 @@ export class CL_Vehicle extends CL_Entity{
         const lineEndX = tankCenterX + lineLength;
         const lineEndY = tankCenterY;
         const turret = new PIXI.Graphics();
-        turret.lineStyle(6, { r: 0, g: 200, b: 0 }); // Set the line color to dark green
+        turret.lineStyle(6, { r: 200, g: 200, b: 200 }); // Set the line color to dark green
         turret.beginFill(0x006400); // Set the fill color to dark green
         
         turret.moveTo(tankCenterX, tankCenterY);
@@ -122,7 +125,7 @@ export class CL_Vehicle extends CL_Entity{
         // DRAW CIRCLE AT THE BASE OF TURRET
         const circleRadius = 13; // adjust the radius of the circle as needed
 
-        turret.beginFill({ r: 0, g: 222, b: 0 }); // Set the fill color to dark green
+        turret.beginFill({ r: 233, g: 233, b: 233 }); // Set the fill color to dark green
         turret.drawCircle(tankCenterX, tankCenterY, circleRadius);
         turret.endFill();
 
@@ -162,7 +165,7 @@ export class CL_Vehicle extends CL_Entity{
         this.graphicsHealthBar = healthBar;
 
         const healthBarBarFG = new PIXI.Graphics();
-        healthBarBarFG.beginFill({ r: 0, g: 255, b: 0 });
+        healthBarBarFG.beginFill({ r: 255, g: 255, b: 255 });
         healthBarBarFG.drawRect(-20, -40, 40, 4);
         healthBarBarFG.endFill();
         
@@ -249,19 +252,11 @@ export class CL_Vehicle extends CL_Entity{
             this.match.em.addParticle(this.entity.x, this.entity.y, 10);  
         }
 
-        const colorMatrix = new PIXI.ColorMatrixFilter();
-        this.graphics.filters = [colorMatrix];
-        colorMatrix.greyscale(0.5, false);
-
+        const gray = new PIXI.Color({r: 111, g: 111, b: 111}).toNumber();
+        const filter = new PIXI.ColorMatrixFilter();
+        filter.tint(gray, false)
+        this.graphics.filters = [filter];
         this.graphicsHealthBar.alpha = 0;
-    }
-    
-    addColorFilter(graphics: PIXI.Graphics, shift: number): void {
-        const colorMatrix = new PIXI.ColorMatrixFilter();
-        graphics.filters = [colorMatrix];
-        //const c = new PIXI.Color({r: 111, g: 125, b: 255}).toNumber();
-        //colorMatrix.tint(c, false);
-        colorMatrix.hue(shift, true);
     }
 
     onRespawn(): void {
@@ -272,7 +267,94 @@ export class CL_Vehicle extends CL_Entity{
         this.graphicsTurret.rotation = this.entity.turretAngle;
         this.graphics.alpha = 1;
         this.graphicsHealthBar.alpha = 1;
-        this.addColorFilter(this.graphics, this.match.getTeamHueShift(this.entity.team));
+        this.resetColorFilter(this.graphics);
     }
+
+    // public readonly hueShifts = [0, 0, 90, 240, 270, 180, 300, 150, 60, 120, 210];
+    // getTeamHueShift(team: number): number {
+
+    //     if(team < this.hueShifts.length){
+    //         return this.hueShifts[team];
+    //     }
+
+    //     return Math.round(Math.random() * 360);
+    // }
+
+    resetColorFilter(graphics: PIXI.Graphics): void {
+        graphics.filters = [this.colorFilter];
+    }
+
+    //TODO: move to match and persist color, so random colors are consistent between client and server
+    static getColorFilterByTeam(team: number): PIXI.ColorMatrixFilter {
+        
+        const colorMatrix = new PIXI.ColorMatrixFilter();
+
+        if(team == 0){
+            return colorMatrix;
+        }
+
+        switch(team){
+            
+            case 1:
+                //lime green
+                const team1Color = new PIXI.Color({r: 0, g: 255, b: 0}).toNumber();
+                colorMatrix.tint(team1Color, true);
+                break;
+            case 2:
+                //cyan
+                const team6Color = new PIXI.Color({r: 0, g: 255, b: 255}).toNumber();
+                colorMatrix.tint(team6Color, true);
+                break;
+            case 3:
+                //red
+                const team3Color = new PIXI.Color({r: 255, g: 0, b: 0}).toNumber();
+                colorMatrix.tint(team3Color, true);
+                break;
+            case 4:
+                //yellow
+                const team4Color = new PIXI.Color({r: 255, g: 255, b: 0}).toNumber();
+                colorMatrix.tint(team4Color, true);
+                break;
+            case 5:
+                //hot pink
+                const team5Color = new PIXI.Color({r: 255, g: 0, b: 255}).toNumber();
+                colorMatrix.tint(team5Color, true);
+                break;
+            case 6:
+                //blue
+                const team2Color = new PIXI.Color({r: 6, g: 6, b: 120}).toNumber();
+                colorMatrix.contrast(.6, true);
+                colorMatrix.brightness(1.75, true);
+                colorMatrix.tint(team2Color, true);
+                break;
+            case 7:
+                //orange
+                const team7Color = new PIXI.Color({r: 255, g: 165, b: 0}).toNumber();
+                colorMatrix.tint(team7Color, true);
+                break;
+            case 8:
+                //soft pink
+                const team8Color = new PIXI.Color({r: 255, g: 105, b: 180}).toNumber();
+                colorMatrix.tint(team8Color, true);
+                break;
+            case 9:
+                //dark purple
+                const team9Color = new PIXI.Color({r: 75, g: 0, b: 133}).toNumber();
+                colorMatrix.tint(team9Color, true);
+                colorMatrix.brightness(1.4, true);
+                break;
+            default:
+                const huedColor = new PIXI.Color({r:255, g: 255, b: 255}).toNumber();
+                colorMatrix.tint(huedColor, true);
+                colorMatrix.hue(60, true);
+                break;
+        }
+
+        return colorMatrix;
+
+    }
+
+
+
 
 }
