@@ -129,8 +129,8 @@ export class Game extends PIXI.Application {
     }
 
     pickRoom() {
-        this.connect("roomTest");
-        //this.connect("roomBR");
+        //this.connect("roomTest");
+        this.connect("roomBR");
     }
 
     async connect(roomType: string) {
