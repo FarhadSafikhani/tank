@@ -15,7 +15,7 @@ export const enum EntityState {
 
 export class CL_Entity{
     entity: SV_Entity;
-    graphics: PIXI.Graphics;
+    container: PIXI.Container;
     match: CL_Match;
     
     state: EntityState = EntityState.VOID;
@@ -23,14 +23,13 @@ export class CL_Entity{
     constructor(match: CL_Match, entity: SV_Entity){
         this.match = match;
         this.entity = entity;
-        this.graphics = this.createGraphics();
+        this.container = new PIXI.Container();
+        this.match.game.viewport.addChild(this.container);
+        this.createGraphics();
         this.state = EntityState.ALIVE;
     }
 
-    createGraphics(): PIXI.Graphics {
-        const graphics = new PIXI.Graphics();
-        return graphics;
-    }
+    createGraphics(): void {}
 
     update(){
         if(this.state === EntityState.ALIVE) {
@@ -53,8 +52,8 @@ export class CL_Entity{
     }
 
     destroy(){ 
-        this.match.game.viewport.removeChild(this.graphics);
-        this.graphics.destroy();
+        this.match.game.viewport.removeChild(this.container);
+        this.container.destroy();
         this.match.em.removeClEntity(this.entity.id);
     }
 

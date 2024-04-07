@@ -10,18 +10,18 @@ import { CL_Weapon_25mm } from "./weapons/cl_weapon_25mm";
 import { CL_Weapon_120mm } from "./weapons/cl_weapon_120mm";
 import { CL_Weapon_50cal } from "./weapons/cl_weapon_50cal";
 import { SV_Vehicle } from "../server/vehicle/sv_vehicle";
-import * as pixiparticles from "@pixi/particle-emitter";
-import * as emit1 from "./emit1.json"
-
+import * as PParticle from "@pixi/particle-emitter";
+import * as emit_explosion_vehcile from "./emit_explosion_vehcile.json"
+import * as emit_turret_big from "./emit_turret_big.json"
 
 export class CL_Vehicle extends CL_Entity{
 
     entity: SV_Vehicle;
     localShots: number = 0;
 
+    gConatiner: PIXI.Graphics;
     graphicsTankBody: PIXI.Graphics;
     graphicsTurret: PIXI.Graphics;
-    graphicsMuzzleFlash: PIXI.Graphics;
     graphicsHealthBar: PIXI.Graphics;
 
     isCLientVehicle: boolean = false;
@@ -42,12 +42,12 @@ export class CL_Vehicle extends CL_Entity{
         this.isCLientVehicle = match.room.sessionId === entity.id;
         if(this.isCLientVehicle){
             this.match.currentPlayerVehcile = this;
-            this.match.game.viewport.follow(this.graphics);
+            this.match.game.viewport.follow(this.container);
             this.mainWeapon = this.setupWeapon(entity.mainWeapon);
             this.secondaryWeapon = this.setupWeapon(entity.secondaryWeapon);
         }
         this.colorFilter = CL_Vehicle.getColorFilterByTeam(this.entity.team);
-        this.resetColorFilter(this.graphics);
+        this.resetColorFilter(this.gConatiner);
     }
 
     setupWeapon(svWeapon: SV_Weapon): CL_Weapon{
@@ -69,8 +69,9 @@ export class CL_Vehicle extends CL_Entity{
         return weapon;
     }
 
-    createGraphics(): PIXI.Graphics {
+    createGraphics(): void {
         
+        this.gConatiner = new PIXI.Graphics();
         const graphics = new PIXI.Graphics();
 
         graphics.x = this.entity.x;
@@ -84,18 +85,13 @@ export class CL_Vehicle extends CL_Entity{
         this.graphicsTankBody.beginFill( { r: 155, g: 155, b: 155 }); // Set the fill color g155 0 0
         this.graphicsTankBody.drawPolygon(tankVertices);
         this.graphicsTankBody.endFill();
-        graphics.addChild(this.graphicsTankBody);
-
-        this.match.entityContainer.addChild(graphics);
-        
-        return graphics;
+        this.gConatiner.addChild(this.graphicsTankBody);
+        this.container.addChild(this.gConatiner);
     }
 
     drawAngleIndicator() {
         const size = 15;
         const position = 22;
-
-        // DRAW ANGLE INDICATOR
         const angleIndicator = new PIXI.Graphics();
         angleIndicator.lineStyle(3, { r: 200, g: 200, b: 200 }); 
         angleIndicator.moveTo(0, -size);
@@ -132,49 +128,24 @@ export class CL_Vehicle extends CL_Entity{
         turret.endFill();
 
         this.graphicsTurret = turret;
-        this.graphics.addChild(turret);
-
-        this.graphicsMuzzleFlash = this.createMuzzleFlash(lineEndX, lineEndY);
-        this.graphicsTurret.addChild(this.graphicsMuzzleFlash); 
-
-        this.createMuzzleFlash(lineEndX, lineEndY);
-
-    }
-
-    createMuzzleFlash(x: number, y: number) {
-        const flash = new PIXI.Graphics();
-    
-        // Draw the base of the flash
-        flash.beginFill(0xFFFFFF);
-        flash.drawEllipse(x, y, 9, 3); // x, y, width, height
-        flash.endFill();
-    
-        // Add some glow to make it look more like a flash
-        flash.beginFill(0xFFFF00, 0.5); // Adding some yellow with alpha for glow
-        flash.drawEllipse(x, y, 10, 4);
-        flash.endFill();
-        flash.alpha = 0;
-        return flash;
+        this.gConatiner.addChild(turret);
     }
 
     createHealthBar(){
         const healthBar = new PIXI.Graphics();
-        //healthBar.beginFill({ r: 0, g: 0, b: 0 });
         healthBar.lineStyle(1, { r: 110, g: 110, b: 110 });
         healthBar.drawRect(-20, -40, 40, 4);
         healthBar.endFill();
-        
+        healthBar.position.set(0, -10);
         this.graphicsHealthBar = healthBar;
 
         const healthBarBarFG = new PIXI.Graphics();
-        healthBarBarFG.beginFill({ r: 255, g: 255, b: 255 });
+        healthBarBarFG.beginFill({ r: 0, g: 255, b: 0, a: .6});
         healthBarBarFG.drawRect(-20, -40, 40, 4);
         healthBarBarFG.endFill();
         
         this.graphicsHealthBar.addChild(healthBarBarFG);
-
-        this.graphics.addChild(this.graphicsHealthBar);
-
+        this.container.addChild(this.graphicsHealthBar);
         this.updateHealthBar();
     }
 
@@ -213,66 +184,18 @@ export class CL_Vehicle extends CL_Entity{
     }
 
     onShot(): void {
-        // this.muzzleScale = 1;
-        // this.graphicsMuzzleFlash.scale.set(this.muzzleScale);
-        // this.graphicsMuzzleFlash.alpha = 1;
-        // this.animateMuzzleFlash();
-
-        
-        //const x = PIXI.Texture.from('/fire.png');
-        
-
-        //this.match.game.viewport.addChild(cnt);
-
-        // const cnt = new PIXI.Container();
-
-        // const emitter = new pixiparticles.Emitter(cnt, {
-        // lifetime: { min: 0.1, max: 1 },
-        // frequency: .1,
-        // spawnChance: .9,
-        // particlesPerWave: 5,
-        // emitterLifetime: .2,
-        // maxParticles: 100,
-        // pos: { x: 0, y: 0 },
-        
-        // autoUpdate: true,
-        // behaviors: [
-        //     {
-        //         type: 'spawnShape',
-        //         config: { type: 'torus', data: { x: 10, y: 10, radius: 10 } },
-        //     },
-        //     { 
-        //         type: 'textureSingle', 
-        //         config: { texture: PIXI.Texture.from('/fire.png') } 
-        //     },
-        // ],
-        // });
-
-        // cnt.position.set(this.entity.x, this.entity.y);
-        // this.match.game.viewport.addChild(cnt);
-        
+        const emitConfig: PParticle.EmitterConfigV3 = PParticle.upgradeConfig(emit_turret_big, PIXI.Texture.from('/fire.png'));
+        const emitter = new PParticle.Emitter(this.container, emitConfig);
+        emitter.spawnPos.set(40, 0);
+        emitter.rotate(this.entity.turretAngle);
+        emitter.playOnceAndDestroy();
     }
 
     aliveTick(): void {
-        this.animateMuzzleFlash();
-        this.graphics.x = lerp(this.graphics.x, this.entity.x, 0.2);
-        this.graphics.y = lerp(this.graphics.y, this.entity.y, 0.2);
+        this.container.x = lerp(this.container.x, this.entity.x, 0.2);
+        this.container.y = lerp(this.container.y, this.entity.y, 0.2);
         this.graphicsTankBody.rotation = this.entity.angle;
         this.graphicsTurret.rotation = this.entity.turretAngle;  
-    }
-
-    animateMuzzleFlash(): void {
-        if(this.graphicsMuzzleFlash.alpha == 0){
-            return;
-        }
-
-        if (this.muzzleScale > 1.5) {
-            this.graphicsMuzzleFlash.alpha = 0;
-            return;
-        }
-
-        this.muzzleScale += 0.1;
-        this.graphicsMuzzleFlash.scale.set(this.muzzleScale);
     }
 
     destroy(): void {
@@ -283,37 +206,26 @@ export class CL_Vehicle extends CL_Entity{
     }
 
     onKia(): void {
-
-        const emitConfig = pixiparticles.upgradeConfig(emit1, PIXI.Texture.from('/fire.png'));
-        
-
-        const emitter = new pixiparticles.Emitter(this.match.particleContainer, emitConfig);
-        emitter.spawnPos.set(this.entity.x, this.entity.y);
-        emitter.playOnceAndDestroy();
-        //emitter.autoUpdate = true;
-
-        
-        
-        // for (let i = 0; i < 15; i++) {
-        //     this.match.em.addParticle(this.entity.x, this.entity.y, 10);  
-        // }
-
         const gray = new PIXI.Color({r: 111, g: 111, b: 111}).toNumber();
         const filter = new PIXI.ColorMatrixFilter();
         filter.tint(gray, false)
-        this.graphics.filters = [filter];
+        this.gConatiner.filters = [filter];
         this.graphicsHealthBar.alpha = 0;
+        const emitConfig = PParticle.upgradeConfig(emit_explosion_vehcile, PIXI.Texture.from('/fire.png'));
+        const emitter = new PParticle.Emitter(this.container, emitConfig);
+        emitter.addAtBack = false;
+        emitter.playOnceAndDestroy();
     }
 
     onRespawn(): void {
-        this.graphics.filters = [];
-        this.graphics.x = this.entity.x;
-        this.graphics.y = this.entity.y;
+        this.gConatiner.filters = [];
+        this.container.x = this.entity.x;
+        this.container.y = this.entity.y;
         this.graphicsTankBody.rotation = this.entity.angle;
         this.graphicsTurret.rotation = this.entity.turretAngle;
-        this.graphics.alpha = 1;
+        this.gConatiner.alpha = 1;
         this.graphicsHealthBar.alpha = 1;
-        this.resetColorFilter(this.graphics);
+        this.resetColorFilter(this.gConatiner);
     }
 
     // public readonly hueShifts = [0, 0, 90, 240, 270, 180, 300, 150, 60, 120, 210];

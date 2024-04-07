@@ -5,38 +5,29 @@ import { SV_Projectile } from "../server/entities/sv_projectile";
 import { lerp } from "../common/utils";
 import { CL_Match } from "./match";
 import { CL_Projectile } from "./cl_projectile";
+import { SV_Projectile_25mm } from "../server/entities/sv_projectile_25mm";
 
 
 export class CL_Projectile_25mm extends CL_Projectile{
 
-    entity: SV_Projectile;
+    entity: SV_Projectile_25mm;
    
     constructor(match: CL_Match, entity: SV_Projectile){
         super(match, entity);
         //this.drawDebugLine();
+        this.container.rotation = this.entity.angle;
+        this.container.x = this.entity.x;
+        this.container.y = this.entity.y;
     }
 
-    createGraphics(): PIXI.Graphics {
-
-        const graphics = new PIXI.Graphics();
-
-        // DRAW BODY
-        graphics.rotation = this.entity.angle;
-        graphics.x = this.entity.x;
-        graphics.y = this.entity.y;
-
-
-        this.match.game.viewport.addChild(graphics);
-
+    createGraphics(): void {
         const sprite = PIXI.Sprite.from('/25mm.png');
         sprite.width = 10; // increase width
         sprite.height = 90; // increase height
         sprite.angle = -90; // set rotation
         sprite.anchor.set(0.5); // set anchor point to center
         sprite.position.set(0, 0); // set position
-        graphics.addChild(sprite); // add sprite to graphics
-
-        return graphics;
+        this.container.addChild(sprite);
     }
 
     drawDebugLine(){
@@ -48,9 +39,9 @@ export class CL_Projectile_25mm extends CL_Projectile{
     }
 
     aliveTick(): void {
-        this.graphics.x = lerp(this.graphics.x, this.entity.x, 0.2);
-        this.graphics.y = lerp(this.graphics.y, this.entity.y, 0.2);
-        this.graphics.rotation = this.entity.angle;
+        this.container.x = lerp(this.container.x, this.entity.x, 0.2);
+        this.container.y = lerp(this.container.y, this.entity.y, 0.2);
+        this.container.rotation = this.entity.angle;
     }
 
     //called from update in cl_entity when state is DYING

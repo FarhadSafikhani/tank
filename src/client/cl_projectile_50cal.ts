@@ -13,36 +13,18 @@ export class CL_Projectile_50cal extends CL_Projectile{
    
     constructor(match: CL_Match, entity: SV_Projectile){
         super(match, entity);
-        //this.drawDebugLine();
+        this.container.rotation = this.entity.angle;
+        this.container.x = this.entity.x;
+        this.container.y = this.entity.y;
     }
 
-    createGraphics(): PIXI.Graphics {
-
+    createGraphics(): void {
         const graphics = new PIXI.Graphics();
-
-        // DRAW BODY
-        graphics.rotation = this.entity.angle;
-        graphics.x = this.entity.x;
-        graphics.y = this.entity.y;
-
         const bodyVerts = JSON.parse(this.entity.verts);
         graphics.beginFill({ r: 222, g: 180, b: 180, a: .8 }); // Gray color
         graphics.drawPolygon(bodyVerts);
         graphics.endFill();
-        
-
-
-        this.match.game.viewport.addChild(graphics);
-
-        // const sprite = PIXI.Sprite.from('/25mm.png');
-        // sprite.width = 10; // increase width
-        // sprite.height = 90; // increase height
-        // sprite.angle = -90; // set rotation
-        // sprite.anchor.set(0.5); // set anchor point to center
-        // sprite.position.set(0, 0); // set position
-        // graphics.addChild(sprite); // add sprite to graphics
-
-        return graphics;
+        this.container.addChild(graphics);
     }
 
     drawDebugLine(){
@@ -54,9 +36,9 @@ export class CL_Projectile_50cal extends CL_Projectile{
     }
 
     aliveTick(): void {
-        this.graphics.x = lerp(this.graphics.x, this.entity.x, 0.2);
-        this.graphics.y = lerp(this.graphics.y, this.entity.y, 0.2);
-        this.graphics.rotation = this.entity.angle;
+        this.container.x = lerp(this.container.x, this.entity.x, 0.2);
+        this.container.y = lerp(this.container.y, this.entity.y, 0.2);
+        this.container.rotation = this.entity.angle;
     }
 
     //called from update in cl_entity when state is DYING

@@ -13,28 +13,19 @@ export class CL_Projectile extends CL_Entity{
     constructor(match: CL_Match, entity: SV_Projectile){
         super(match, entity);
         //this.drawDebugLine();
+        this.container.rotation = this.entity.angle;
+        this.container.x = this.entity.x;
+        this.container.y = this.entity.y;
     }
 
-    createGraphics(): PIXI.Graphics {
-
+    createGraphics(): void {
         const graphics = new PIXI.Graphics();
-
-        // DRAW BODY
         const bodyVerts = JSON.parse(this.entity.verts);
-
-        //create a rectangle from the verts from matter.js
         graphics.clear();
         graphics.beginFill({ r: 125, g: 115, b: 125, a: .7 }); // Gray color
         graphics.drawPolygon(bodyVerts);
         graphics.endFill();
-        
-        graphics.rotation = this.entity.angle;
-        graphics.x = this.entity.x;
-        graphics.y = this.entity.y;
-
-        this.match.game.viewport.addChild(graphics);
-
-        return graphics;
+        this.container.addChild(graphics);
     }
 
     drawDebugLine(){
@@ -46,9 +37,9 @@ export class CL_Projectile extends CL_Entity{
     }
 
     aliveTick(): void {
-        this.graphics.x = lerp(this.graphics.x, this.entity.x, 0.2);
-        this.graphics.y = lerp(this.graphics.y, this.entity.y, 0.2);
-        this.graphics.rotation = this.entity.angle;
+        this.container.x = lerp(this.container.x, this.entity.x, 0.2);
+        this.container.y = lerp(this.container.y, this.entity.y, 0.2);
+        this.container.rotation = this.entity.angle;
     }
 
     //called from update in cl_entity when state is DYING

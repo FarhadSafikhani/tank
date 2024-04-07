@@ -7,6 +7,7 @@ import { SV_Weapon_120mm } from "../weapons/sv_weapon_120mm";
 import { SV_Weapon_50cal } from "../weapons/sv_weapon_50cal";
 import { BaseState } from "../rooms/sv_state_base";
 import { SV_Player } from "../entities/sv_player";
+import { SV_Weapon_25mm } from "../weapons/sv_weapon_25mm";
 
 export class SV_Vehicle extends SV_Entity {
 
