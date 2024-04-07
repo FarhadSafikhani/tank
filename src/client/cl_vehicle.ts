@@ -10,6 +10,8 @@ import { CL_Weapon_25mm } from "./weapons/cl_weapon_25mm";
 import { CL_Weapon_120mm } from "./weapons/cl_weapon_120mm";
 import { CL_Weapon_50cal } from "./weapons/cl_weapon_50cal";
 import { SV_Vehicle } from "../server/vehicle/sv_vehicle";
+import * as pixiparticles from "@pixi/particle-emitter";
+import * as emit1 from "./emit1.json"
 
 
 export class CL_Vehicle extends CL_Entity{
@@ -84,7 +86,7 @@ export class CL_Vehicle extends CL_Entity{
         this.graphicsTankBody.endFill();
         graphics.addChild(this.graphicsTankBody);
 
-        this.match.game.viewport.addChild(graphics);
+        this.match.entityContainer.addChild(graphics);
         
         return graphics;
     }
@@ -211,10 +213,44 @@ export class CL_Vehicle extends CL_Entity{
     }
 
     onShot(): void {
-        this.muzzleScale = 1;
-        this.graphicsMuzzleFlash.scale.set(this.muzzleScale);
-        this.graphicsMuzzleFlash.alpha = 1;
-        this.animateMuzzleFlash();
+        // this.muzzleScale = 1;
+        // this.graphicsMuzzleFlash.scale.set(this.muzzleScale);
+        // this.graphicsMuzzleFlash.alpha = 1;
+        // this.animateMuzzleFlash();
+
+        
+        //const x = PIXI.Texture.from('/fire.png');
+        
+
+        //this.match.game.viewport.addChild(cnt);
+
+        // const cnt = new PIXI.Container();
+
+        // const emitter = new pixiparticles.Emitter(cnt, {
+        // lifetime: { min: 0.1, max: 1 },
+        // frequency: .1,
+        // spawnChance: .9,
+        // particlesPerWave: 5,
+        // emitterLifetime: .2,
+        // maxParticles: 100,
+        // pos: { x: 0, y: 0 },
+        
+        // autoUpdate: true,
+        // behaviors: [
+        //     {
+        //         type: 'spawnShape',
+        //         config: { type: 'torus', data: { x: 10, y: 10, radius: 10 } },
+        //     },
+        //     { 
+        //         type: 'textureSingle', 
+        //         config: { texture: PIXI.Texture.from('/fire.png') } 
+        //     },
+        // ],
+        // });
+
+        // cnt.position.set(this.entity.x, this.entity.y);
+        // this.match.game.viewport.addChild(cnt);
+        
     }
 
     aliveTick(): void {
@@ -247,10 +283,20 @@ export class CL_Vehicle extends CL_Entity{
     }
 
     onKia(): void {
+
+        const emitConfig = pixiparticles.upgradeConfig(emit1, PIXI.Texture.from('/fire.png'));
         
-        for (let i = 0; i < 15; i++) {
-            this.match.em.addParticle(this.entity.x, this.entity.y, 10);  
-        }
+
+        const emitter = new pixiparticles.Emitter(this.match.particleContainer, emitConfig);
+        emitter.spawnPos.set(this.entity.x, this.entity.y);
+        emitter.playOnceAndDestroy();
+        //emitter.autoUpdate = true;
+
+        
+        
+        // for (let i = 0; i < 15; i++) {
+        //     this.match.em.addParticle(this.entity.x, this.entity.y, 10);  
+        // }
 
         const gray = new PIXI.Color({r: 111, g: 111, b: 111}).toNumber();
         const filter = new PIXI.ColorMatrixFilter();

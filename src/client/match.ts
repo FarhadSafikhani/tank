@@ -19,6 +19,10 @@ export class CL_Match {
     em: CL_EntityManager;
     uim: CL_UiManager;
 
+    doodadContainer: PIXI.Container;
+    entityContainer: PIXI.Container;
+    particleContainer: PIXI.Container; //actual particle container seems laggy?
+
     //TODO: player manager?
     players: { [id: string]: CL_Player } = {};
 
@@ -39,6 +43,15 @@ export class CL_Match {
         this.game = game;
         this.room = room;
 
+        //TODO: doodad container
+
+        this.entityContainer = new PIXI.Container();
+        this.game.viewport.addChild(this.entityContainer);
+        this.particleContainer = new PIXI.Container();
+        this.game.viewport.addChild(this.particleContainer);
+        this.game.stage
+
+
         this.addTilingBackground();
 
         this.onConnected(room);
@@ -48,6 +61,7 @@ export class CL_Match {
 
         //TODO: load textures needed for match
         // /25mm.png
+        PIXI.Texture.from('/fire.png');
     }
 
 
@@ -128,7 +142,7 @@ export class CL_Match {
         }
 
         this.em.update();
-
+        this.particleContainer.zIndex = 111111111;
         requestAnimationFrame(this.tick.bind(this));
     }
 

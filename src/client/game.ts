@@ -129,8 +129,8 @@ export class Game extends PIXI.Application {
     }
 
     pickRoom() {
-        //this.connect("roomTest");
-        this.connect("roomBR");
+        this.connect("roomTest");
+        //this.connect("roomBR");
     }
 
     async connect(roomType: string) {
@@ -138,7 +138,6 @@ export class Game extends PIXI.Application {
         //.joinOrCreate<State>(roomType);
         this.room = await this.client.joinOrCreate(roomType, {"userName": localStorage.getItem("userName")});
         this.match = new CL_Match(this, this.room);
-
     }
 
 }
