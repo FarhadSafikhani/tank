@@ -9,6 +9,7 @@ import { CL_EntityManager } from './managers/cl_manager_entity';
 import { CL_UiManager } from './managers/cl_manager_ui';
 import { SV_Player } from '../server/entities/sv_player';
 import { CL_Player } from './cl_player';
+import { CL_ParticleManager } from './managers/cl_manager_particles';
 
 //import dirtImg from '../assets/dirt.jpg';
 
@@ -18,6 +19,7 @@ export class CL_Match {
     
     em: CL_EntityManager;
     uim: CL_UiManager;
+    ptm: CL_ParticleManager;
 
     doodadContainer: PIXI.Container;
     entityContainer: PIXI.Container;
@@ -38,6 +40,7 @@ export class CL_Match {
 
         this.em = new CL_EntityManager(this);
         this.uim = new CL_UiManager(this);
+        this.ptm = new CL_ParticleManager(this);
         
         this.active = true;
         this.game = game;
@@ -49,8 +52,6 @@ export class CL_Match {
         this.game.viewport.addChild(this.entityContainer);
         this.particleContainer = new PIXI.Container();
         this.game.viewport.addChild(this.particleContainer);
-        this.game.stage
-
 
         this.addTilingBackground();
 
@@ -142,6 +143,7 @@ export class CL_Match {
         }
 
         this.em.update();
+        this.ptm.update();
         this.particleContainer.zIndex = 111111111;
         requestAnimationFrame(this.tick.bind(this));
     }

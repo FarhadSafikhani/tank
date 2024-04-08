@@ -16,6 +16,10 @@ export class CL_Projectile_120mm extends CL_Projectile{
         this.container.rotation = this.entity.angle;
         this.container.x = this.entity.x;
         this.container.y = this.entity.y;
+
+        const casterEntity = this.match.em.getClEntity(this.entity.casterId);
+        const casterContainer = casterEntity.container;
+        this.match.ptm.spawnParticles120mm(casterContainer, this.entity.angle);
     }
 
     createGraphics(): void {
@@ -52,7 +56,7 @@ export class CL_Projectile_120mm extends CL_Projectile{
 
     spawnPartiles(){
         for (let i = 0; i < 10; i++) {
-            this.match.em.addParticle(this.entity.x, this.entity.y, 2);  
+            this.match.ptm.addParticle(this.entity.x, this.entity.y, 2);  
         }
     }
 

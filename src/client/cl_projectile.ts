@@ -50,7 +50,7 @@ export class CL_Projectile extends CL_Entity{
 
     spawnPartiles(){
         for (let i = 0; i < 10; i++) {
-            this.match.em.addParticle(this.entity.x, this.entity.y, 2);  
+            this.match.ptm.addParticle(this.entity.x, this.entity.y, 2);  
         }
     }
 

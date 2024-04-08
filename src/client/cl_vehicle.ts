@@ -1,7 +1,5 @@
 import * as PIXI from "pixi.js";
 import { CL_Entity } from "./cl_entity";
-import { SV_Player } from "../server/entities/sv_player";
-import { Game } from "./game";
 import { lerp } from "../common/utils";
 import { CL_Match } from "./match";
 import { CL_Weapon } from "./weapons/cl_weapon";
@@ -10,9 +8,7 @@ import { CL_Weapon_25mm } from "./weapons/cl_weapon_25mm";
 import { CL_Weapon_120mm } from "./weapons/cl_weapon_120mm";
 import { CL_Weapon_50cal } from "./weapons/cl_weapon_50cal";
 import { SV_Vehicle } from "../server/vehicle/sv_vehicle";
-import * as PParticle from "@pixi/particle-emitter";
-import * as emit_explosion_vehcile from "./emit_explosion_vehcile.json"
-import * as emit_turret_big from "./emit_turret_big.json"
+
 
 export class CL_Vehicle extends CL_Entity{
 
@@ -183,11 +179,7 @@ export class CL_Vehicle extends CL_Entity{
     }
 
     onShot(): void {
-        const emitConfig: PParticle.EmitterConfigV3 = PParticle.upgradeConfig(emit_turret_big, PIXI.Texture.from('/fire.png'));
-        const emitter = new PParticle.Emitter(this.container, emitConfig);
-        emitter.spawnPos.set(40, 0);
-        emitter.rotate(this.entity.turretAngle);
-        emitter.playOnceAndDestroy();
+
     }
 
     aliveTick(): void {
@@ -210,10 +202,8 @@ export class CL_Vehicle extends CL_Entity{
         filter.tint(gray, false)
         this.gConatiner.filters = [filter];
         this.graphicsHealthBar.alpha = 0;
-        const emitConfig = PParticle.upgradeConfig(emit_explosion_vehcile, PIXI.Texture.from('/fire.png'));
-        const emitter = new PParticle.Emitter(this.container, emitConfig);
-        emitter.addAtBack = false;
-        emitter.playOnceAndDestroy();
+
+        this.match.ptm.spawnKiaParticles(this.container);
     }
 
     onRespawn(): void {

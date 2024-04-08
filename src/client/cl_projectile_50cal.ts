@@ -6,8 +6,7 @@ import { lerp } from "../common/utils";
 import { CL_Match } from "./match";
 import { CL_Projectile } from "./cl_projectile";
 
-import * as PParticle from "@pixi/particle-emitter";
-import * as emit_turret_small from "./emit_turret_small.json"
+
 
 export class CL_Projectile_50cal extends CL_Projectile{
 
@@ -21,13 +20,8 @@ export class CL_Projectile_50cal extends CL_Projectile{
 
         const casterEntity = this.match.em.getClEntity(this.entity.casterId);
         const casterContainer = casterEntity.container;
+        this.match.ptm.spawnParticles50cal(casterContainer, this.entity.angle);
 
-        const emitConfig = PParticle.upgradeConfig(emit_turret_small, PIXI.Texture.from('/fire.png'));
-        const emitter = new PParticle.Emitter(casterContainer, emitConfig);
-        emitter.spawnPos.set(10, 0);
-        emitter.rotate(this.entity.angle);
-        emitter.addAtBack = false;
-        emitter.playOnceAndDestroy();
     }
 
     createGraphics(): void {
@@ -63,7 +57,7 @@ export class CL_Projectile_50cal extends CL_Projectile{
 
     spawnPartiles(){
         for (let i = 0; i < 10; i++) {
-            this.match.em.addParticle(this.entity.x, this.entity.y, 2);  
+            this.match.ptm.addParticle(this.entity.x, this.entity.y, 2);  
         }
     }
 

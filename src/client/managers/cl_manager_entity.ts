@@ -9,7 +9,6 @@ import { CL_Vehicle } from "../cl_vehicle";
 import { CL_Projectile } from "../cl_projectile";
 import { CL_WorldDoodad } from "../cl_worlddoodad";
 import { CL_Match } from "../match";
-import { Particle } from "../particle";
 import { CL_Projectile_25mm } from "../cl_projectile_25mm";
 import { CL_Projectile_120mm } from "../cl_projectile_120mm";
 import { CL_Projectile_50cal } from "../cl_projectile_50cal";
@@ -18,20 +17,15 @@ import { SV_Vehicle } from "../../server/vehicle/sv_vehicle";
 export class CL_EntityManager extends CL_Manager{
 
     clEntities: { [id: string]: CL_Entity } = {};
-    particles: Particle[] = [];
 
     constructor(match: CL_Match) {
         super(match);
     }
 
     update() {
-
         for (let id in this.clEntities) {
             this.getClEntity(id).update();
         }
-
-        this.updateParticles();
-
     }
 
     getClEntity(entityId: string) {
@@ -75,11 +69,4 @@ export class CL_EntityManager extends CL_Manager{
         delete this.clEntities[entityId];
     }
 
-    addParticle(x: number, y: number, size: number) {
-        this.particles.push(new Particle(this.match, x, y, size));
-    }
-
-    updateParticles() {
-        this.particles = this.particles.filter(particle => particle.update());
-    }
 }

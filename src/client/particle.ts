@@ -25,7 +25,7 @@ export class Particle {
         };
 
         this.lifespan = this.lifespanMax;
-        this.match.game.viewport.addChild(this.graphic);
+        this.match.particleContainer.addChild(this.graphic);
     }
 
     update(): boolean {
@@ -36,10 +36,11 @@ export class Particle {
         this.graphic.alpha = this.lifespan / this.lifespanMax; // Fade out effect
 
         if (this.lifespan <= 0) {
-            this.match.game.viewport.removeChild(this.graphic);
+            this.match.particleContainer.removeChild(this.graphic);
             this.graphic.destroy();
             return false;
         };
+        
         return true;
     }
 }

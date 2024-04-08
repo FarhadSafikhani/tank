@@ -54,7 +54,7 @@ export class CL_Projectile_25mm extends CL_Projectile{
 
     spawnPartiles(){
         for (let i = 0; i < 10; i++) {
-            this.match.em.addParticle(this.entity.x, this.entity.y, 2);  
+            this.match.ptm.addParticle(this.entity.x, this.entity.y, 2);  
         }
     }
 
