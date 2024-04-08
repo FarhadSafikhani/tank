@@ -22,12 +22,11 @@ export class SV_Weapon extends Schema{
     }
 
     fire(angle: number) {
-        
+        this.shots++;
+        this.cooldownEndsMs = Date.now() + this.cooldownMaxMs;
     }
 
-    update() {
-
-    }    
+    update() {}    
 
     reInit() {
         this.cooldownEndsMs = 0;

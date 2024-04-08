@@ -37,8 +37,8 @@ export class CL_Projectile extends CL_Entity{
     }
 
     aliveTick(): void {
-        this.container.x = lerp(this.container.x, this.entity.x, 0.2);
-        this.container.y = lerp(this.container.y, this.entity.y, 0.2);
+        this.container.x = lerp(this.container.x, this.entity.x, 0.7);
+        this.container.y = lerp(this.container.y, this.entity.y, 0.7);
         this.container.rotation = this.entity.angle;
     }
 

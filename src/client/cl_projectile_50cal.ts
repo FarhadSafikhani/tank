@@ -6,6 +6,8 @@ import { lerp } from "../common/utils";
 import { CL_Match } from "./match";
 import { CL_Projectile } from "./cl_projectile";
 
+import * as PParticle from "@pixi/particle-emitter";
+import * as emit_turret_small from "./emit_turret_small.json"
 
 export class CL_Projectile_50cal extends CL_Projectile{
 
@@ -16,6 +18,16 @@ export class CL_Projectile_50cal extends CL_Projectile{
         this.container.rotation = this.entity.angle;
         this.container.x = this.entity.x;
         this.container.y = this.entity.y;
+
+        const casterEntity = this.match.em.getClEntity(this.entity.casterId);
+        const casterContainer = casterEntity.container;
+
+        const emitConfig = PParticle.upgradeConfig(emit_turret_small, PIXI.Texture.from('/fire.png'));
+        const emitter = new PParticle.Emitter(casterContainer, emitConfig);
+        emitter.spawnPos.set(10, 0);
+        emitter.rotate(this.entity.angle);
+        emitter.addAtBack = false;
+        emitter.playOnceAndDestroy();
     }
 
     createGraphics(): void {
@@ -36,14 +48,16 @@ export class CL_Projectile_50cal extends CL_Projectile{
     }
 
     aliveTick(): void {
-        this.container.x = lerp(this.container.x, this.entity.x, 0.2);
-        this.container.y = lerp(this.container.y, this.entity.y, 0.2);
+        this.container.x = lerp(this.container.x, this.entity.x, .5);
+        this.container.y = lerp(this.container.y, this.entity.y, .5);
         this.container.rotation = this.entity.angle;
     }
 
     //called from update in cl_entity when state is DYING
     dieTick(): void {
         super.dieTick();
+        this.container.x = this.entity.x;
+        this.container.y = this.entity.y;
         this.spawnPartiles();
     }
 

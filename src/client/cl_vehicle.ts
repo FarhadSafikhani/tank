@@ -100,7 +100,6 @@ export class CL_Vehicle extends CL_Entity{
         angleIndicator.lineTo(0, -size); // Add this line to complete the triangle
         angleIndicator.endFill();
         angleIndicator.x = position;
-        //angleIndicator.y = position * 1.2;
         this.graphicsTankBody.addChild(angleIndicator);
     }
 

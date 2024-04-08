@@ -22,8 +22,8 @@ export class SV_Projectile_50cal extends SV_Projectile {
         this.tag = "50cal";
         this.body = this.createBody();
 
-        this.vx = -Math.cos(this.angle) * this.initialSpeed;
-        this.vy = -Math.sin(this.angle) * this.initialSpeed;
+        this.vx = Math.cos(this.angle) * this.initialSpeed;
+        this.vy = Math.sin(this.angle) * this.initialSpeed;
         
         Matter.Body.setVelocity(this.body, {x: this.vx, y: this.vy});
     }

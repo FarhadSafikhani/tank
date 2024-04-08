@@ -85,8 +85,8 @@ export class SV_Vehicle extends SV_Entity {
 
         if(!this.isKia){
             this.updateMovement();
-            this.player.rmDown && this.secondaryWeapon.fire(this.turretAngle);
             this.player.mDown && this.mainWeapon.fire(this.turretAngle);
+            this.player.rmDown && this.secondaryWeapon.fire(this.turretAngle);
         }
 
         this.x = this.body.position.x;

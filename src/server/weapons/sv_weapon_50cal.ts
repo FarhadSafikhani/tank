@@ -42,15 +42,10 @@ export class SV_Weapon_50cal extends SV_Weapon {
             return;
         }
 
-        this.cooldownEndsMs = Date.now() + this.cooldownMaxMs;
-
-        this.shots++;
-
+        super.fire(angle);
         const spawnX = this.caster.x + Math.cos(angle) * 30;
         const spawnY = this.caster.y + Math.sin(angle) * 30;
-        const spawnAngle = Math.atan2(this.caster.y - spawnY, this.caster.x - spawnX);
-
-        this.caster.state.createProjectile(this, spawnX, spawnY, spawnAngle);
+        this.caster.state.createProjectile(this, spawnX, spawnY, angle);
         
         this.roundsLeft--;
         if(this.roundsNextReplenishMs === 0){

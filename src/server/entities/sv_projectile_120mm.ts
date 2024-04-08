@@ -22,8 +22,8 @@ export class SV_Projectile120mm extends SV_Projectile {
         this.tag = "120mm";
         this.body = this.createBody();
 
-        this.vx = -Math.cos(this.angle) * this.initialSpeed;
-        this.vy = -Math.sin(this.angle) * this.initialSpeed;
+        this.vx = Math.cos(this.angle) * this.initialSpeed;
+        this.vy = Math.sin(this.angle) * this.initialSpeed;
         
         Matter.Body.setVelocity(this.body, {x: this.vx, y: this.vy});
     }

@@ -11,21 +11,22 @@ export class SV_Projectile extends SV_Entity {
     @type("string") verts: string = "";
     @type("number") casterX: number;
     @type("number") casterY: number;
+    @type("string") casterId: string;
 
     caster: SV_Entity;
     body: Matter.Body;
     vx: number = 0;
     vy: number = 0;
     age: number = 0;
+    collided: boolean = false;
 
     // configs
     w: number = 25;
     h: number = 7;
-    initialSpeed: number = 15; //40
+    initialSpeed: number = 15;
     damage: number = 32;
     maxAge: number = 1500;
     
-
     constructor(state: BaseState, id: string, caster: SV_Entity, x: number, y: number, angle: number) {
         super(state, id);
         this.caster = caster;
@@ -34,18 +35,17 @@ export class SV_Projectile extends SV_Entity {
         this.y = y;
         this.casterX = caster.x;
         this.casterY = caster.y;
+        this.casterId = caster.id;
         this.angle = angle;
         this.body = this.createBody();
-
-        this.vx = -Math.cos(this.angle) * this.initialSpeed;
-        this.vy = -Math.sin(this.angle) * this.initialSpeed;
+        this.vx = Math.cos(this.angle) * this.initialSpeed;
+        this.vy = Math.sin(this.angle) * this.initialSpeed;
         
         Matter.Body.setVelocity(this.body, {x: this.vx, y: this.vy});
     }
 
     createBody() {
-
-        
+    
         /*
             category?: number | undefined; // The category of colliding bodies
             mask?: number | undefined; // determines the category of objects that this body can collide with
@@ -53,7 +53,6 @@ export class SV_Projectile extends SV_Entity {
             never collide if group is negative
         */
         
-
         const body = Matter.Bodies.rectangle(this.x, this.y, this.w, this.h,
         {
             isStatic: false, frictionAir: 0, friction: .5, restitution: 0.6, density: 0.3,
@@ -75,13 +74,15 @@ export class SV_Projectile extends SV_Entity {
     }
 
     update(deltaTime): void {
+        this.age += deltaTime;
+        if(this.age > this.maxAge || this.collided) {
+            this.dead = true;
+        }
+        
         this.x = this.body.position.x;
         this.y = this.body.position.y;
         this.angle = this.body.angle;
-        this.age += deltaTime;
-        if(this.age > this.maxAge) {
-            this.dead = true;
-        }
+
     }
 
     onCollisionStart(otherEntity: SV_Entity, collision: IEventCollision<Engine>) {
@@ -96,7 +97,9 @@ export class SV_Projectile extends SV_Entity {
             //     enemy.takeDamage(this.damage, this.caster);
             // }
             // //console.log("collision start", this.tag , " hits ", otherEntity.tag);
-            this.dead = true;
+            //this.dead = true;
+            this.collided = true;
+            
         }
     }
 

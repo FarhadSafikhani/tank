@@ -39,14 +39,16 @@ export class CL_Projectile_25mm extends CL_Projectile{
     }
 
     aliveTick(): void {
-        this.container.x = lerp(this.container.x, this.entity.x, 0.2);
-        this.container.y = lerp(this.container.y, this.entity.y, 0.2);
+        this.container.x = lerp(this.container.x, this.entity.x, 0.5);
+        this.container.y = lerp(this.container.y, this.entity.y, 0.5);
         this.container.rotation = this.entity.angle;
     }
 
     //called from update in cl_entity when state is DYING
     dieTick(): void {
         super.dieTick();
+        this.container.x = this.entity.x;
+        this.container.y = this.entity.y;
         this.spawnPartiles();
     }
 

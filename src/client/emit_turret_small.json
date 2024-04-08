@@ -4,18 +4,18 @@
 		"end": 0.03
 	},
 	"scale": {
-		"start": 0.2,
-		"end": 0.3,
+		"start": 0.1,
+		"end": 0.05,
 		"minimumScaleMultiplier": 1
 	},
 	"color": {
 		"start": "#ffffff",
-		"end": "#ffe100"
+		"end": "#ffc800"
 	},
 	"speed": {
-		"start": 400,
+		"start": 55,
 		"end": 0,
-		"minimumSpeedMultiplier": 0.5
+		"minimumSpeedMultiplier": 2
 	},
 	"acceleration": {
 		"x": 0,
@@ -23,17 +23,17 @@
 	},
 	"maxSpeed": 0,
 	"startRotation": {
-		"min": -3,
-		"max": 3
+		"min": -45,
+		"max": 45
 	},
-	"noRotation": true,
+	"noRotation": false,
 	"rotationSpeed": {
 		"min": 0,
-		"max": 0
+		"max": 111
 	},
 	"lifetime": {
 		"min": 0.25,
-		"max": 0.5
+		"max": 0.4
 	},
 	"blendMode": "add",
 	"ease": [
