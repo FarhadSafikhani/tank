@@ -10,19 +10,15 @@ export class RoomTest extends RoomBase {
     this.state.initialize();
   }
 
+  getState(): StateTest {
+    return this.state as StateTest;
+  }
+
   onJoin(client: Client, clientOptions: any) {
     super.onJoin(client, clientOptions);
     const nextTeam = this.getState().getNextTeam();
     this.getState().createPlayer(client.sessionId, {x: 0, y: 0}, nextTeam, clientOptions);
   }
 
-  onLeave(client: Client<any, any>): void {
-    super.onLeave(client);
-    this.getState().removePlayer(client.sessionId);
-  }
-
-  getState(): StateTest {
-    return this.state as StateTest;
-  }
 
 }

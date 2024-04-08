@@ -50,13 +50,17 @@ export class RoomBase extends Room {
     this.state.initialize();
   }
 
+  getState(){
+    return this.state as BaseState;
+  }
+
   onJoin(client: Client, clientOptions: any) {
     console.log("client joined:", client.sessionId, clientOptions);
   }
 
   onLeave(client: Client) {
     console.log("client left:", client.sessionId);
-    //this.state.players.delete(client.sessionId);
+    this.getState().removePlayer(client.sessionId);
   }
 
   getPlayerById(sessionId: string): SV_Player | undefined {

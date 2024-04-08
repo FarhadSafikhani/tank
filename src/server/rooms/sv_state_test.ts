@@ -71,14 +71,6 @@ export class StateTest extends BaseState {
     this.nextSpawnTime = Date.now() + 2000;
   }
 
-  onPlayerDeath(player: SV_Player) {
-    //TODO: have a shared pool of lives for players
-    this.gameOver();
-  }
-
-  gameOver() {
-
-  }
 
 
 }

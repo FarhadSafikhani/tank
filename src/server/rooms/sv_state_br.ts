@@ -120,15 +120,6 @@ export class StateBR extends BaseState {
     this.nextSpawnTime = Date.now() + 2000;
   }
 
-  onPlayerDeath(player: SV_Player) {
-    //TODO: have a shared pool of lives for players
-    //this.gameOver();
-  }
-
-  gameOver() {
-    this.isGameOver = true;
-    //this.room.disconnect();
-  }
 
 
 }

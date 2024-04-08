@@ -208,9 +208,6 @@ export class BaseState extends Schema {
     });
   }
 
-  onPlayerDeath(player: SV_Player) {
-    this.gameOver();
-  }
 
   gameOver() {
     this.isGameOver = true;

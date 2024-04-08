@@ -12,16 +12,15 @@ export class RoomBR extends RoomBase {
     this.getState().initialize();
   }
 
+  getState(){
+    return this.state as StateBR;
+  }
+
   onJoin(client: Client, clientOptions: any) {
-    
     super.onJoin(client, clientOptions);
     const randomSpawnPoint = this.getState().pickRandomSpawnPoint();
     const nextTeam = this.getState().getNextTeam();
     this.getState().createPlayer(client.sessionId, randomSpawnPoint, nextTeam, clientOptions);
-
   }
 
-  getState(){
-    return this.state as StateBR;
-  }
 }
