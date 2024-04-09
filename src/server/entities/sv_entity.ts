@@ -2,6 +2,45 @@ import { Schema, type } from "@colyseus/schema";
 import { BaseState } from "../rooms/sv_state_base";
 import { Engine, IEventCollision } from "matter-js";
 
+export class SV_Comp_Destructable extends Schema {
+    @type("int32") healthCurr: number = 0;
+    @type("int32") healthMax: number = 0;
+    @type("boolean") isKia: boolean = false;
+
+    entity: SV_Entity;
+    onKiaCallback: Function | undefined;
+    lastAttackerId: string = "";
+    lastAttackerName: string = "";
+
+    constructor(entity: SV_Entity, startingHealthMax: number, onKiaCallback: Function | undefined = undefined) {
+        super();
+        this.entity = entity;
+        this.healthMax = startingHealthMax;
+        this.healthCurr = startingHealthMax;
+        this.onKiaCallback = onKiaCallback;
+
+    }
+
+    takeDamage(damage: number, attacker: SV_Entity) {
+        if(this.entity.dead || this.isKia) return;
+        this.lastAttackerId = attacker.id;
+        this.lastAttackerName = attacker.name;
+        this.healthCurr -= damage;
+        if(this.healthCurr <= 0) {
+            this.healthCurr = 0;
+            this.isKia = true;
+            if(this.onKiaCallback) {
+                this.onKiaCallback();
+            }
+        }
+    }
+
+    reset() {
+        this.healthCurr = this.healthMax;
+        this.isKia = false;
+    }
+}
+
 export class SV_Entity extends Schema {
     @type("float64") x!: number;
     @type("float64") y!: number;
@@ -9,6 +48,7 @@ export class SV_Entity extends Schema {
     @type("string") id: string;
     @type("string") tag: string = "entity";
     @type("int32") team: number = 0;
+    @type(SV_Comp_Destructable) cDestructable: SV_Comp_Destructable | undefined;
     
     state: BaseState;
     body: Matter.Body | undefined;
@@ -30,9 +70,5 @@ export class SV_Entity extends Schema {
 
     onCollisionStart(otherEntity: SV_Entity, collision: IEventCollision<Engine>) {}
 
-
-    //TODO: destructable component in entity takes damage
-    isDestructable: boolean = false;
-    takeDamage(damage: number, attacker: SV_Entity) {}
-
 }
+

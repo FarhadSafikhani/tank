@@ -51,7 +51,7 @@ export class StateTest extends BaseState {
     });
     Matter.Engine.update(this.engine, deltaTime)
 
-    //this.waveSpawner(deltaTime);
+    this.waveSpawner(deltaTime);
   }
 
   nextSpawnTime = Date.now();
@@ -68,7 +68,7 @@ export class StateTest extends BaseState {
     //padd the x and y
     const spawnPos = { x: x < 0 ? x - padding : x + padding, y: y < 0 ? y - padding : y + padding };
     this.createEnemy(spawnPos);
-    this.nextSpawnTime = Date.now() + 2000;
+    this.nextSpawnTime = Date.now() + 3000;
   }
 
 

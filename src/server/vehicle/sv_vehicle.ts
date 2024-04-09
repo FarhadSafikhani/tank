@@ -1,5 +1,5 @@
 import { Schema, type } from "@colyseus/schema";
-import { SV_Entity } from "../entities/sv_entity";
+import { SV_Comp_Destructable, SV_Entity } from "../entities/sv_entity";
 import Matter from "matter-js";
 import { CollisionCategory } from "../../common/interfaces";
 import { SV_Weapon } from "../weapons/sv_weapon";
@@ -14,15 +14,12 @@ export class SV_Vehicle extends SV_Entity {
     @type("float64") vy: number = 0;
     @type("float64") turretAngle: number = 0;
     @type("string") verts: string = "";
-    @type("int32") healthCurr: number = 0;
-    @type("int32") healthMax: number = 0;
-    @type("boolean") isKia: boolean = false;
     @type("int32") w: number = 60;
     @type("int32") h: number = 40;
     @type(SV_Weapon) mainWeapon: SV_Weapon;
     @type(SV_Weapon) secondaryWeapon: SV_Weapon;
 
-    isDestructable: boolean = true;
+    cDestructable!: SV_Comp_Destructable;
     player: SV_Player;
     body: Matter.Body;
 
@@ -41,8 +38,7 @@ export class SV_Vehicle extends SV_Entity {
         this.x = x;
         this.y = y;
         this.body = this.createBody();
-        this.healthMax = this.startingMaxHealth;
-        this.healthCurr = this.healthMax;
+        this.cDestructable = new SV_Comp_Destructable(this, this.startingMaxHealth, this.onKia.bind(this));
         
         this.mainWeapon = new SV_Weapon_120mm(this);
         //this.secondaryWeapon = new SV_Weapon_25mm(this);
@@ -78,7 +74,7 @@ export class SV_Vehicle extends SV_Entity {
 
         if(this.dead) return;
 
-        if(!this.isKia){
+        if(!this.cDestructable.isKia) {
             this.updateMovement();
             this.player.mDown && this.mainWeapon.fire(this.turretAngle);
             this.player.rmDown && this.secondaryWeapon.fire(this.turretAngle);
@@ -136,22 +132,14 @@ export class SV_Vehicle extends SV_Entity {
         }
     }
 
-    takeDamage(damage: number, attacker: SV_Entity) {
-        
-        if(this.dead || this.player.isKia || this.healthCurr <= 0) return;
-        
-        this.healthCurr -= damage;
-        if(this.healthCurr <= 0 && attacker){
-            this.healthCurr = 0;
-            this.isKia = true;
-            this.player.killedInAction();
-            this.player.lastKillerId = attacker.id;
-            this.player.lastKillerName = attacker.name;
-        }
+    onKia() {
+        this.player.killedInAction();
+        this.player.lastKillerId = this.cDestructable.lastAttackerId;
+        this.player.lastKillerName = this.cDestructable.lastAttackerName;
     }
 
     onMouseMove(mx: number, my: number) {
-        if(this.isKia){
+        if(this.cDestructable?.isKia){
             return;
         }
         this.turretAngle = Math.atan2(my - this.y, mx - this.x);
@@ -163,10 +151,9 @@ export class SV_Vehicle extends SV_Entity {
         Matter.Body.setAngularSpeed(this.body, 0);
         Matter.Body.setVelocity(this.body, { x: 0, y: 0 }); 
 
-        this.healthCurr = this.healthMax;
+        this.cDestructable.reset();
         this.mainWeapon.reInit();
         this.secondaryWeapon.reInit();
-        this.isKia = false;
     }
 
 }

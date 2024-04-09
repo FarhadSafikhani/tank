@@ -1,5 +1,5 @@
 import Matter, { Engine, IEventCollision } from "matter-js";
-import { SV_Entity } from "./sv_entity";
+import { SV_Comp_Destructable, SV_Entity } from "./sv_entity";
 import { type } from "@colyseus/schema"; 
 import { BaseState } from "../rooms/sv_state_base";
 import { CollisionCategory } from "../../common/interfaces";
@@ -11,23 +11,23 @@ export class SV_Enemy extends SV_Entity {
     @type("float64") vx: number = 0;
     @type("float64") vy: number = 0;
     @type("float64") turretAngle: number = 0;
-    @type("int32") healthCurr: number = 0;
-    @type("int32") healthMax: number = 0;
     @type("int32") size: number = 26;
 
     name: string = "";
-    accel: number = .15; 
-    turnRate: number = 1; 
+    accel: number = .1; 
+    turnRate: number = .8; 
     maxSpeed: number = 3;
     friction: number = 0.75;
-    startingMaxHealth: number = 60;
-    damage: number = 22;
+    startingMaxHealth: number = 40;
+    damage: number = 18;
 
+    cDestructable!: SV_Comp_Destructable;
     body: Matter.Body;
 
-    isDestructable: boolean = true;
-
     currentTarget: SV_Vehicle | null = null;
+    searchTargetEveryMs: number = 2000;
+    nextChaseTime: number = Date.now();
+
 
     constructor(state: BaseState, id: string, x: number, y: number) {
         super(state, id);
@@ -35,8 +35,7 @@ export class SV_Enemy extends SV_Entity {
         this.x = x;
         this.y = y;
         this.body = this.createBody();
-        this.healthMax = this.startingMaxHealth;
-        this.healthCurr = this.healthMax;
+        this.cDestructable = new SV_Comp_Destructable(this, this.startingMaxHealth, this.onKia.bind(this));
         this.name = "Grunt";
     }
 
@@ -62,14 +61,25 @@ export class SV_Enemy extends SV_Entity {
 
         if(this.dead) return;
 
-        if(this.healthCurr <= 0) {
-            this.healthCurr = 0;
-            this.dead = true;
-            return;
+        if(!this.cDestructable.isKia) {
+            this.tryAcquireTarget();
+            this.tryChaseTarget();
         }
 
-        //chase the nearby players
-        this.currentTarget = this.acquireTarget();
+        this.x = this.body.position.x;
+        this.y = this.body.position.y;
+        this.angle = this.body.angle;
+
+    }
+
+    tryAcquireTarget() {
+        if(this.nextChaseTime < Date.now()) {
+            this.currentTarget = this.acquireTarget();
+            this.nextChaseTime = Date.now() + this.searchTargetEveryMs;
+        }
+    }
+
+    tryChaseTarget() {
 
         if(this.currentTarget) {
             const angleToPlayer = Math.atan2(this.currentTarget.y - this.y, this.currentTarget.x - this.x);
@@ -101,49 +111,36 @@ export class SV_Enemy extends SV_Entity {
             }
 
         }
-
-        this.x = this.body.position.x;
-        this.y = this.body.position.y;
-        this.angle = this.body.angle;
-
     }
 
     acquireTarget(): SV_Vehicle | null {
-    
-        //chase the nearby players
-        const players = this.state.entities.values();
+        const entities = this.state.entities.values();   
         let closestPlayer: SV_Vehicle | null = null;
         let closestDistance = 999999;
-        for(let player of players) {
-            if(player.tag === "player") {
-                const distance = Math.sqrt(Math.pow(player.x - this.x, 2) + Math.pow(player.y - this.y, 2));
+        for(let vehicle of entities) {
+            if(vehicle instanceof SV_Vehicle && vehicle.team !== this.team) {
+                const distance = Math.sqrt(Math.pow(vehicle.x - this.x, 2) + Math.pow(vehicle.y - this.y, 2));
                 if(distance < closestDistance) {
                     closestDistance = distance;
-                    closestPlayer = player as SV_Vehicle;
+                    closestPlayer = vehicle;
                 }
             }
         }
-
         return closestPlayer;
-
     }
 
     onCollisionStart(otherEntity: SV_Entity, collision: IEventCollision<Engine>) {
-        if(this.body && otherEntity && otherEntity.body && otherEntity.isDestructable && !this.dead && !otherEntity.dead && otherEntity.team !== this.team) {
-            if(otherEntity instanceof SV_Vehicle){
-                otherEntity.takeDamage(this.damage, this);
+        if(this.body && otherEntity && otherEntity.body) {
+            if(otherEntity instanceof SV_Vehicle && otherEntity.team !== this.team) {
+                otherEntity.cDestructable?.takeDamage(this.damage, this);
             }
         }
     }
 
-    takeDamage(damage: number, attacker: SV_Entity) {
-        this.healthCurr -= damage;
-        // if(this.healthCurr <= 0 && attacker){
-        //     this.lastKillerId = attacker.id;
-        //     this.lastKillerName = attacker.name;
-        // }
-
+    onKia() {
+        this.dead = true;
     }
+
 
     
 }

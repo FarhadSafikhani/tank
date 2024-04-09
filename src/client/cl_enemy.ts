@@ -10,29 +10,19 @@ import { CL_Match } from "./match";
 export class CL_Enemy extends CL_Entity{
 
     entity: SV_Enemy;
-
     graphicsHealthBar: PIXI.Graphics;
-
 
     constructor(match: CL_Match, entity: SV_Enemy){
         super(match, entity);
         this.createHealthBar();
     }
 
-    createGraphics(): PIXI.Graphics {
-        
+    createGraphics(): void {
         const g = new PIXI.Graphics();
-
-        g.x = this.entity.x;
-        g.y = this.entity.y;
-
         g.beginFill({ r: 222, g: 0, b: 0 })
         g.drawCircle(0, 0, this.entity.size);
         g.endFill();
-
-        this.match.game.viewport.addChild(g);
-
-        return g;
+        this.container.addChild(g);
     }
 
 
@@ -52,14 +42,19 @@ export class CL_Enemy extends CL_Entity{
         
         this.graphicsHealthBar.addChild(healthBarBarFG);
 
-        this.graphics.addChild(this.graphicsHealthBar);
+        this.container.addChild(this.graphicsHealthBar);
 
         this.updateHealthBar();
     }
 
     updateHealthBar(){
+        const compDestro = this.entity.cDestructable;
+        if(!compDestro){
+            return;
+        }
+
         const healthBarFG = this.graphicsHealthBar.children[0] as PIXI.Graphics;
-        let scale = this.entity.healthCurr / this.entity.healthMax;
+        let scale = compDestro.healthCurr / compDestro.healthMax;
         if(scale < 0 ) {
             scale = 0;
         }
@@ -76,10 +71,10 @@ export class CL_Enemy extends CL_Entity{
 
 
     aliveTick(): void {
-        this.graphics.x = lerp(this.graphics.x, this.entity.x, 0.2);
-        this.graphics.y = lerp(this.graphics.y, this.entity.y, 0.2);
-        this.graphics.rotation = this.entity.angle;
-        this.graphics.rotation = this.entity.turretAngle;
+        this.container.x = lerp(this.container.x, this.entity.x, 0.2);
+        this.container.y = lerp(this.container.y, this.entity.y, 0.2);
+        this.container.rotation = this.entity.angle;
+        this.container.rotation = this.entity.turretAngle;
     }
 
 

@@ -24,6 +24,7 @@ export class CL_Entity{
         this.match = match;
         this.entity = entity;
         this.container = new PIXI.Container();
+        this.container.position.set(entity.x, entity.y);
         this.match.game.viewport.addChild(this.container);
         this.createGraphics();
         this.state = EntityState.ALIVE;

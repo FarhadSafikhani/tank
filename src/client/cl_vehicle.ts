@@ -67,10 +67,6 @@ export class CL_Vehicle extends CL_Entity{
     createGraphics(): void {
         
         this.gConatiner = new PIXI.Graphics();
-        const graphics = new PIXI.Graphics();
-
-        graphics.x = this.entity.x;
-        graphics.y = this.entity.y;
 
         // DRAW BODY
         const tankVertices = JSON.parse(this.entity.verts);
@@ -144,8 +140,12 @@ export class CL_Vehicle extends CL_Entity{
     }
 
     updateHealthBar(){
+        const compDestro = this.entity.cDestructable;
+        if(!compDestro){
+            return;
+        }
         const healthBarFG = this.graphicsHealthBar.children[0] as PIXI.Graphics;
-        let scale = this.entity.healthCurr / this.entity.healthMax;
+        let scale = compDestro.healthCurr / compDestro.healthMax;
         if(scale < 0 ) {
             scale = 0;
         }
@@ -157,14 +157,18 @@ export class CL_Vehicle extends CL_Entity{
 
     onChange(): void {
         
-        if(this.localKia != this.entity.isKia){
-            this.localKia = this.entity.isKia;
-            if(this.localKia){
-                this.onKia();
-            } else {
-                this.onRespawn();
-            }     
+        const compDestro = this.entity.cDestructable;
+        if(compDestro){
+            if(this.localKia != compDestro.isKia){
+                this.localKia = compDestro.isKia;
+                if(this.localKia){
+                    this.onKia();
+                } else {
+                    this.onRespawn();
+                }     
+            }
         }
+
 
         this.updateHealthBar();
 
