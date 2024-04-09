@@ -13,7 +13,6 @@ import { SV_Vehicle } from "../server/vehicle/sv_vehicle";
 export class CL_Vehicle extends CL_Entity{
 
     entity: SV_Vehicle;
-    localShots: number = 0;
 
     gConatiner: PIXI.Graphics;
     graphicsTankBody: PIXI.Graphics;
@@ -162,14 +161,9 @@ export class CL_Vehicle extends CL_Entity{
             this.localKia = this.entity.isKia;
             if(this.localKia){
                 this.onKia();
-            }else{
+            } else {
                 this.onRespawn();
             }     
-        }
-
-        if(this.entity.mainWeapon.shots > this.localShots){
-            this.localShots = this.entity.mainWeapon.shots;
-            this.onShot();
         }
 
         this.updateHealthBar();
@@ -178,15 +172,11 @@ export class CL_Vehicle extends CL_Entity{
         this.secondaryWeapon?.update();
     }
 
-    onShot(): void {
-
-    }
-
     aliveTick(): void {
         this.container.x = lerp(this.container.x, this.entity.x, 0.2);
         this.container.y = lerp(this.container.y, this.entity.y, 0.2);
         this.graphicsTankBody.rotation = this.entity.angle;
-        this.graphicsTurret.rotation = this.entity.turretAngle;  
+        this.graphicsTurret.rotation = this.entity.turretAngle;
     }
 
     destroy(): void {
@@ -196,13 +186,19 @@ export class CL_Vehicle extends CL_Entity{
         super.destroy();
     }
 
+    // Helper function to interpolate angles
+    //this.lerpAngle(this.graphicsTurret.rotation, this.entity.turretAngle + Math.PI, 0.5); 
+    lerpAngle(a: number, b: number, t: number): number {
+        const angle = (((b - a + Math.PI * 2) % (Math.PI * 2) - Math.PI) % (Math.PI * 2));
+        return a + angle * t;
+    }
+
     onKia(): void {
         const gray = new PIXI.Color({r: 111, g: 111, b: 111}).toNumber();
         const filter = new PIXI.ColorMatrixFilter();
-        filter.tint(gray, false)
+        filter.tint(gray, false);
         this.gConatiner.filters = [filter];
         this.graphicsHealthBar.alpha = 0;
-
         this.match.ptm.spawnKiaParticles(this.container);
     }
 

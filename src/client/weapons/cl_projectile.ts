@@ -1,32 +1,28 @@
 import * as PIXI from "pixi.js";
-import { CL_Entity, EntityState } from "./cl_entity";
-import { Game } from "./game";
-import { SV_Projectile } from "../server/entities/sv_projectile";
-import { lerp } from "../common/utils";
-import { CL_Match } from "./match";
-import { CL_Projectile } from "./cl_projectile";
+import { CL_Entity, EntityState } from "../cl_entity";
+import { Game } from "../game";
+import { SV_Projectile } from "../../server/entities/sv_projectile";
+import { lerp } from "../../common/utils";
+import { CL_Match } from "../match";
 
 
-export class CL_Projectile_120mm extends CL_Projectile{
+export class CL_Projectile extends CL_Entity{
 
     entity: SV_Projectile;
    
     constructor(match: CL_Match, entity: SV_Projectile){
         super(match, entity);
+        //this.drawDebugLine();
         this.container.rotation = this.entity.angle;
         this.container.x = this.entity.x;
         this.container.y = this.entity.y;
-
-        const casterEntity = this.match.em.getClEntity(this.entity.casterId);
-        const casterContainer = casterEntity.container;
-        this.match.ptm.spawnParticles120mm(casterContainer, this.entity.angle);
     }
 
     createGraphics(): void {
         const graphics = new PIXI.Graphics();
         const bodyVerts = JSON.parse(this.entity.verts);
         graphics.clear();
-        graphics.beginFill({ r: 222, g: 180, b: 180, a: .8 }); // Gray color
+        graphics.beginFill({ r: 125, g: 115, b: 125, a: .7 }); // Gray color
         graphics.drawPolygon(bodyVerts);
         graphics.endFill();
         this.container.addChild(graphics);
@@ -41,16 +37,14 @@ export class CL_Projectile_120mm extends CL_Projectile{
     }
 
     aliveTick(): void {
-        this.container.x = lerp(this.container.x, this.entity.x, .5);
-        this.container.y = lerp(this.container.y, this.entity.y, .5);
+        this.container.x = lerp(this.container.x, this.entity.x, 0.7);
+        this.container.y = lerp(this.container.y, this.entity.y, 0.7);
         this.container.rotation = this.entity.angle;
     }
 
     //called from update in cl_entity when state is DYING
     dieTick(): void {
         super.dieTick();
-        this.container.x = this.entity.x;
-        this.container.y = this.entity.y;
         this.spawnPartiles();
     }
 

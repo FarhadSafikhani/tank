@@ -6,12 +6,12 @@ import { CL_Enemy } from "../cl_enemy";
 import { CL_Entity } from "../cl_entity";
 import { CL_Manager, } from "./cl_manager";
 import { CL_Vehicle } from "../cl_vehicle";
-import { CL_Projectile } from "../cl_projectile";
+import { CL_Projectile } from "../weapons/cl_projectile";
 import { CL_WorldDoodad } from "../cl_worlddoodad";
 import { CL_Match } from "../match";
-import { CL_Projectile_25mm } from "../cl_projectile_25mm";
-import { CL_Projectile_120mm } from "../cl_projectile_120mm";
-import { CL_Projectile_50cal } from "../cl_projectile_50cal";
+import { CL_Projectile_25mm } from "../weapons/cl_projectile_25mm";
+import { CL_Projectile_120mm } from "../weapons/cl_projectile_120mm";
+import { CL_Projectile_50cal } from "../weapons/cl_projectile_50cal";
 import { SV_Vehicle } from "../../server/vehicle/sv_vehicle";
 
 export class CL_EntityManager extends CL_Manager{
