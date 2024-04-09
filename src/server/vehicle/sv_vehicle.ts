@@ -5,7 +5,6 @@ import { CollisionCategory } from "../../common/interfaces";
 import { SV_Weapon } from "../weapons/sv_weapon";
 import { SV_Weapon_120mm } from "../weapons/sv_weapon_120mm";
 import { SV_Weapon_50cal } from "../weapons/sv_weapon_50cal";
-import { BaseState } from "../rooms/sv_state_base";
 import { SV_Player } from "../entities/sv_player";
 import { SV_Weapon_25mm } from "../weapons/sv_weapon_25mm";
 
@@ -24,7 +23,6 @@ export class SV_Vehicle extends SV_Entity {
     @type(SV_Weapon) secondaryWeapon: SV_Weapon;
 
     isDestructable: boolean = true;
-    
     player: SV_Player;
     body: Matter.Body;
 
@@ -80,14 +78,14 @@ export class SV_Vehicle extends SV_Entity {
 
         if(this.dead) return;
 
-        this.mainWeapon.update();
-        this.secondaryWeapon.update();
-
         if(!this.isKia){
             this.updateMovement();
             this.player.mDown && this.mainWeapon.fire(this.turretAngle);
             this.player.rmDown && this.secondaryWeapon.fire(this.turretAngle);
         }
+
+        this.mainWeapon.update();
+        this.secondaryWeapon.update();
 
         this.x = this.body.position.x;
         this.y = this.body.position.y;
