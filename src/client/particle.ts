@@ -13,7 +13,7 @@ export class Particle {
         this.match = match;
 
         this.graphic = new PIXI.Graphics();
-        this.graphic.beginFill({r: 255, g: 255, b: 0}); // Yellow color
+        this.graphic.beginFill({r: 255, g: 255, b: 0, a: .8}); // Yellow color
         this.graphic.drawCircle(0, 0, size); // Draw a circle with radius 5
         this.graphic.endFill();
         this.graphic.x = x;
