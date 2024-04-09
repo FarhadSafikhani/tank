@@ -14,22 +14,13 @@ export class CL_WorldDoodad extends CL_Entity{
     }
 
     createGraphics(): void {
-        
         const graphics = new PIXI.Graphics();
-
-        graphics.x = this.entity.x;
-        graphics.y = this.entity.y;
-
-        // DRAW BODY
         const bodyVerts = JSON.parse(this.entity.verts);
         graphics.clear();
         graphics.beginFill({r:25, g:115, b:25}); // Gray color
         graphics.drawPolygon(bodyVerts);
         graphics.endFill();
-
         this.container.addChild(graphics);
-        // this.match.game.viewport.addChild(graphics);
-        // return graphics;
     }
 
 }
