@@ -15,12 +15,11 @@ export class CL_Weapon_120mm extends CL_Weapon {
     htmlUiBar: HTMLElement;
     htmlUiContainer: HTMLElement;
 
-    constructor(vehicle: CL_Vehicle, svWeapon: SV_Weapon){
+    constructor(vehicle: CL_Vehicle, svWeapon: SV_Weapon_120mm){
         super(vehicle, svWeapon);
     }
 
     setupUi() {
-
         this.htmlUiContainer = this.vehicle.match.uim.create({
             id: 'weapon-ui-120mm',
             class: 'ui-text weapon-ui',
@@ -37,7 +36,6 @@ export class CL_Weapon_120mm extends CL_Weapon {
     }
 
     update() {
-
         if(!this.vehicle.isCLientVehicle){
             return;
         }
@@ -47,7 +45,7 @@ export class CL_Weapon_120mm extends CL_Weapon {
             const percent = (1 - (this.localCooldownLeftMs / this.svWeapon.cooldownMaxMs)) * 100;
             this.vehicle.match.uim.updateBar(this.htmlUiBar, percent);
         }
-
+        
     }    
 
 }

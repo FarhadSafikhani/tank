@@ -7,12 +7,13 @@ import { SV_WorldDoodad } from "../entities/sv_worlddoodad";
 import { SV_Projectile } from "../entities/sv_projectile";
 import { SV_Enemy } from "../entities/sv_enemy";
 import { RoomBase } from "./sv_room_base";
-import { Cords } from "../../common/interfaces";
+import { Cords, Vehicles } from "../../common/interfaces";
 import { SV_Projectile_25mm } from "../entities/sv_projectile_25mm";
 import { SV_Weapon } from "../weapons/sv_weapon";
 import { SV_Projectile120mm } from "../entities/sv_projectile_120mm";
 import { SV_Projectile_50cal } from "../entities/sv_projectile_50cal";
 import { SV_Vehicle } from "../vehicle/sv_vehicle";
+import { SV_MediumTank } from "../vehicle/sv_vehicle_medium_tank";
 
 const GAME_CONFIG = {
   worldSize: 1200
@@ -107,10 +108,14 @@ export class BaseState extends Schema {
     this.players.set(sessionId, p);
   }
 
-  createVehicle(player: SV_Player, x: number, y: number) {
-    const p = new SV_Vehicle(player, x, y);
-    this.addEntity(player.id, p);
-    return p;
+  createVehicle(player: SV_Player, x: number, y: number, vehicleTag: Vehicles): SV_Vehicle {
+    switch(vehicleTag) {
+      case Vehicles.MEDIUM_TANK:
+        const v = new SV_MediumTank(player, x, y);
+        this.addEntity(player.id, v);
+        return v;
+    }
+    throw new Error("Unknown vehicle tag: " + vehicleTag);
   }
 
   createProjectile(weapon: SV_Weapon, x: number, y: number, angle: number) {

@@ -1,6 +1,7 @@
 import { Schema, type, MapSchema } from "@colyseus/schema";
 import { BaseState } from "../rooms/sv_state_base";
 import { SV_Vehicle } from "../vehicle/sv_vehicle";
+import { Vehicles } from "../../common/interfaces";
 
 export class SV_Player extends Schema{
 
@@ -34,7 +35,7 @@ export class SV_Player extends Schema{
         this.state = state;
         this.team = team;
         this.name = name;
-        this.vehicle = this.state.createVehicle(this, x, y);
+        this.vehicle = this.state.createVehicle(this, x, y, Vehicles.MEDIUM_TANK);
     }
 
 

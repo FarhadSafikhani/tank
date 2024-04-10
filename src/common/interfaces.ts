@@ -20,3 +20,9 @@ export interface Cords {
     x: number,
     y: number
 }
+
+export const enum Vehicles {
+    MEDIUM_TANK = "medium_tank",
+    LIGHT_TANK = "light_tank",
+    HEAVY_TANK = "heavy_tank"
+}

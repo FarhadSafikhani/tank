@@ -1,72 +1,68 @@
 import { Schema, type } from "@colyseus/schema";
 import { SV_Comp_Destructable, SV_Entity } from "../entities/sv_entity";
 import Matter from "matter-js";
+import { CollisionCategory } from "../../common/interfaces";
 import { SV_Weapon } from "../weapons/sv_weapon";
+import { SV_Weapon_120mm } from "../weapons/sv_weapon_120mm";
+import { SV_Weapon_50cal } from "../weapons/sv_weapon_50cal";
 import { SV_Player } from "../entities/sv_player";
+import { SV_Weapon_25mm } from "../weapons/sv_weapon_25mm";
+import { SV_Vehicle, VehicleBaseStats } from "./sv_vehicle";
 
-export interface VehicleBaseStats {
-    accel: number;
-    turnRate: number;
-    maxSpeed: number;
-    friction: number;
-    startingMaxHealth: number;
-    density: number;
-}
 
-export class SV_Vehicle extends SV_Entity {
 
-    @type("float64") vx: number = 0;
-    @type("float64") vy: number = 0;
-    @type("float64") turretAngle: number = 0;
-    @type("string") verts: string = "";
-    @type("int32") w: number = 60;
-    @type("int32") h: number = 40;
-    @type(SV_Weapon) mainWeapon: SV_Weapon | undefined;
-    @type(SV_Weapon) secondaryWeapon: SV_Weapon | undefined;
+export class SV_MediumTank extends SV_Vehicle {
 
-    cDestructable!: SV_Comp_Destructable;
-    player: SV_Player;
-    body!: Matter.Body;
-    stats: VehicleBaseStats;
+    w: number = 60;
+    h: number = 40;
 
-    constructor(player: SV_Player, x: number, y: number, stats: VehicleBaseStats) {
-        super(player.state, player.id, player.team);
-        this.stats = stats;
-        this.player = player;
-        this.name = player.name;
-        this.tag = "vehicle";
-        this.x = x;
-        this.y = y;
-        this.body = this.createBody();
-        this.cDestructable = new SV_Comp_Destructable(this, this.stats.startingMaxHealth, this.onKia.bind(this));
+    constructor(player: SV_Player, x: number, y: number) {
+
+        const stats = {
+            accel: .42,
+            turnRate: 0.03,
+            maxSpeed: 11,
+            friction: .03,
+            startingMaxHealth: 120,
+            density: 1
+        };
+
+        super(player, x, y, stats);
+        this.tag = "medium_tank";
+        
+        this.mainWeapon = new SV_Weapon_120mm(this);
+        this.secondaryWeapon = new SV_Weapon_50cal(this);
+        
+
     }
 
     createBody() {
-        const tankBody = Matter.Bodies.circle(this.x, this.y, this.w);
+        
+        const tankBody = Matter.Bodies.rectangle(this.x, this.y, this.w, this.h,
+        {
+            isStatic: false, friction: .3, 
+            frictionAir: this.stats.friction, restitution: 0.6, 
+            density: this.stats.density,
+            chamfer: { radius: 6 },
+            collisionFilter: {
+                group: -this.team, //group for collision filtering
+                category: CollisionCategory.PLAYER, // category for projectiles
+                mask: CollisionCategory.PROJECTILE | CollisionCategory.PLAYER | 
+                CollisionCategory.ENEMY | CollisionCategory.ENEMY_PROJECTILE, // mask for other objects (e.g., players)
+                
+            },
+        });
+
         const points = tankBody.vertices.map(vertex => {
             return { x: this.x - vertex.x, y: this.y - vertex.y };
         });
+
         this.verts = JSON.stringify(points);
         return tankBody;
     }
 
     update() {
-
-        if(this.dead) return;
-
-        if(!this.cDestructable.isKia) {
-            this.updateMovement();
-            this.player.mDown && this.mainWeapon?.fire(this.turretAngle);
-            this.player.rmDown && this.secondaryWeapon?.fire(this.turretAngle);
-        }
-
-        this.mainWeapon?.update();
-        this.secondaryWeapon?.update();
-
-        this.x = this.body.position.x;
-        this.y = this.body.position.y;
-        this.angle = this.body.angle;
-
+        super.update();
     }
 
     updateMovement() {
@@ -113,27 +109,15 @@ export class SV_Vehicle extends SV_Entity {
     }
 
     onKia() {
-        this.player.killedInAction();
-        this.player.lastKillerId = this.cDestructable.lastAttackerId;
-        this.player.lastKillerName = this.cDestructable.lastAttackerName;
+        super.onKia();
     }
 
     onMouseMove(mx: number, my: number) {
-        if(this.cDestructable?.isKia){
-            return;
-        }
-        this.turretAngle = Math.atan2(my - this.y, mx - this.x);
+        super.onMouseMove(mx, my);
     }
 
     respawn() {
-        const spawnPos = this.state.pickRandomSpawnPoint();
-        Matter.Body.setPosition(this.body, { x: spawnPos.x, y: spawnPos.y });
-        Matter.Body.setAngularSpeed(this.body, 0);
-        Matter.Body.setVelocity(this.body, { x: 0, y: 0 }); 
-
-        this.cDestructable.reset();
-        this.mainWeapon?.reInit();
-        this.secondaryWeapon?.reInit();
+        super.respawn();
     }
 
 }

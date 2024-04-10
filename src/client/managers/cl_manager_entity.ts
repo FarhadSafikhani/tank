@@ -13,6 +13,9 @@ import { CL_Projectile_25mm } from "../weapons/cl_projectile_25mm";
 import { CL_Projectile_120mm } from "../weapons/cl_projectile_120mm";
 import { CL_Projectile_50cal } from "../weapons/cl_projectile_50cal";
 import { SV_Vehicle } from "../../server/vehicle/sv_vehicle";
+import { Vehicles } from "../../common/interfaces";
+import { SV_MediumTank } from "../../server/vehicle/sv_vehicle_medium_tank";
+import { CL_MediumTank } from "../cl_vehicle_medium_tank";
 
 export class CL_EntityManager extends CL_Manager{
 
@@ -36,8 +39,8 @@ export class CL_EntityManager extends CL_Manager{
         
         let clEntity: CL_Entity;
         switch (entity.tag) {
-            case "vehicle":
-                clEntity = new CL_Vehicle(this.match, entity as SV_Vehicle);
+            case Vehicles.MEDIUM_TANK:
+                clEntity = new CL_MediumTank(this.match, entity as SV_MediumTank);
                 break;
             case "wdoodad":
                 clEntity = new CL_WorldDoodad(this.match, entity as SV_WorldDoodad);
@@ -58,7 +61,7 @@ export class CL_EntityManager extends CL_Manager{
                 clEntity = new CL_Enemy(this.match, entity as SV_Enemy);
                 break;
             default:
-                throw new Error("Unknown entity type");
+                throw new Error("Unknown entity type: " + entity.tag);
         }
 
         this.clEntities[entity.id] = clEntity;

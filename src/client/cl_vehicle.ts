@@ -8,6 +8,7 @@ import { CL_Weapon_25mm } from "./weapons/cl_weapon_25mm";
 import { CL_Weapon_120mm } from "./weapons/cl_weapon_120mm";
 import { CL_Weapon_50cal } from "./weapons/cl_weapon_50cal";
 import { SV_Vehicle } from "../server/vehicle/sv_vehicle";
+import { SV_Weapon_120mm } from "../server/weapons/sv_weapon_120mm";
 
 
 export class CL_Vehicle extends CL_Entity{
@@ -20,7 +21,6 @@ export class CL_Vehicle extends CL_Entity{
     graphicsHealthBar: PIXI.Graphics;
 
     isCLientVehicle: boolean = false;
-    muzzleScale: number = 0;
 
     localKia: boolean = false;
 
@@ -38,21 +38,21 @@ export class CL_Vehicle extends CL_Entity{
         if(this.isCLientVehicle){
             this.match.currentPlayerVehcile = this;
             this.match.game.viewport.follow(this.container);
-            this.mainWeapon = this.setupWeapon(entity.mainWeapon);
-            this.secondaryWeapon = this.setupWeapon(entity.secondaryWeapon);
+            this.mainWeapon = entity.mainWeapon ? this.setupWeapon(entity.mainWeapon) : undefined;
+            this.secondaryWeapon = entity.secondaryWeapon ? this.setupWeapon(entity.secondaryWeapon) : undefined;
         }
         this.colorFilter = CL_Vehicle.getColorFilterByTeam(this.entity.team);
         this.resetColorFilter(this.gConatiner);
     }
 
-    setupWeapon(svWeapon: SV_Weapon): CL_Weapon{
+    setupWeapon(svWeapon: SV_Weapon): CL_Weapon {
         let weapon: CL_Weapon;
         switch(svWeapon.tag){
             case "25mm":
                 weapon = new CL_Weapon_25mm(this, svWeapon);
                 break;
             case "120mm":
-                weapon = new CL_Weapon_120mm(this, svWeapon);
+                weapon = new CL_Weapon_120mm(this, svWeapon as SV_Weapon_120mm);
                 break;
             case "50cal":
                 weapon = new CL_Weapon_50cal(this, svWeapon);
