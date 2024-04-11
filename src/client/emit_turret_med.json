@@ -4,7 +4,7 @@
 		"end": 0.03
 	},
 	"scale": {
-		"start": 0.1,
+		"start": 0.15,
 		"end": 0.05,
 		"minimumScaleMultiplier": 1
 	},
@@ -13,7 +13,7 @@
 		"end": "#ffc800"
 	},
 	"speed": {
-		"start": 70,
+		"start": 66,
 		"end": 0,
 		"minimumSpeedMultiplier": 3
 	},
@@ -23,8 +23,8 @@
 	},
 	"maxSpeed": 0,
 	"startRotation": {
-		"min": -45,
-		"max": 45
+		"min": -22,
+		"max": 22
 	},
 	"noRotation": false,
 	"rotationSpeed": {

@@ -18,6 +18,10 @@ export class CL_Projectile_25mm extends CL_Projectile{
         this.container.rotation = this.entity.angle;
         this.container.x = this.entity.x;
         this.container.y = this.entity.y;
+
+        const casterEntity = this.match.em.getClEntity(this.entity.casterId);
+        const casterContainer = casterEntity.container;
+        this.match.ptm.spawnParticlesTurretMed(casterContainer, this.entity.angle);
     }
 
     createGraphics(): void {

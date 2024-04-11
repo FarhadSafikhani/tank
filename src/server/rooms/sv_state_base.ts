@@ -14,6 +14,7 @@ import { SV_Projectile120mm } from "../entities/sv_projectile_120mm";
 import { SV_Projectile_50cal } from "../entities/sv_projectile_50cal";
 import { SV_Vehicle } from "../vehicle/sv_vehicle";
 import { SV_MediumTank } from "../vehicle/sv_vehicle_medium_tank";
+import { SV_APC } from "../vehicle/sv_vehicle_apc";
 
 const GAME_CONFIG = {
   worldSize: 1200
@@ -109,11 +110,16 @@ export class BaseState extends Schema {
   }
 
   createVehicle(player: SV_Player, x: number, y: number, vehicleTag: Vehicles): SV_Vehicle {
+    let vehicle: SV_Vehicle;
     switch(vehicleTag) {
       case Vehicles.MEDIUM_TANK:
-        const v = new SV_MediumTank(player, x, y);
-        this.addEntity(player.id, v);
-        return v;
+        vehicle = new SV_MediumTank(player, x, y);
+        this.addEntity(player.id, vehicle);
+        return vehicle;
+      case Vehicles.APC:
+        vehicle = new SV_APC(player, x, y);
+        this.addEntity(player.id, vehicle);
+        return vehicle;
     }
     throw new Error("Unknown vehicle tag: " + vehicleTag);
   }

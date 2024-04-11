@@ -16,6 +16,8 @@ import { SV_Vehicle } from "../../server/vehicle/sv_vehicle";
 import { Vehicles } from "../../common/interfaces";
 import { SV_MediumTank } from "../../server/vehicle/sv_vehicle_medium_tank";
 import { CL_MediumTank } from "../cl_vehicle_medium_tank";
+import { CL_APC } from "../cl_vehicle_apc";
+import { SV_APC } from "../../server/vehicle/sv_vehicle_apc";
 
 export class CL_EntityManager extends CL_Manager{
 
@@ -41,6 +43,9 @@ export class CL_EntityManager extends CL_Manager{
         switch (entity.tag) {
             case Vehicles.MEDIUM_TANK:
                 clEntity = new CL_MediumTank(this.match, entity as SV_MediumTank);
+                break;
+            case Vehicles.APC:
+                clEntity = new CL_APC(this.match, entity as SV_APC);
                 break;
             case "wdoodad":
                 clEntity = new CL_WorldDoodad(this.match, entity as SV_WorldDoodad);

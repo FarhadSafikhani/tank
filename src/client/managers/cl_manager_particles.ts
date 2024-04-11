@@ -6,6 +6,8 @@ import { Particle } from "../particle";
 import * as PParticle from "@pixi/particle-emitter";
 import * as emit_explosion_vehcile from "./../emit_explosion_vehcile.json"
 import * as emit_turret_big from "./../emit_turret_big.json"
+import * as emit_turret_med from "./../emit_turret_med.json"
+
 import * as emit_turret_small from "./../emit_turret_small.json"
 import * as emit_rocket from "./../emit_rocket.json"
 
@@ -42,6 +44,14 @@ export class CL_ParticleManager extends CL_Manager {
 
     spawnParticles120mm(container: PIXI.Container, angle: number) {  
         const emitConfig: PParticle.EmitterConfigV3 = PParticle.upgradeConfig(emit_turret_big, PIXI.Texture.from('/fire.png'));
+        const emitter = new PParticle.Emitter(container, emitConfig);
+        emitter.spawnPos.set(40, 0);
+        emitter.rotate(angle);
+        emitter.playOnceAndDestroy();
+    }
+
+    spawnParticlesTurretMed(container: PIXI.Container, angle: number) {  
+        const emitConfig: PParticle.EmitterConfigV3 = PParticle.upgradeConfig(emit_turret_med, PIXI.Texture.from('/fire.png'));
         const emitter = new PParticle.Emitter(container, emitConfig);
         emitter.spawnPos.set(40, 0);
         emitter.rotate(angle);

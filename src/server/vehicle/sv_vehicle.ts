@@ -5,6 +5,8 @@ import { SV_Weapon } from "../weapons/sv_weapon";
 import { SV_Player } from "../entities/sv_player";
 
 export interface VehicleBaseStats {
+    width: number;
+    height: number;
     accel: number;
     turnRate: number;
     maxSpeed: number;
@@ -19,8 +21,6 @@ export class SV_Vehicle extends SV_Entity {
     @type("float64") vy: number = 0;
     @type("float64") turretAngle: number = 0;
     @type("string") verts: string = "";
-    @type("int32") w: number = 60;
-    @type("int32") h: number = 40;
     @type(SV_Weapon) mainWeapon: SV_Weapon | undefined;
     @type(SV_Weapon) secondaryWeapon: SV_Weapon | undefined;
 
@@ -42,7 +42,7 @@ export class SV_Vehicle extends SV_Entity {
     }
 
     createBody() {
-        const tankBody = Matter.Bodies.circle(this.x, this.y, this.w);
+        const tankBody = Matter.Bodies.circle(this.x, this.y, this.stats.width);
         const points = tankBody.vertices.map(vertex => {
             return { x: this.x - vertex.x, y: this.y - vertex.y };
         });

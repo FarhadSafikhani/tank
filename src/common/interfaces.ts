@@ -23,6 +23,6 @@ export interface Cords {
 
 export const enum Vehicles {
     MEDIUM_TANK = "medium_tank",
-    LIGHT_TANK = "light_tank",
+    APC = "apc",
     HEAVY_TANK = "heavy_tank"
 }

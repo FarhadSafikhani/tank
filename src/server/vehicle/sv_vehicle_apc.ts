@@ -11,39 +11,37 @@ import { SV_Vehicle, VehicleBaseStats } from "./sv_vehicle";
 
 
 
-export class SV_MediumTank extends SV_Vehicle {
-
+export class SV_APC extends SV_Vehicle {
 
     constructor(player: SV_Player, x: number, y: number) {
 
         const stats = {
-            width: 60,
-            height: 40,
-            accel: .42,
+            width: 47,
+            height: 35,
+            accel: .4,
             turnRate: 0.03,
-            maxSpeed: 11,
+            maxSpeed: 7,
             friction: .03,
-            startingMaxHealth: 120,
-            density: 1
+            startingMaxHealth: 69,
+            density: .7
         };
 
         super(player, x, y, stats);
-        this.tag = Vehicles.MEDIUM_TANK;
+        this.tag = Vehicles.APC;
         
-        this.mainWeapon = new SV_Weapon_120mm(this);
+        this.mainWeapon = new SV_Weapon_25mm(this);
         this.secondaryWeapon = new SV_Weapon_50cal(this);
         
 
     }
 
     createBody() {
-        
         const tankBody = Matter.Bodies.rectangle(this.x, this.y, this.stats.width, this.stats.height,
         {
             isStatic: false, friction: .3, 
-            frictionAir: this.stats.friction, restitution: 0.6, 
+            frictionAir: this.stats.friction, restitution: 0.7, 
             density: this.stats.density,
-            chamfer: { radius: 6 },
+            chamfer: { radius: 11 },
             collisionFilter: {
                 group: -this.team, //group for collision filtering
                 category: CollisionCategory.PLAYER, // category for projectiles
