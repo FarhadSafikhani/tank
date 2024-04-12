@@ -35,11 +35,11 @@ export class SV_Player extends Schema{
         this.state = state;
         this.team = team;
         this.name = name;
-        this.vehicle = this.state.createVehicle(this, x, y, Vehicles.APC);
-        
-        // const which = Math.random() > 0.5;
-        // this.vehicle = which ? this.state.createVehicle(this, x, y, Vehicles.APC) :
-        // this.state.createVehicle(this, x, y, Vehicles.MEDIUM_TANK);
+        //this.vehicle = this.state.createVehicle(this, x, y, Vehicles.APC);
+
+        const which = Math.random() > 0.5;
+        this.vehicle = which ? this.state.createVehicle(this, x, y, Vehicles.APC) :
+        this.state.createVehicle(this, x, y, Vehicles.MEDIUM_TANK);
     }
 
 

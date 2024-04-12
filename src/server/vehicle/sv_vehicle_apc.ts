@@ -16,8 +16,8 @@ export class SV_APC extends SV_Vehicle {
     constructor(player: SV_Player, x: number, y: number) {
 
         const stats = {
-            width: 47,
-            height: 35,
+            width: 55,
+            height: 40,
             accel: .4,
             turnRate: 0.03,
             maxSpeed: 7,
