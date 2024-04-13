@@ -7,19 +7,19 @@ import { SV_Player } from "./sv_player";
 import { SV_Enemy } from "./sv_enemy";
 import { SV_Projectile } from "./sv_projectile";
 
-export class SV_Projectile_120mm extends SV_Projectile {
+export class SV_Projectile_Tow extends SV_Projectile {
 
     // configs
     w: number = 25;
     h: number = 7;
-    initialSpeed: number = 15; //40
+    initialSpeed: number = 0;//4;
     damage: number = 36;
-    maxAge: number = 1500;
+    maxAge: number = 11500;
     
 
     constructor(state: BaseState, id: string, caster: SV_Entity, x: number, y: number, angle: number) {
         super(state, id, caster, x, y, angle);
-        this.tag = "120mm";
+        this.tag = "tow";
         this.body = this.createBody();
 
         this.vx = Math.cos(this.angle) * this.initialSpeed;

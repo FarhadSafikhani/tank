@@ -9,6 +9,10 @@ import { CL_Weapon_120mm } from "./weapons/cl_weapon_120mm";
 import { CL_Weapon_50cal } from "./weapons/cl_weapon_50cal";
 import { SV_Vehicle } from "../server/vehicle/sv_vehicle";
 import { SV_Weapon_120mm } from "../server/weapons/sv_weapon_120mm";
+import { SV_Weapon_Tow } from "../server/weapons/sv_weapon_tow";
+import { CL_Weapon_Tow } from "./weapons/cl_weapon_tow";
+import { SV_Weapon_50cal } from "../server/weapons/sv_weapon_50cal";
+import { SV_Weapon_25mm } from "../server/weapons/sv_weapon_25mm";
 
 
 export class CL_Vehicle extends CL_Entity{
@@ -49,14 +53,17 @@ export class CL_Vehicle extends CL_Entity{
         let weapon: CL_Weapon;
         switch(svWeapon.tag){
             case "25mm":
-                weapon = new CL_Weapon_25mm(this, svWeapon);
+                weapon = new CL_Weapon_25mm(this, svWeapon as SV_Weapon_25mm);
                 break;
             case "120mm":
                 weapon = new CL_Weapon_120mm(this, svWeapon as SV_Weapon_120mm);
                 break;
             case "50cal":
-                weapon = new CL_Weapon_50cal(this, svWeapon);
+                weapon = new CL_Weapon_50cal(this, svWeapon as SV_Weapon_50cal);
                 break;  
+            case "tow":
+                weapon = new CL_Weapon_Tow(this, svWeapon as SV_Weapon_Tow);
+                break;
             default:
                 throw new Error("Unknown weapon tag: " + svWeapon.tag);
                 break;

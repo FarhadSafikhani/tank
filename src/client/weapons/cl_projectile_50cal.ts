@@ -5,14 +5,15 @@ import { SV_Projectile } from "../../server/entities/sv_projectile";
 import { lerp } from "../../common/utils";
 import { CL_Match } from "../match";
 import { CL_Projectile } from "./cl_projectile";
+import { SV_Projectile_50cal } from "../../server/entities/sv_projectile_50cal";
 
 
 
 export class CL_Projectile_50cal extends CL_Projectile{
 
-    entity: SV_Projectile;
+    entity: SV_Projectile_50cal;
    
-    constructor(match: CL_Match, entity: SV_Projectile){
+    constructor(match: CL_Match, entity: SV_Projectile_50cal){
         super(match, entity);
         this.container.rotation = this.entity.angle;
         this.container.x = this.entity.x;

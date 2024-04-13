@@ -18,6 +18,7 @@ import { SV_MediumTank } from "../../server/vehicle/sv_vehicle_medium_tank";
 import { CL_MediumTank } from "../cl_vehicle_medium_tank";
 import { CL_APC } from "../cl_vehicle_apc";
 import { SV_APC } from "../../server/vehicle/sv_vehicle_apc";
+import { CL_Projectile_Tow } from "../weapons/cl_projectile_tow";
 
 export class CL_EntityManager extends CL_Manager{
 
@@ -61,6 +62,9 @@ export class CL_EntityManager extends CL_Manager{
                 break;
             case "50cal":
                 clEntity = new CL_Projectile_50cal(this.match, entity as SV_Projectile);
+                break;
+            case "tow":
+                clEntity = new CL_Projectile_Tow(this.match, entity as SV_Projectile);
                 break;
             case "enemy":
                 clEntity = new CL_Enemy(this.match, entity as SV_Enemy);

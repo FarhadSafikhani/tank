@@ -10,11 +10,12 @@ import { RoomBase } from "./sv_room_base";
 import { Cords, Vehicles } from "../../common/interfaces";
 import { SV_Projectile_25mm } from "../entities/sv_projectile_25mm";
 import { SV_Weapon } from "../weapons/sv_weapon";
-import { SV_Projectile120mm } from "../entities/sv_projectile_120mm";
+import { SV_Projectile_120mm } from "../entities/sv_projectile_120mm";
 import { SV_Projectile_50cal } from "../entities/sv_projectile_50cal";
 import { SV_Vehicle } from "../vehicle/sv_vehicle";
 import { SV_MediumTank } from "../vehicle/sv_vehicle_medium_tank";
 import { SV_APC } from "../vehicle/sv_vehicle_apc";
+import { SV_Projectile_Tow } from "../entities/sv_projectile_tow";
 
 const GAME_CONFIG = {
   worldSize: 1200
@@ -133,7 +134,7 @@ export class BaseState extends Schema {
     }
 
     if(weapon.tag === "120mm") {
-      const p = new SV_Projectile120mm(this, entityId, weapon.caster, x, y, angle);
+      const p = new SV_Projectile_120mm(this, entityId, weapon.caster, x, y, angle);
       this.addEntity(entityId, p);
       return;
     }
@@ -144,8 +145,14 @@ export class BaseState extends Schema {
       return;
     }
 
-    const p = new SV_Projectile(this, entityId, weapon.caster, x, y, angle);
-    this.addEntity(entityId, p);
+    if(weapon.tag === "tow") {
+      const p = new SV_Projectile_Tow(this, entityId, weapon.caster, x, y, angle);
+      this.addEntity(entityId, p);
+      return;
+    }
+
+    throw new Error("Unknown weapon tag: " + weapon.tag);
+
   }
 
   createEnemy(position: Cords) {
@@ -196,16 +203,17 @@ export class BaseState extends Schema {
       return;
     }
 
-    // delete all dead entities
-    this.entities.forEach((entity, entityId) => {
-      entity.dead && this.removeEntity(entityId);
-    });
     Matter.Engine.update(this.engine, deltaTime)
 
   }
 
   matterAfterUpdate(engineTimeEvent: IEventTimestamped<Engine>) {
     const d = engineTimeEvent['delta'];
+
+    // delete all dead entities
+    this.entities.forEach((entity, entityId) => {
+      entity.dead && this.removeEntity(entityId);
+    });
 
     this.entities.forEach((entity, entityId) => {
       entity.update(d);

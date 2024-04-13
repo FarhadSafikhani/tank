@@ -29,8 +29,8 @@ export class CL_APC extends CL_Vehicle{
     }
 
     drawAngleIndicator() {
-        const size = 13;
-        const position = 17;
+        const size = 15;
+        const position = 19;
         const angleIndicator = new PIXI.Graphics();
         angleIndicator.beginFill({ r: 200, g: 200, b: 200 }); 
         angleIndicator.moveTo(0, -size);
@@ -45,12 +45,12 @@ export class CL_APC extends CL_Vehicle{
     drawTurret(){
 
         // DRAW TURRET
-        const tankCenterX = -5;
+        const tankCenterX = -7;
 
         const fullTurret = new PIXI.Graphics();
 
         // DRAW TURRET BASE
-        const squareSize = 18; // adjust the size of the square as needed
+        const squareSize = 23; // adjust the size of the square as needed
         const squareX = tankCenterX - squareSize / 2; // position the square at the base of the turret
         const squareY = 0 - squareSize / 2; // position the square vertically centered
         const triangleLength = 6; // adjust the length of the triangle as needed
@@ -75,14 +75,14 @@ export class CL_APC extends CL_Vehicle{
         const rocketPod = new PIXI.Graphics();
         rocketPod.lineStyle(2, { r: 190, g: 190, b: 190 }); // Set the stroke color to dark green
         rocketPod.beginFill({ r: 133, g: 133, b: 133 }); // Set the fill color to dark green
-        rocketPod.drawRect(-10, 6, 15, 10); // Draw a filled and stroked rectangle
+        rocketPod.drawRect(-14, 7, 16, 10); // Draw a filled and stroked rectangle
         rocketPod.endFill();
         fullTurret.addChild(rocketPod);
 
         const turretBarrel = new PIXI.Graphics();
         turretBarrel.lineStyle(2, { r: 200, g: 200, b: 200 }); // Set the stroke color to dark green
         turretBarrel.beginFill({ r: 55, g: 55, b: 55 }); // Set the fill color to dark green
-        turretBarrel.drawRect(6, -2, 22, 4); // Draw a filled and stroked rectangle
+        turretBarrel.drawRect(8, -2, 22, 4); // Draw a filled and stroked rectangle
         turretBarrel.endFill();
         fullTurret.addChild(turretBarrel);
 

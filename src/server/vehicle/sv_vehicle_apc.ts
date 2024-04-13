@@ -8,6 +8,7 @@ import { SV_Weapon_50cal } from "../weapons/sv_weapon_50cal";
 import { SV_Player } from "../entities/sv_player";
 import { SV_Weapon_25mm } from "../weapons/sv_weapon_25mm";
 import { SV_Vehicle, VehicleBaseStats } from "./sv_vehicle";
+import { SV_Weapon_Tow } from "../weapons/sv_weapon_tow";
 
 
 
@@ -18,7 +19,7 @@ export class SV_APC extends SV_Vehicle {
         const stats = {
             width: 55,
             height: 40,
-            accel: .4,
+            accel: .42,
             turnRate: 0.03,
             maxSpeed: 7,
             friction: .03,
@@ -30,7 +31,7 @@ export class SV_APC extends SV_Vehicle {
         this.tag = Vehicles.APC;
         
         this.mainWeapon = new SV_Weapon_25mm(this);
-        this.secondaryWeapon = new SV_Weapon_50cal(this);
+        this.secondaryWeapon = new SV_Weapon_Tow(this);
         
 
     }

@@ -19,7 +19,7 @@ export class CL_Weapon_25mm extends CL_Weapon {
     ammoCounter: HTMLElement;
     replenishBar: HTMLElement;
 
-    constructor(vehicle: CL_Vehicle, svWeapon: SV_Weapon){
+    constructor(vehicle: CL_Vehicle, svWeapon: SV_Weapon_25mm){
         super(vehicle, svWeapon);
     }
 

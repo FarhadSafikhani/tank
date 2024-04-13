@@ -75,13 +75,14 @@ export class SV_Projectile extends SV_Entity {
 
     update(deltaTime): void {
         this.age += deltaTime;
-        if(this.age > this.maxAge || this.collided) {
-            this.dead = true;
-        }
         
         this.x = this.body.position.x;
         this.y = this.body.position.y;
         this.angle = this.body.angle;
+
+        if(this.age > this.maxAge || this.collided) {
+            this.dead = true;
+        }
 
     }
 
