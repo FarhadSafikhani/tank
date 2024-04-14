@@ -8,6 +8,8 @@ import { SV_Projectile_Tow } from "../../server/entities/sv_projectile_tow";
 export class CL_Projectile_Tow extends CL_Projectile{
 
     entity: SV_Projectile_Tow;
+
+    rocketNozzle: PIXI.Container;
    
     constructor(match: CL_Match, entity: SV_Projectile_Tow){
         super(match, entity);
@@ -15,10 +17,13 @@ export class CL_Projectile_Tow extends CL_Projectile{
         this.container.x = this.entity.x;
         this.container.y = this.entity.y;
 
-        const casterEntity = this.match.em.getClEntity(this.entity.casterId);
-        const casterContainer = casterEntity.container;
+        // const casterEntity = this.match.em.getClEntity(this.entity.casterId);
+        // const casterContainer = casterEntity.container;
         
-        //this.match.ptm.spawnParticles120mm(casterContainer, this.entity.angle);
+        //TODO: do a backblast particle effect
+        //this.match.ptm.spawnParticlesTurretMed(casterContainer, this.entity.angle);
+
+        this.match.ptm.spawnRocketParticles(this.rocketNozzle, this.entity.angle);
     }
 
     createGraphics(): void {
@@ -28,6 +33,10 @@ export class CL_Projectile_Tow extends CL_Projectile{
         graphics.beginFill({ r: 222, g: 180, b: 180, a: .8 }); // Gray color
         graphics.drawPolygon(bodyVerts);
         graphics.endFill();
+
+        this.rocketNozzle = new PIXI.Container();
+        this.rocketNozzle.angle = -180;
+        this.container.addChild(this.rocketNozzle);
         this.container.addChild(graphics);
     }
 

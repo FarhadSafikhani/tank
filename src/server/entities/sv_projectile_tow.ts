@@ -10,21 +10,27 @@ import { SV_Projectile } from "./sv_projectile";
 export class SV_Projectile_Tow extends SV_Projectile {
 
     // configs
-    w: number = 25;
-    h: number = 7;
-    initialSpeed: number = 0;//4;
-    damage: number = 36;
-    maxAge: number = 11500;
+    w: number = 22; //25
+    h: number = 5; //7
+    initialSpeed: number = .25;//4;
+    acceleration: number = .05;
+    turnRate: number = 0.07;
+    damage: number = 80;
+    maxAge: number = 5000;
     
+    caster: SV_Entity;
+    player: SV_Player | undefined;
 
     constructor(state: BaseState, id: string, caster: SV_Entity, x: number, y: number, angle: number) {
         super(state, id, caster, x, y, angle);
         this.tag = "tow";
         this.body = this.createBody();
-
+        this.caster = caster;
         this.vx = Math.cos(this.angle) * this.initialSpeed;
         this.vy = Math.sin(this.angle) * this.initialSpeed;
-        
+
+        this.player = this.state.players.get(this.caster.id);
+
         Matter.Body.setVelocity(this.body, {x: this.vx, y: this.vy});
     }
 
@@ -32,7 +38,7 @@ export class SV_Projectile_Tow extends SV_Projectile {
 
         const body = Matter.Bodies.rectangle(this.x, this.y, this.w, this.h,
         {
-            isStatic: false, frictionAir: 0, friction: .05, restitution: 0.6, density: 0.3,
+            isStatic: false, frictionAir: .02, friction: .05, restitution: 0.6, density: 0.9,
             collisionFilter: {
                 group: -this.caster.team, //set group -1 if projectiles should not collide with each other
                 category: CollisionCategory.PROJECTILE,
@@ -48,6 +54,48 @@ export class SV_Projectile_Tow extends SV_Projectile {
         this.verts = JSON.stringify(points);
 
         return body;
+    }
+
+    update(deltaTime: any): void {
+
+
+
+        if(this.player){
+
+            const x = this.player.mX;
+            const y = this.player.mY;
+            //rotate the rocket body to head to the mouse
+            const currentAngle = this.body.angle;
+            const targetAngle = Math.atan2(y - this.y, x - this.x);
+
+            // Adjust the angle difference to be within -PI to PI range
+            let angleDifference = targetAngle - currentAngle;
+            if (angleDifference > Math.PI) {
+                angleDifference -= 2 * Math.PI;
+            } else if (angleDifference < -Math.PI) {
+                angleDifference += 2 * Math.PI;
+            }
+
+            // Limit the turn speed
+            const turnAmount = Math.min(this.turnRate, Math.abs(angleDifference));
+            const turnDirection = Math.sign(angleDifference);
+            const newAngle = currentAngle + turnAmount * turnDirection;
+  
+            this.vx = Math.cos(newAngle) * this.acceleration;
+            this.vy = Math.sin(newAngle) * this.acceleration;
+            Matter.Body.setAngle(this.body, newAngle);
+            Matter.Body.applyForce(this.body, this.body.position, {x: this.vx, y: this.vy});
+        
+        } else {
+        
+            this.vx = Math.cos(this.angle) * this.acceleration;
+            this.vy = Math.sin(this.angle) * this.acceleration;
+            Matter.Body.applyForce(this.body, this.body.position, {x: this.vx, y: this.vy});
+
+        }
+
+        super.update(deltaTime);
+        
     }
  
 
