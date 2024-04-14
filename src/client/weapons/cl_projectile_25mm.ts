@@ -53,7 +53,6 @@ export class CL_Projectile_25mm extends CL_Projectile{
         super.dieTick();
         this.container.x = this.entity.x;
         this.container.y = this.entity.y;
-        this.spawnPartiles();
     }
 
     spawnPartiles(){

@@ -16,7 +16,10 @@ export class SV_Projectile_Tow extends SV_Projectile {
     acceleration: number = .05;
     turnRate: number = 0.07;
     damage: number = 80;
-    maxAge: number = 5000;
+    maxAge: number = 6000;
+
+    @type("number") targetX: number;
+    @type("number") targetY: number;
     
     caster: SV_Entity;
     player: SV_Player | undefined;
@@ -30,6 +33,8 @@ export class SV_Projectile_Tow extends SV_Projectile {
         this.vy = Math.sin(this.angle) * this.initialSpeed;
 
         this.player = this.state.players.get(this.caster.id);
+        this.targetX = this.player?.mX || 0;
+        this.targetY = this.player?.mY || 0;
 
         Matter.Body.setVelocity(this.body, {x: this.vx, y: this.vy});
     }
@@ -62,11 +67,13 @@ export class SV_Projectile_Tow extends SV_Projectile {
 
         if(this.player){
 
-            const x = this.player.mX;
-            const y = this.player.mY;
+            this.targetX = this.player.mX;
+            this.targetY = this.player.mY;
+
+
             //rotate the rocket body to head to the mouse
             const currentAngle = this.body.angle;
-            const targetAngle = Math.atan2(y - this.y, x - this.x);
+            const targetAngle = Math.atan2(this.targetY - this.y, this.targetX - this.x);
 
             // Adjust the angle difference to be within -PI to PI range
             let angleDifference = targetAngle - currentAngle;

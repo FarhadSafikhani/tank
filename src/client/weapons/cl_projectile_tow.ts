@@ -10,18 +10,22 @@ export class CL_Projectile_Tow extends CL_Projectile{
     entity: SV_Projectile_Tow;
 
     rocketNozzle: PIXI.Container;
+    reticle: PIXI.Graphics;
    
     constructor(match: CL_Match, entity: SV_Projectile_Tow){
         super(match, entity);
         this.container.rotation = this.entity.angle;
         this.container.x = this.entity.x;
         this.container.y = this.entity.y;
+        this.reticle.x = this.entity.targetX;
+        this.reticle.y = this.entity.targetY;
 
-        // const casterEntity = this.match.em.getClEntity(this.entity.casterId);
-        // const casterContainer = casterEntity.container;
+        const casterEntity = this.match.em.getClEntity(this.entity.casterId);
+        const casterContainer = casterEntity.container;
         
         //TODO: do a backblast particle effect
-        //this.match.ptm.spawnParticlesTurretMed(casterContainer, this.entity.angle);
+        const oppositeAngle = this.entity.angle + Math.PI;
+        this.match.ptm.spawnParticlesTurretMed(casterContainer, oppositeAngle);
 
         this.match.ptm.spawnRocketParticles(this.rocketNozzle, this.entity.angle);
     }
@@ -38,6 +42,14 @@ export class CL_Projectile_Tow extends CL_Projectile{
         this.rocketNozzle.angle = -180;
         this.container.addChild(this.rocketNozzle);
         this.container.addChild(graphics);
+
+        this.reticle = new PIXI.Graphics();
+        //stroke a rectangle
+        this.reticle.lineStyle(2, {r: 0, g: 255, b: 0, a: 1});
+        this.reticle.drawRect(0, 0, 20, 20);
+        this.reticle.endFill();
+        this.reticle.position.set(this.entity.x, this.entity.y);
+        this.match.game.viewport.addChild(this.reticle);
     }
 
     drawDebugLine(){
@@ -52,6 +64,12 @@ export class CL_Projectile_Tow extends CL_Projectile{
         this.container.x = lerp(this.container.x, this.entity.x, .5);
         this.container.y = lerp(this.container.y, this.entity.y, .5);
         this.container.rotation = this.entity.angle;
+        //center the reticle on the target position based on the size of reticle
+        const x = this.entity.targetX - this.reticle.width / 2;
+        const y = this.entity.targetY - this.reticle.height / 2;
+
+        this.reticle.x = lerp(this.reticle.x, x, .1);
+        this.reticle.y = lerp(this.reticle.y, y, .1);
     }
 
     //called from update in cl_entity when state is DYING
@@ -59,7 +77,8 @@ export class CL_Projectile_Tow extends CL_Projectile{
         super.dieTick();
         this.container.x = this.entity.x;
         this.container.y = this.entity.y;
-        this.spawnPartiles();
+        this.match.game.viewport.removeChild(this.reticle);
+        this.reticle.destroy();
     }
 
     spawnPartiles(){
