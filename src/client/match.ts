@@ -148,5 +148,9 @@ export class CL_Match {
         requestAnimationFrame(this.tick.bind(this));
     }
 
+    isLocalPlayer(id: string): boolean {
+        return id === this.currentClientPlayer?.svPlayer.id;
+    }
+
 
 }

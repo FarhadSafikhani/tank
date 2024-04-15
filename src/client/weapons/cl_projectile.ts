@@ -9,6 +9,8 @@ import { CL_Match } from "../match";
 export class CL_Projectile extends CL_Entity{
 
     entity: SV_Projectile;
+
+    casterIsLocalPlayer: boolean;
    
     constructor(match: CL_Match, entity: SV_Projectile){
         super(match, entity);
@@ -16,6 +18,7 @@ export class CL_Projectile extends CL_Entity{
         this.container.rotation = this.entity.angle;
         this.container.x = this.entity.x;
         this.container.y = this.entity.y;
+        this.casterIsLocalPlayer = match.isLocalPlayer(this.entity.casterId);
     }
 
     createGraphics(): void {

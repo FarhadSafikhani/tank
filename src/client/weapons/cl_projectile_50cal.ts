@@ -15,9 +15,6 @@ export class CL_Projectile_50cal extends CL_Projectile{
    
     constructor(match: CL_Match, entity: SV_Projectile_50cal){
         super(match, entity);
-        this.container.rotation = this.entity.angle;
-        this.container.x = this.entity.x;
-        this.container.y = this.entity.y;
 
         const casterEntity = this.match.em.getClEntity(this.entity.casterId);
         const casterContainer = casterEntity.container;

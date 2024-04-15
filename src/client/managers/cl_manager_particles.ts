@@ -10,6 +10,7 @@ import * as emit_turret_med from "./../emit_turret_med.json"
 
 import * as emit_turret_small from "./../emit_turret_small.json"
 import * as emit_rocket from "./../emit_rocket.json"
+import { Cords } from "../../common/interfaces";
 
 export class CL_ParticleManager extends CL_Manager {
 
@@ -50,10 +51,11 @@ export class CL_ParticleManager extends CL_Manager {
         emitter.playOnceAndDestroy();
     }
 
-    spawnParticlesTurretMed(container: PIXI.Container, angle: number) {  
+    spawnParticlesTurretMed(container: PIXI.Container, angle: number, point: Cords) {  
         const emitConfig: PParticle.EmitterConfigV3 = PParticle.upgradeConfig(emit_turret_med, PIXI.Texture.from('/fire.png'));
         const emitter = new PParticle.Emitter(container, emitConfig);
-        emitter.spawnPos.set(40, 0);
+        emitter.spawnPos.set(point.x, point.y);
+        emitter.addAtBack = false;
         emitter.rotate(angle);
         emitter.playOnceAndDestroy();
     }
