@@ -1,10 +1,9 @@
+import { type } from "@colyseus/schema";
 import Matter, { Engine, IEventCollision } from "matter-js";
-import { SV_Comp_Destructable, SV_Entity } from "./sv_entity";
-import { type } from "@colyseus/schema"; 
-import { BaseState } from "../rooms/sv_state_base";
 import { CollisionCategory } from "../../common/interfaces";
-import { SV_Player } from "./sv_player";
+import { BaseState } from "../rooms/sv_state_base";
 import { SV_Vehicle } from "../vehicle/sv_vehicle";
+import { SV_Comp_Destructable, SV_Entity } from "./sv_entity";
 
 export class SV_Enemy extends SV_Entity {
 

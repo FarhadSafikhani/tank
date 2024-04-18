@@ -1,8 +1,5 @@
-import { SV_Weapon } from "../../server/weapons/sv_weapon";
-import { SV_Weapon_120mm } from "../../server/weapons/sv_weapon_120mm";
 import { SV_Weapon_Tow } from "../../server/weapons/sv_weapon_tow";
 import { CL_Vehicle } from "../cl_vehicle";
-import { CL_Match } from "../match";
 import { CL_Weapon } from "./cl_weapon";
 
 

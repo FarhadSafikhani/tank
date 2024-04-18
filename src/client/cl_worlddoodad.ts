@@ -1,7 +1,6 @@
 import * as PIXI from "pixi.js";
-import { CL_Entity } from "./cl_entity";
-import { Game } from "./game";
 import { SV_WorldDoodad } from "../server/entities/sv_worlddoodad";
+import { CL_Entity } from "./cl_entity";
 import { CL_Match } from "./match";
 
 

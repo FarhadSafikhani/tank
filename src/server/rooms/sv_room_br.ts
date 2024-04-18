@@ -1,8 +1,6 @@
 import { Client } from "colyseus";
 import { RoomBase } from "./sv_room_base";
 import { StateBR } from "./sv_state_br";
-import { StateTest } from "./sv_state_test";
-import { BaseState } from "./sv_state_base";
 
 //<BaseState>
 export class RoomBR extends RoomBase {

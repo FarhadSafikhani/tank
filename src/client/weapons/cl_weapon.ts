@@ -1,6 +1,5 @@
 import { SV_Weapon } from "../../server/weapons/sv_weapon";
 import { CL_Vehicle } from "../cl_vehicle";
-import { CL_Match } from "../match";
 
 export class CL_Weapon {
 

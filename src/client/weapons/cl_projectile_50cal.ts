@@ -1,11 +1,8 @@
 import * as PIXI from "pixi.js";
-import { CL_Entity, EntityState } from "../cl_entity";
-import { Game } from "../game";
-import { SV_Projectile } from "../../server/entities/sv_projectile";
 import { lerp } from "../../common/utils";
+import { SV_Projectile_50cal } from "../../server/entities/sv_projectile_50cal";
 import { CL_Match } from "../match";
 import { CL_Projectile } from "./cl_projectile";
-import { SV_Projectile_50cal } from "../../server/entities/sv_projectile_50cal";
 
 
 

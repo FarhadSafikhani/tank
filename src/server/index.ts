@@ -1,15 +1,13 @@
-import { Server } from "colyseus";
-import http from "http";
-import express from "express";
-import path from "path";
-import basicAuth from "express-basic-auth";
 import { monitor } from "@colyseus/monitor";
-import cors from 'cors';
-import { RoomBase } from "./rooms/sv_room_base";
 import { WebSocketTransport } from "@colyseus/ws-transport";
-import { RoomTest } from "./rooms/sv_room_test";
+import { Server } from "colyseus";
+import cors from 'cors';
+import express from "express";
+import basicAuth from "express-basic-auth";
+import http from "http";
+import path from "path";
 import { RoomBR } from "./rooms/sv_room_br";
-import { StateBR } from "./rooms/sv_state_br";
+import { RoomTest } from "./rooms/sv_room_test";
 export const port = Number(process.env.PORT || 2567);
 export const endpoint = "localhost";
 

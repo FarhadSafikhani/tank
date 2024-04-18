@@ -1,21 +1,20 @@
+import { MapSchema, Schema, type } from "@colyseus/schema";
 import { Room, generateId } from "colyseus";
-import { Schema, type, MapSchema, filterChildren } from "@colyseus/schema";
+import Matter, { Engine, IEventCollision, IEventTimestamped } from "matter-js";
+import { Cords, Vehicles } from "../../common/interfaces";
+import { SV_Enemy } from "../entities/sv_enemy";
 import { SV_Entity } from "../entities/sv_entity";
 import { SV_Player } from "../entities/sv_player";
-import Matter, { Engine, IEventCollision, IEventTimestamped } from "matter-js";
-import { SV_WorldDoodad } from "../entities/sv_worlddoodad";
-import { SV_Projectile } from "../entities/sv_projectile";
-import { SV_Enemy } from "../entities/sv_enemy";
-import { RoomBase } from "./sv_room_base";
-import { Cords, Vehicles } from "../../common/interfaces";
-import { SV_Projectile_25mm } from "../entities/sv_projectile_25mm";
-import { SV_Weapon } from "../weapons/sv_weapon";
 import { SV_Projectile_120mm } from "../entities/sv_projectile_120mm";
+import { SV_Projectile_25mm } from "../entities/sv_projectile_25mm";
 import { SV_Projectile_50cal } from "../entities/sv_projectile_50cal";
-import { SV_Vehicle } from "../vehicle/sv_vehicle";
-import { SV_MediumTank } from "../vehicle/sv_vehicle_medium_tank";
-import { SV_APC } from "../vehicle/sv_vehicle_apc";
 import { SV_Projectile_Tow } from "../entities/sv_projectile_tow";
+import { SV_WorldDoodad } from "../entities/sv_worlddoodad";
+import { SV_Vehicle } from "../vehicle/sv_vehicle";
+import { SV_APC } from "../vehicle/sv_vehicle_apc";
+import { SV_MediumTank } from "../vehicle/sv_vehicle_medium_tank";
+import { SV_Weapon } from "../weapons/sv_weapon";
+import { RoomBase } from "./sv_room_base";
 
 const GAME_CONFIG = {
   worldSize: 1200

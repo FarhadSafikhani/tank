@@ -1,7 +1,5 @@
 import * as PIXI from "pixi.js";
 import { SV_Entity } from "../server/entities/sv_entity";
-import { Game } from "./game";
-import e from "express";
 import { CL_Match } from "./match";
 
 

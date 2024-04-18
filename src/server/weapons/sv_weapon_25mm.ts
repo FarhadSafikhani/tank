@@ -1,6 +1,6 @@
+import { type } from "@colyseus/schema";
 import { SV_Entity } from "../entities/sv_entity";
 import { SV_Weapon } from "./sv_weapon";
-import { Schema, type } from "@colyseus/schema";
 
 export class SV_Weapon_25mm extends SV_Weapon {
 

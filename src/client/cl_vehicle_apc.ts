@@ -1,8 +1,7 @@
 import * as PIXI from "pixi.js";
-import { CL_Match } from "./match";
-import { CL_Vehicle } from "./cl_vehicle";
-import { SV_MediumTank } from "../server/vehicle/sv_vehicle_medium_tank";
 import { SV_APC } from "../server/vehicle/sv_vehicle_apc";
+import { CL_Vehicle } from "./cl_vehicle";
+import { CL_Match } from "./match";
 
 export class CL_APC extends CL_Vehicle{
 

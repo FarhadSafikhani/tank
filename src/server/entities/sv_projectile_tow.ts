@@ -1,10 +1,9 @@
-import Matter, { Collision, Engine, IEventCollision } from "matter-js";
-import { SV_Entity } from "./sv_entity";
-import { type } from "@colyseus/schema"; 
-import { BaseState } from "../rooms/sv_state_base";
+import { type } from "@colyseus/schema";
+import Matter from "matter-js";
 import { CollisionCategory } from "../../common/interfaces";
+import { BaseState } from "../rooms/sv_state_base";
+import { SV_Entity } from "./sv_entity";
 import { SV_Player } from "./sv_player";
-import { SV_Enemy } from "./sv_enemy";
 import { SV_Projectile } from "./sv_projectile";
 
 export class SV_Projectile_Tow extends SV_Projectile {

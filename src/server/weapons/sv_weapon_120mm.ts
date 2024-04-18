@@ -1,5 +1,4 @@
 import Matter from "matter-js";
-import { type } from "@colyseus/schema";
 import { SV_Entity } from "../entities/sv_entity";
 import { SV_Weapon } from "./sv_weapon";
 

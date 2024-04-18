@@ -1,9 +1,7 @@
 import * as PIXI from "pixi.js";
-import { CL_Entity, EntityState } from "./cl_entity";
-import { SV_Player } from "../server/entities/sv_player";
-import { Game } from "./game";
 import { lerp } from "../common/utils";
 import { SV_Enemy } from "../server/entities/sv_enemy";
+import { CL_Entity } from "./cl_entity";
 import { CL_Match } from "./match";
 
 

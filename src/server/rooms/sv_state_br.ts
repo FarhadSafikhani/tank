@@ -1,8 +1,7 @@
 
-import { SV_Player } from "../entities/sv_player";
-import Matter, { Engine, IEventTimestamped } from "matter-js";
-import { BaseState } from "./sv_state_base";
+import Matter from "matter-js";
 import { RoomBase } from "./sv_room_base";
+import { BaseState } from "./sv_state_base";
 
 const GAME_CONFIG = {
   worldSize: 2600

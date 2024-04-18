@@ -1,8 +1,8 @@
-import { Schema, type } from "@colyseus/schema";
-import { SV_Comp_Destructable, SV_Entity } from "../entities/sv_entity";
+import { type } from "@colyseus/schema";
 import Matter from "matter-js";
-import { SV_Weapon } from "../weapons/sv_weapon";
+import { SV_Comp_Destructable, SV_Entity } from "../entities/sv_entity";
 import { SV_Player } from "../entities/sv_player";
+import { SV_Weapon } from "../weapons/sv_weapon";
 
 export interface VehicleBaseStats {
     width: number;

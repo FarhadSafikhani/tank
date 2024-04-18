@@ -1,8 +1,7 @@
+import { type } from "@colyseus/schema";
 import Matter from "matter-js";
-import { SV_Entity } from "./sv_entity";
-import { type } from "@colyseus/schema"; 
-import { lerp } from '../../common/utils'; 
 import { BaseState } from "../rooms/sv_state_base";
+import { SV_Entity } from "./sv_entity";
 
 export class SV_WorldDoodad extends SV_Entity {
 
