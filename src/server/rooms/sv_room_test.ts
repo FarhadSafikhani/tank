@@ -17,6 +17,9 @@ export class RoomTest extends RoomBase {
   onJoin(client: Client, clientOptions: any) {
     super.onJoin(client, clientOptions);
     const nextTeam = this.getState().getNextTeam();
+
+    //TODO: instead of creating the player rightaway, 
+    //we should wait for the client to send a message to the server to create the player
     this.getState().createPlayer(client.sessionId, {x: 0, y: 0}, nextTeam, clientOptions);
   }
 

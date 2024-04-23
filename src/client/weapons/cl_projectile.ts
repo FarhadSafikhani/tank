@@ -17,7 +17,7 @@ export class CL_Projectile extends CL_Entity{
         this.container.rotation = this.entity.angle;
         this.container.x = this.entity.x;
         this.container.y = this.entity.y;
-        this.casterIsLocalPlayer = match.isLocalPlayer(this.entity.casterId);
+        this.casterIsLocalPlayer = match.isLocalPlayer(this.entity.casterPlayerId);
     }
 
     createGraphics(): void {

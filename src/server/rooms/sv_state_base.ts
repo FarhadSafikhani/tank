@@ -111,14 +111,15 @@ export class BaseState extends Schema {
 
   createVehicle(player: SV_Player, x: number, y: number, vehicleTag: Vehicles): SV_Vehicle {
     let vehicle: SV_Vehicle;
+    const entityId = generateId();
     switch(vehicleTag) {
       case Vehicles.MEDIUM_TANK:
-        vehicle = new SV_MediumTank(player, x, y);
-        this.addEntity(player.id, vehicle);
+        vehicle = new SV_MediumTank(entityId, player, x, y);
+        this.addEntity(entityId, vehicle);
         return vehicle;
       case Vehicles.APC:
-        vehicle = new SV_APC(player, x, y);
-        this.addEntity(player.id, vehicle);
+        vehicle = new SV_APC(entityId, player, x, y);
+        this.addEntity(entityId, vehicle);
         return vehicle;
     }
     throw new Error("Unknown vehicle tag: " + vehicleTag);

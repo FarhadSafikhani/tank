@@ -2,6 +2,7 @@ import { Vehicles } from "../../common/interfaces";
 import { SV_Enemy } from "../../server/entities/sv_enemy";
 import { SV_Entity } from "../../server/entities/sv_entity";
 import { SV_Projectile } from "../../server/entities/sv_projectile";
+import { SV_Projectile_Tow } from "../../server/entities/sv_projectile_tow";
 import { SV_WorldDoodad } from "../../server/entities/sv_worlddoodad";
 import { SV_APC } from "../../server/vehicle/sv_vehicle_apc";
 import { SV_MediumTank } from "../../server/vehicle/sv_vehicle_medium_tank";
@@ -62,7 +63,7 @@ export class CL_EntityManager extends CL_Manager{
                 clEntity = new CL_Projectile_50cal(this.match, entity as SV_Projectile);
                 break;
             case "tow":
-                clEntity = new CL_Projectile_Tow(this.match, entity as SV_Projectile);
+                clEntity = new CL_Projectile_Tow(this.match, entity as SV_Projectile_Tow);
                 break;
             case "enemy":
                 clEntity = new CL_Enemy(this.match, entity as SV_Enemy);

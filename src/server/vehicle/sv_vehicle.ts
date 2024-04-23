@@ -17,6 +17,7 @@ export interface VehicleBaseStats {
 
 export class SV_Vehicle extends SV_Entity {
 
+    @type("string") playerId: string = "";
     @type("float64") vx: number = 0;
     @type("float64") vy: number = 0;
     @type("float64") turretAngle: number = 0;
@@ -29,8 +30,9 @@ export class SV_Vehicle extends SV_Entity {
     body!: Matter.Body;
     stats: VehicleBaseStats;
 
-    constructor(player: SV_Player, x: number, y: number, stats: VehicleBaseStats) {
-        super(player.state, player.id, player.team);
+    constructor(entityId: string, player: SV_Player, x: number, y: number, stats: VehicleBaseStats) {
+        super(player.state, entityId, player.team);
+        this.playerId = player.id;
         this.stats = stats;
         this.player = player;
         this.name = player.name;

@@ -15,7 +15,6 @@ export class CL_Projectile_Tow extends CL_Projectile{
    
     constructor(match: CL_Match, entity: SV_Projectile_Tow){
         super(match, entity);
-
         //backblast
         const casterEntity = this.match.em.getClEntity(this.entity.casterId);
         const casterContainer = casterEntity.container;

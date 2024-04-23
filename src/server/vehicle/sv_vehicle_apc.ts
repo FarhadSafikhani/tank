@@ -9,7 +9,7 @@ import { SV_Vehicle } from "./sv_vehicle";
 
 export class SV_APC extends SV_Vehicle {
 
-    constructor(player: SV_Player, x: number, y: number) {
+    constructor(entityId: string, player: SV_Player, x: number, y: number) {
 
         const stats = {
             width: 55,
@@ -22,13 +22,12 @@ export class SV_APC extends SV_Vehicle {
             density: .7
         };
 
-        super(player, x, y, stats);
+        super(entityId, player, x, y, stats);
         this.tag = Vehicles.APC;
         
         this.mainWeapon = new SV_Weapon_25mm(this);
         this.secondaryWeapon = new SV_Weapon_Tow(this);
         
-
     }
 
     createBody() {
@@ -42,8 +41,7 @@ export class SV_APC extends SV_Vehicle {
                 group: -this.team, //group for collision filtering
                 category: CollisionCategory.PLAYER, // category for projectiles
                 mask: CollisionCategory.PROJECTILE | CollisionCategory.PLAYER | 
-                CollisionCategory.ENEMY | CollisionCategory.ENEMY_PROJECTILE, // mask for other objects (e.g., players)
-                
+                CollisionCategory.ENEMY | CollisionCategory.ENEMY_PROJECTILE, // mask for other objects (e.g., players) 
             },
         });
 

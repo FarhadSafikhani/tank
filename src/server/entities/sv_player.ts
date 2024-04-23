@@ -11,7 +11,7 @@ export class SV_Player extends Schema{
     @type("string") lastKillerName: string = "";
     @type("boolean") isKia: boolean = false;
     @type({ map: "int32" }) matchStats = new MapSchema<number>();
-    @type(SV_Vehicle) vehicle: SV_Vehicle;
+    @type(SV_Vehicle) vehicle?: SV_Vehicle;
     @type("string") id: string;
 
     state: BaseState;
@@ -35,7 +35,7 @@ export class SV_Player extends Schema{
         this.state = state;
         this.team = team;
         this.name = name;
-        this.vehicle = this.state.createVehicle(this, x, y, Vehicles.APC);
+        //this.vehicle = this.state.createVehicle(this, x, y, Vehicles.APC);
 
         // const which = Math.random() > 0.5;
         // this.vehicle = which ? this.state.createVehicle(this, x, y, Vehicles.APC) :
@@ -46,7 +46,7 @@ export class SV_Player extends Schema{
     onMouseMove(x: number, y: number) {
         this.mX = x;
         this.mY = y;
-        this.vehicle.onMouseMove(x, y);
+        this.vehicle?.onMouseMove(x, y);
     }
 
     onKeyDown(keyCode: string) {
@@ -111,7 +111,7 @@ export class SV_Player extends Schema{
 
     respawn() {
         this.isKia = false;
-        this.vehicle.respawn();
+        this.vehicle?.respawn();
     }
 
     update(engineDeltaTime) {
@@ -127,8 +127,25 @@ export class SV_Player extends Schema{
     }
 
     onLeave() {
-        this.vehicle.dead = true;
+        if(this.vehicle) {
+            this.vehicle.dead = true;
+        }
         this.isKia = true;
+    }
+
+
+
+    pickVehicle(vehicleType: Vehicles) {
+        if (!Object.values(Vehicles).includes(vehicleType)) {
+            console.error("Invalid vehicle type: " + vehicleType);
+            return;
+        }
+
+        if (this.vehicle) {
+            this.vehicle.dead = true;
+        }
+        const spawnPos = this.state.pickRandomSpawnPoint();
+        this.vehicle = this.state.createVehicle(this, spawnPos.x, spawnPos.y, vehicleType);
     }
 
     

@@ -33,6 +33,10 @@ export class CL_Weapon_Tow extends CL_Weapon {
 
     }
 
+    removeUi(): void {
+        this.vehicle.match.uim.weaponsContainer.removeChild(this.htmlUiContainer);
+    }
+
     update() {
         if(!this.vehicle.isCLientVehicle){
             return;

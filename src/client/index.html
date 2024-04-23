@@ -8,6 +8,7 @@
 
     <link href="./css/style.css" type="text/css" rel="stylesheet" />
     <link href="./css/ui.css" type="text/css" rel="stylesheet" />
+    <link href="./css/dialog.css" type="text/css" rel="stylesheet" />
 
     <!-- ParcelJS is responsible for building this file -->
     <script src="./index.ts" type="module"></script>
@@ -20,8 +21,9 @@
     </div>
     
     <div id="ui">
+        
         <div id="ui-br" class="ui-container">
-            <div id="room-id" class="ui-text">ROOMID</div>
+            
             <div id="kill-message-area">
             </div>
             
@@ -39,12 +41,31 @@
             </div>
 
             <!-- <div id="shots" class="ui-text">0</div> -->
+
         </div>
 
-        <div id="player-name-panel" class="ui-text">
-            <input type="text" id="player-name-input" placeholder="Pick a player name" />
-            <button id="player-name-submit-button">Play</button>
+    </div>
+
+    <div id="settings-btn" class="ui-btn"></div> 
+    <div id="room-id" class="ui-text">ROOMID</div>
+    <div id="dialog-mask"></div>
+    <div id="dialog-char" class="dialog">
+        <div class="dialog-content">
+            <div class="dialog-header">PLAYER NAME</div>
+            <div class="dialog-panel">
+                <input type="text" id="player-name-input" placeholder="Pick a player name" />
+            </div>
+            <div class="dialog-header">SELECT VEHICLE</div>
+            <div id="dialog-vehcile-choices" class="dialog-panel">
+                <div class="tank-select">TANK</div>
+                <div class="tank-select">APC</div>
+            </div>
         </div>
+        <!-- <div class="dialog-buttons">
+            <button id="ok-button">OK</button>
+            <button id="cancel-button">Cancel</button>
+        </div> -->
+        <div class="dialog-close">X</div>
     </div>
 </body>
 

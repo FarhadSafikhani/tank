@@ -1,7 +1,7 @@
 import { Room, Client } from "colyseus";
 import { BaseState } from "./sv_state_base";
 import { SV_Player } from "../entities/sv_player";
-import { KeyMessage, MouseMessage } from "../../common/interfaces";
+import { KeyMessage, MouseMessage, Vehicles } from "../../common/interfaces";
 
 //<BaseState>
 export class RoomBase extends Room {
@@ -42,6 +42,10 @@ export class RoomBase extends Room {
       } else if (message.button === 2){
         this.getPlayerById(client.sessionId)?.onRightMouseUp(message.x, message.y);
       }
+    });
+
+    this.onMessage('player-pick-vehicle', (client, message: {vehicle: Vehicles}) => {
+      this.getPlayerById(client.sessionId)?.pickVehicle(message.vehicle);
     });
   }
 

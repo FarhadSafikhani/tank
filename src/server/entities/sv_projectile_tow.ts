@@ -20,18 +20,16 @@ export class SV_Projectile_Tow extends SV_Projectile {
     @type("number") targetX: number;
     @type("number") targetY: number;
     
-    caster: SV_Entity;
     player: SV_Player | undefined;
 
     constructor(state: BaseState, id: string, caster: SV_Entity, x: number, y: number, angle: number) {
         super(state, id, caster, x, y, angle);
         this.tag = "tow";
         this.body = this.createBody();
-        this.caster = caster;
         this.vx = Math.cos(this.angle) * this.initialSpeed;
         this.vy = Math.sin(this.angle) * this.initialSpeed;
 
-        this.player = this.state.players.get(this.caster.id);
+        this.player = this.state.players.get(this.caster["playerId"]);
         this.targetX = this.player?.mX || 0;
         this.targetY = this.player?.mY || 0;
 

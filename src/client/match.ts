@@ -9,6 +9,7 @@ import { Game } from './game';
 import { CL_EntityManager } from './managers/cl_manager_entity';
 import { CL_ParticleManager } from './managers/cl_manager_particles';
 import { CL_UiManager } from './managers/cl_manager_ui';
+import { Vehicles } from "../common/interfaces";
 
 //import dirtImg from '../assets/dirt.jpg';
 
@@ -20,7 +21,6 @@ export class CL_Match {
     uim: CL_UiManager;
     ptm: CL_ParticleManager;
 
-    doodadContainer: PIXI.Container;
     entityContainer: PIXI.Container;
     particleContainer: PIXI.Container; //actual particle container seems laggy?
 
@@ -37,16 +37,19 @@ export class CL_Match {
     
     constructor (game: Game, room: Room<BaseState>) {
 
-        this.em = new CL_EntityManager(this);
-        this.uim = new CL_UiManager(this);
-        this.ptm = new CL_ParticleManager(this);
-        
+        //set properties before managers
         this.active = true;
         this.game = game;
         this.room = room;
 
-        //TODO: doodad container
+        //setup managers
+        this.em = new CL_EntityManager(this);
+        this.uim = new CL_UiManager(this);
+        this.ptm = new CL_ParticleManager(this);
+        
 
+
+        //TODO: doodad container
         this.entityContainer = new PIXI.Container();
         this.game.viewport.addChild(this.entityContainer);
         this.particleContainer = new PIXI.Container();
@@ -149,6 +152,10 @@ export class CL_Match {
 
     isLocalPlayer(id: string): boolean {
         return id === this.currentClientPlayer?.svPlayer.id;
+    }
+
+    pickVehicle(vehicle: Vehicles) {
+        this.room?.send('player-pick-vehicle', { vehicle });
     }
 
 

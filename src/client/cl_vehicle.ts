@@ -38,10 +38,9 @@ export class CL_Vehicle extends CL_Entity{
         this.drawAngleIndicator();
         this.drawTurret();
         this.createHealthBar()
-        this.isCLientVehicle = match.room.sessionId === entity.id;
+        this.isCLientVehicle = match.room.sessionId === entity.playerId;
         if(this.isCLientVehicle){
-            this.match.currentPlayerVehcile = this;
-            this.match.game.viewport.follow(this.container);
+            this.match.currentPlayerVehcile = this;            
             this.mainWeapon = entity.mainWeapon ? this.setupWeapon(entity.mainWeapon) : undefined;
             this.secondaryWeapon = entity.secondaryWeapon ? this.setupWeapon(entity.secondaryWeapon) : undefined;
         }
@@ -188,12 +187,28 @@ export class CL_Vehicle extends CL_Entity{
         this.container.y = lerp(this.container.y, this.entity.y, 0.2);
         this.graphicsTankBody.rotation = this.entity.angle;
         this.graphicsTurret.rotation = this.entity.turretAngle;
+        
+        //update camera position
+        if(this.isCLientVehicle){  
+            const cx = this.match.game.viewport.center.x;
+            const cy = this.match.game.viewport.center.y;
+            const lerpedX = lerp(cx, this.container.x, 0.2);
+            const lerpedY = lerp(cy, this.container.y, 0.2);
+            this.match.game.viewport.animate({
+                time: 66,
+                position: { x: lerpedX, y: lerpedY },
+                ease: "linear"
+            });
+        }
     }
 
     destroy(): void {
-        if(this.isCLientVehicle){
-            this.match.game.viewport.pause = true;
-        }
+        
+        // if(this.isCLientVehicle){
+        //     this.match.game.viewport.pause = true;
+        // }
+        this.mainWeapon?.destroy();
+        this.secondaryWeapon?.destroy();
         super.destroy();
     }
 

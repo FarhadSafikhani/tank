@@ -15,6 +15,12 @@ export class CL_Weapon {
     setupUi(){}
 
     update() {}    
+
+    destroy() {
+        this.removeUi();
+    }
+
+    removeUi() {}
 }
 
 

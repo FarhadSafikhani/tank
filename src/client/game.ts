@@ -3,7 +3,7 @@ import { Room, Client } from "colyseus.js";
 import { Viewport } from 'pixi-viewport'
 import { BaseState } from "../server/rooms/sv_state_base";
 import { CL_Match } from './match';
-import { KeyMessage, MouseMessage } from '../common/interfaces';
+import { KeyMessage, MouseMessage, Vehicles } from '../common/interfaces';
 
 //import dirtImg from '../assets/dirt.jpg';
 
@@ -37,13 +37,7 @@ export class Game extends PIXI.Application {
 
         //const room = await client.reconnect(cachedReconnectionToken);
 
-        //TODO: move to a user class
-        const userName = localStorage.getItem("userName");
-        if(userName) {
-            this.pickRoom();
-        } else {   
-            document.getElementById("player-name-panel")!.style.display = "block";
-        }
+        this.pickRoom();
 
         setTimeout(() => {
             this.resizeView();
@@ -84,9 +78,6 @@ export class Game extends PIXI.Application {
             this.room?.send('keyup', { keyCode: e.key } as KeyMessage);
         });
 
-        document.getElementById("player-name-submit-button")!.onclick = () => {
-            this.setUserName();
-        }
     }
 
     public resizeView(): void {
@@ -112,14 +103,13 @@ export class Game extends PIXI.Application {
 
     }
 
-    setUserName() {
-        const userName = (document.getElementById("player-name-input") as HTMLInputElement).value;
-        const sanitizedUserName = this.sanitizeUserName(userName);
-        if(sanitizedUserName && sanitizedUserName.length > 0) {
-            localStorage.setItem("userName", sanitizedUserName);
-            this.pickRoom();
-            document.getElementById("player-name-panel")!.style.display = "none";
-        }
+    getRandomName(): string {
+        return "Player" + Math.floor(Math.random() * 1000);
+    }
+
+    setUserName(userName: string) {
+        localStorage.setItem("userName", userName);
+        //this.pickRoom();
     }
 
     sanitizeUserName(userName: string): string {

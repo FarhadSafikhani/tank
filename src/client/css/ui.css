@@ -180,3 +180,22 @@ button, input{
     font-size: 50px;
     line-height: 50px;
 }
+
+
+
+#settings-btn{
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-image: url(../../assets/gear.png);
+    background-position: center;
+    background-size: 100% 100%;
+    width: 64px;
+    height: 64px;
+    cursor: pointer;
+}
+
+
+
+
+

@@ -10,7 +10,7 @@ import { SV_Vehicle } from "./sv_vehicle";
 export class SV_MediumTank extends SV_Vehicle {
 
 
-    constructor(player: SV_Player, x: number, y: number) {
+    constructor(entityId: string, player: SV_Player, x: number, y: number) {
 
         const stats = {
             width: 60,
@@ -23,7 +23,7 @@ export class SV_MediumTank extends SV_Vehicle {
             density: 1
         };
 
-        super(player, x, y, stats);
+        super(entityId, player, x, y, stats);
         this.tag = Vehicles.MEDIUM_TANK;
         
         this.mainWeapon = new SV_Weapon_120mm(this);

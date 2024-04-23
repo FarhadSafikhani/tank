@@ -10,6 +10,7 @@ export class SV_Projectile extends SV_Entity {
     @type("number") casterX: number;
     @type("number") casterY: number;
     @type("string") casterId: string;
+    @type("string") casterPlayerId: string;
 
     caster: SV_Entity;
     body: Matter.Body;
@@ -34,6 +35,7 @@ export class SV_Projectile extends SV_Entity {
         this.casterX = caster.x;
         this.casterY = caster.y;
         this.casterId = caster.id;
+        this.casterPlayerId = caster["playerId"];
         this.angle = angle;
         this.body = this.createBody();
         this.vx = Math.cos(this.angle) * this.initialSpeed;
