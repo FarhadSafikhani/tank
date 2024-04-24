@@ -193,8 +193,12 @@ button, input{
     width: 64px;
     height: 64px;
     cursor: pointer;
+    transition: all .1s;
 }
 
+#settings-btn:active{
+    transform: scale(.9);
+}
 
 
 

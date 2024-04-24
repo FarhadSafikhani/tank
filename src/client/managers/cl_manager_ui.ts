@@ -148,7 +148,9 @@ export class CL_UiManager extends CL_Manager {
                     html: v,
                     parent: charOptions
                 });
-                el.addEventListener("click", () => {
+                el.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
                     this.match.pickVehicle(Vehicles[v]);
                     this.closeDialogChar();
                 });
